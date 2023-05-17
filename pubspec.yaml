@@ -1,0 +1,62 @@
+name: egu_industry
+description: A new Flutter project.
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0-311.0.dev <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+  get: ^4.6.5
+  intl: ^0.18.0
+  get_storage: ^2.1.1
+  flutter_svg: ^2.0.2
+  dio: ^5.0.1
+  font_awesome_flutter: ^10.4.0
+  carousel_slider: ^4.1.1
+  step_progress_indicator: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  build_runner: ^2.3.3
+  freezed: ^2.3.2
+  json_serializable: ^6.6.1
+  flutter_launcher_icons: ^0.12.0
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/app/
+
+
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: fonts/NOTOSANS/NotoSansKR-Thin.otf
+          weight: 100
+        - asset: fonts/NOTOSANS/NotoSansKR-Light.otf
+          weight: 300
+        - asset: fonts/NOTOSANS/NotoSansKR-Regular.otf
+          weight: 400
+        - asset: fonts/NOTOSANS/NotoSansKR-Medium.otf
+          weight: 500
+        - asset: fonts/NOTOSANS/NotoSansKR-Bold.otf
+          weight: 700
+        - asset: fonts/NOTOSANS/NotoSansKR-Black.otf
+          weight: 900
