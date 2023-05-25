@@ -24,6 +24,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   carousel_slider: ^4.1.1
   step_progress_indicator: ^1.0.2
+  url_launcher: ^6.1.3
 
 dev_dependencies:
   flutter_test:
@@ -45,18 +46,4 @@ flutter:
     - assets/app/
 
 
-  fonts:
-    - family: NotoSansKR
-      fonts:
-        - asset: fonts/NOTOSANS/NotoSansKR-Thin.otf
-          weight: 100
-        - asset: fonts/NOTOSANS/NotoSansKR-Light.otf
-          weight: 300
-        - asset: fonts/NOTOSANS/NotoSansKR-Regular.otf
-          weight: 400
-        - asset: fonts/NOTOSANS/NotoSansKR-Medium.otf
-          weight: 500
-        - asset: fonts/NOTOSANS/NotoSansKR-Bold.otf
-          weight: 700
-        - asset: fonts/NOTOSANS/NotoSansKR-Black.otf
-          weight: 900
+

@@ -10,7 +10,7 @@ import '../../common/common_bottom_sheet.dart';
 import '../../common/global_service.dart';
 import '../../routes/app_route.dart';
 import '../blue_tooth/blue_tooth_page.dart';
-import '../health/health_page.dart';
+import '../home/home_page.dart';
 import '../setting/setting_page.dart';
 import 'main_controller.dart';
 
@@ -89,7 +89,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
+        appBar: controller.selected.value == 0 ? null : AppBar(
           backgroundColor: Colors.white,
           title: Text(controller.appBarTitle.value),
           centerTitle: true,
@@ -102,13 +102,13 @@ class MainPage extends StatelessWidget {
         body: Obx(() {
           switch (controller.selected.value) {
             case 0:
-              return HealthPage();
+              return HomePage();
             case 1:
               return BluetoothPage();
             case 2:
               return SettingPage();
             default:
-              return HealthPage();
+              return HomePage();
           }
         }),
         bottomNavigationBar: CommonBottomWidget()));

@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 
-class HealthController extends GetxController with GetTickerProviderStateMixin {
+class HomeController extends GetxController with GetTickerProviderStateMixin {
 
 
 

@@ -47,16 +47,16 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        // height: 294,
-        // width: double.infinity,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.transparent)
+        ),
         child: Stack(
           alignment: AlignmentDirectional.bottomCenter,
-          // clipBehavior: Clip.none,
-          // fit: StackFit,
+
           children: [
             CarouselSlider(
               options: CarouselOptions(
-                height: 294,
+                height: 350,
                 viewportFraction: 1.0,
                 autoPlayInterval: const Duration(seconds: 3),
                 autoPlay: true,
@@ -68,23 +68,11 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 // enlargeCenterPage: false,
               ),
               items: [
-                /*
-                _sliderContainer('assets/app/slide01.png'),
-                _sliderContainer('assets/app/slide02.png'),
-                _sliderContainer('assets/app/slide03.png'),
-                _sliderContainer('assets/app/slide04.png'),
-                _sliderContainer('assets/app/slide05.png'),
-                */
-
-/*
-                _btnSliderContainer(
-                  imgUrl: 'assets/app/slide01.png',
-                  onpress: () => Get.to(const BarIntroPage(),
-                      transition: Transition.downToUp),
-                ),
-                */
-                _sliderContainer('assets/app/slide01.png'),
-                _btnSliderContainer(
+                _sliderContainer('assets/app/slide2.jpeg'),
+                _sliderContainer('assets/app/slide2.jpeg'),
+                _sliderContainer('assets/app/slide2.jpeg'),
+                _sliderContainer('assets/app/slide2.jpeg'),
+                /*_btnSliderContainer(
                   imgUrl: 'assets/app/slide02.png',
                   onpress: () => Get.to(const BarIntroPage(),
                       transition: Transition.downToUp),
@@ -100,23 +88,54 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 _btnSliderContainer(
                     imgUrl: 'assets/app/slide05.png',
                     onpress: () => Get.to(const ColdIntroPage(),
-                        transition: Transition.downToUp)),
+                        transition: Transition.downToUp)),*/
               ],
             ),
-            Container(
-              // height: 20,
-                padding: const EdgeInsets.only(
-                    left: AppTheme.spacing_m_16,
-                    right: AppTheme.spacing_m_16,
-                    bottom: AppTheme.spacing_m_16),
-                child: StepProgressIndicator(
-                  totalSteps: 5,
-                  padding: 0,
-                  size: 2,
-                  currentStep: mainSlideIndex + 1,
-                  selectedColor: AppTheme.light_ui_01,
-                  unselectedColor: AppTheme.light_ui_07,
-                )),
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      // height: 20,
+                        padding: const EdgeInsets.only(
+                            left: AppTheme.spacing_m_16,
+                            right: AppTheme.spacing_m_16,
+                            bottom: AppTheme.spacing_m_16),
+                        child: Container(
+                          width: 50,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.black45
+                          ),
+                          child: Center(child: Text('${mainSlideIndex + 1} / 5', style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white
+                          ),)),
+                        )
+                    )/*StepProgressIndicator(
+                          totalSteps: 5,
+                          padding: 0,
+                          size: 2,
+                          currentStep: mainSlideIndex + 1,
+                          selectedColor: AppTheme.light_ui_01,
+                          unselectedColor: AppTheme.light_ui_07,
+                        )
+                    ),*/
+                  ],
+                ),
+                Container(
+                  height: 36,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                    color: Colors.white
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

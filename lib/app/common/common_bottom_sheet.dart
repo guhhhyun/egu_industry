@@ -14,16 +14,16 @@ class CommonBottomWidget extends StatelessWidget {
       onDestinationSelected: (selected) {
         controller.changeMenu(selected);
 
-        //controller.selected.value = selected;
+        controller.selected.value = selected;
       },
       selectedIndex: controller.selected.value,
       destinations: const [
         NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.heartCirclePlus,), label: '건강'),
+            icon: FaIcon(FontAwesomeIcons.house,), label: '홈'),
         NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.bluetoothB,), label: '블루투스'),
+            icon: FaIcon(FontAwesomeIcons.heart,), label: '두번'),
         NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.gear,), label: '환경설정'),
+            icon: FaIcon(FontAwesomeIcons.gear,), label: '세번'),
 
       ],
     ));

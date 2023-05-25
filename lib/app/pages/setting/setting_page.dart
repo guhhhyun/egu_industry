@@ -7,16 +7,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(
-            () => NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overScroll) {
-              overScroll.disallowIndicator();
-              return false;
-            },
-            child: Column(
-              children: const [Text('111')],
-            )),
-      ),
+      body: Container(color: Colors.yellow,)
     );
   }
 }

@@ -12,17 +12,17 @@ class BluetoothPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => Container(
+      body: Container(
             child: Column(
               children: [
-                Text(''),
+                Text('aa'),
                 TextButton(
                     onPressed: () {
                     },
                     child: Text('네이티브에서 값 가져오기'))
               ],
             ),
-          )),
+          ),
 
     );
   }
