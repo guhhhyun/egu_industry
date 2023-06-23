@@ -1,0 +1,300 @@
+import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/routes/app_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:table_calendar/table_calendar.dart';
+
+
+class FacilityFirstController extends GetxController {
+
+  var textTitleController = TextEditingController();
+  var textContentController = TextEditingController();
+  var textFacilityController = TextEditingController();
+
+
+  Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
+  RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
+  RxString selectedIns = '선택해주세요'.obs;
+  RxString insCd = ''.obs;
+  RxList<String> urgencyList = ['선택해주세요', '보통', '긴급'].obs;
+  RxString selectedUrgency = '선택해주세요'.obs;
+  RxString urgencyCd = ''.obs;
+  RxList<String> machList = [''].obs;
+  RxString selectedMach = '선택해주세요'.obs;
+  RxInt selectedMachIndex = 0.obs;
+  RxList<String> machCdList = [''].obs;
+  RxString selectedMachCd = ''.obs;
+  RxList<String> irfgList = [''].obs;
+  RxString selectedIrFq = '선택해주세요'.obs;
+  RxString irfqCd = ''.obs;
+  RxList<String> engineTeamList = [''].obs;
+  RxString selectedEngineTeam = '선택해주세요'.obs;
+  RxString engineTeamCd = ''.obs;
+  RxString errorTime = ''.obs;
+  RxString errorTime2 = ''.obs;
+  RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
+
+
+
+
+
+
+  RxString dayValue = '날짜를 선택해주세요'.obs;
+  RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
+  RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
+  RxInt choiceButtonVal = 1.obs;
+  RxBool isShowCalendar = false.obs;
+  RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
+  RxInt datasLength = 0.obs;
+  RxList datasList = [].obs;
+  RxList test = [].obs;
+  RxBool registButton = false.obs;
+  RxList selectedContainer = [].obs;
+  RxList<String> engineerList = [''].obs;
+  RxList<String> engineerIdList = [''].obs;
+  RxString selectedEnginner = '정비자를 선택해주세요'.obs;
+  RxInt selectedEnginnerIndex = 0.obs;
+  RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
+  RxString selectedResultFg = '전체'.obs;
+  RxString resultFgCd = ''.obs;
+  RxList<String> noReasonList = [''].obs;
+  RxString selectedNoReason = '전체'.obs;
+  RxString noReasonCd = ''.obs;
+  RxString rpUser = ''.obs;
+
+  // 날짜를 선택했는지 확인
+  RxBool bSelectedDayFlag = false.obs;
+  RxBool bSelectedStartDayFlag = false.obs; // 작업 시작일 날짜
+  RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
+  // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
+
+  void test2() async {
+    await Get.dialog(CommonDialogWidget(title: '정비 등록', contentText: '등록되었습니다.',
+    ));
+  }
+  Future<void> saveButton() async {
+    var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'N', '@p_IR_CODE':''
+      , '@p_INS_FG':'${insCd.value}', '@p_MACH_CODE':'${selectedMachCd.value}', '@p_MACH_ETC':'${selectedMach.value}',
+      '@p_IR_TITLE':'${textTitleController.text}', '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':'admin',
+      '@p_FAILURE_DT':'${errorTime2.value}', '@p_IR_FG':'${irfqCd.value}', '@p_URGENCY_FG':'${urgencyCd.value}',
+      '@p_INS_DEPT':'${engineTeamCd.value}', '@p_USER':'admin',});
+    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${a}');
+
+    /*var b = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'Q', '@p_IR_CODE':''});
+    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${b}');*/
+   /* var b = HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'Q',
+      '@p_IR_DATE':errorTime2.value,'@p_URGENCY_FG':urgencyCd.value, '@p_INS_DEPT' : engineTeamCd.value,
+      '@p_RESULT_FG' : 'A'}).then((value) =>
+    {
+      Get.log('aaaa ${value['DATAS']}'),
+
+    });
+    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${b}');*/
+
+    /// 사진파일 프로시저 추가해야함
+
+    /*파일 저장 쿼리
+    EXEC USP_MBS0200_S01 @p_WORK_TYPE = 'FILE_N',
+    @p_IR_CODE      = 'IR230609000001',
+    @p_FILE_NAME   = '의뢰 견적서1',
+    @p_SVR_FILE_PATH      = 'D:\files\MOB\MBS0200\2023-06-09\IR230609000001.jpg',
+    @p_SEQ         = 0
+    ※ 앞에 ’@p_’ 붙이는 항목은 모바일 입력 항목입니다.
+    ※  @p_USER는 접속자 ID입니다.
+    ※ 파일은 경로 저장 형식입니다.*/
+
+
+    /* 저장 쿼리
+    저장 쿼리
+      EXEC USP_MBS0200_S01 @p_WORK_TYPE = 'N', @p_IR_CODE   = ''
+      ,@p_INS_FG      = 'M' // m은 설비점검 s는 안전점검,
+      ,@p_MACH_CODE   = '1'
+      ,@p_MACH_ETC   = '6단1호기2'
+      ,@p_IR_TITILE   = '6단 1호기 안전 점검2'
+      ,@p_IR_CONTENT   = '6단 1호기의 안전점검 실행2.'
+      ,@p_IR_USER       = 'admin'
+      ,@p_FAILURE_DT    = '2023-06-09'
+      ,@p_IR_FG       = '010'
+      ,@p_URGENCY_FG    = 'U'
+      ,@p_INS_DEPT    = '9999'
+      ,@p_USER   = 'admin'
+      ※ 앞에 ’@p_’ 붙이는 항목은 모바일 입력 항목입니다.
+      ※  @p_USER는 접속자 ID입니다.*/
+  }
+
+
+  Future<void> convert() async{
+    machList.clear();
+    irfgList.clear();
+    engineTeamList.clear();
+    machCdList.clear();
+    machList.add('선택해주세요');
+    irfgList.add('선택해주세요');
+    engineTeamList.add('선택해주세요');
+
+
+    /// 설비
+    var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+    {
+     // Get.log('우웅ㅇ ${value}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+         Get.log('우웅ㅇ ${value['DATAS']}'),
+        machList.add(value['DATAS'][i]['MACH_NAME']),
+        machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
+      }
+    });
+
+    /// 정비유형
+    var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+    {
+      //Get.log('우웅ㅇ ${value}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        irfgList.add(value['DATAS'][i]['TEXT'].toString()),
+      }
+    });
+
+    /// 점검부서
+    var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
+    {
+      //Get.log('우웅ㅇ ${value}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
+      }
+    });
+    /*var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+    {
+      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        irfgList.add(value['DATAS'][i]['TEXT'].toString()),
+      }
+    });
+    var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
+    {
+      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
+      }
+    });*/
+  }
+
+
+
+  void cdConvert() {
+    switch(selectedIrFq.value) {
+      case "돌발 정비":
+        irfqCd.value = '010';
+        break;
+      case "예방정비":
+        irfqCd.value = '020';
+        break;
+      case "개조/개선":
+        irfqCd.value = '030';
+        break;
+      case "공사성(신설)":
+        irfqCd.value = '040';
+        break;
+      case "기타":
+        irfqCd.value = '999';
+      default:
+        irfqCd.value = '';
+    }
+    switch(selectedIns.value) {
+      case "설비점검":
+        insCd.value = 'M';
+        break;
+      case "안전점검":
+        insCd.value = 'S';
+        break;
+      default:
+        insCd.value = '';
+    }
+    switch(selectedUrgency.value) {
+      case "보통":
+        urgencyCd.value = 'N';
+        break;
+      case "긴급":
+        urgencyCd.value = 'U';
+        break;
+      default:
+        urgencyCd.value = '';
+    }
+    switch(selectedEngineTeam.value) {
+      case "생산팀":
+        engineTeamCd.value = '1110';
+        break;
+      case "공무팀":
+        engineTeamCd.value = '1160';
+        break;
+      case "전기팀":
+        engineTeamCd.value = '1170';
+        break;
+      case "기타":
+        engineTeamCd.value = '9999';
+      default:
+        engineTeamCd.value = '';
+    }
+    switch(selectedResultFg.value) {
+      case "정비 진행중":
+        resultFgCd.value = 'I';
+        break;
+      case "정비완료":
+        resultFgCd.value = 'Y';
+        break;
+      case "미조치":
+        resultFgCd.value = 'N';
+        break;
+      default:
+        resultFgCd.value = '';
+    }
+    switch(selectedNoReason.value) {
+      case "부품재고 없음":
+        noReasonCd.value = 'A01';
+        break;
+      case "내부정비불가":
+        noReasonCd.value = 'A02';
+        break;
+      case "담당자부재":
+        noReasonCd.value = 'A03';
+        break;
+      case "협력사 AS요청":
+        noReasonCd.value = 'A04';
+        break;
+      case "기타":
+        noReasonCd.value = 'Z99';
+      default:
+        noReasonCd.value = '';
+    }
+  }
+
+
+
+
+
+  void step2RegistBtn() {
+    if(selectedIrFq.value != '전체' && selectedResultFg.value != '전체'
+        && selectedNoReason.value != '전체') {
+      isStep2RegistBtn.value = true;
+    }else {
+      isStep2RegistBtn.value = false;
+    }
+  }
+
+
+
+
+  @override
+  void onInit() {
+    convert();
+  }
+
+  @override
+  void onClose() {}
+
+  @override
+  void onReady() {
+  }
+}

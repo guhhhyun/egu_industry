@@ -12,6 +12,7 @@ import 'app/common/init_binding.dart';
 import 'app/common/logger_utils.dart';
 import 'app/net/http_util.dart';
 import 'app/routes/app_route.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,9 @@ void main() async {
 
   HttpUtil.init();
 
-  runApp(MyApp());
+
+  initializeDateFormatting().then((_) => runApp(MyApp()));
+
 }
 
 class MyApp extends StatelessWidget {

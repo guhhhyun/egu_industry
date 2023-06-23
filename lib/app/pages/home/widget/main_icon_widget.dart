@@ -10,15 +10,17 @@ class MainIconWidget extends StatelessWidget {
       {required String title,
         required String imgUrl,
         required Function() onPressed}) {
-    return SizedBox(
+    return Container(
         child: InkWell(
           onTap: onPressed,
           child: Container(
-                padding: EdgeInsets.only(top: 21, bottom: 21),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: AppTheme.gray_c_gray_200)
+
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: AppTheme.gray_c_gray_200)
                 ),
+                padding: EdgeInsets.only(top: 21, bottom: 21),
+
                 child: Column(
                   children: [
                     Ink.image(
@@ -72,7 +74,7 @@ class MainIconWidget extends StatelessWidget {
                     title: '돌발정비',
                     onPressed: () {
                       Get.log('돌발정비');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                      Get.toNamed(Routes.FACILITY);
                     }),),
                 const SizedBox(width: 8,),
                 Expanded(child: _buttonArea(
@@ -80,6 +82,7 @@ class MainIconWidget extends StatelessWidget {
                     title: '스크랩입고',
                     onPressed: () {
                       Get.log('스크랩입고');
+                      Get.toNamed(Routes.FACILITY_FIRST);
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
                 const SizedBox(width: 8,),

@@ -10,7 +10,6 @@ import 'app_theme.dart';
 class CommonAppbarWidget extends StatelessWidget {
   String title;
   Widget? titleWidget;
-  bool isHomeIcon;
   bool isLogo;
 
   PreferredSizeWidget? bottom;
@@ -18,7 +17,6 @@ class CommonAppbarWidget extends StatelessWidget {
   CommonAppbarWidget(
       {Key? key,
       required this.title,
-      required this.isHomeIcon,
       required this.isLogo,
       this.titleWidget,
       this.bottom})
@@ -36,10 +34,8 @@ class CommonAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      centerTitle: isHomeIcon ? false : true,
-      title: isHomeIcon
-          ? _homeIcon()
-          : titleWidget ??
+      centerTitle: false,
+      title: titleWidget ??
               Text(
                 title,
                 style: AppTheme.notosans400.copyWith(color: Colors.black),

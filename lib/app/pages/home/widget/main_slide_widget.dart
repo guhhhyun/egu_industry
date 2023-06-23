@@ -111,7 +111,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.black45
                           ),
-                          child: Center(child: Text('${mainSlideIndex + 1} / 5', style: TextStyle(
+                          child: Center(child: Text('${mainSlideIndex + 1} / 4', style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.white
                           ),)),

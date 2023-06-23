@@ -1,16 +1,13 @@
-import 'dart:isolate';
-import 'dart:convert';
-import 'dart:isolate';
-import 'dart:math';
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 
 class BlueToothController extends GetxController {
 
+  // 선택된 날짜
+  Rx<DateTime> selectedDay = DateTime.now().obs;
+
+  // 날짜를 선택했는지 확인
+  RxBool bSelectedDayFlag = false.obs;
 
 
 

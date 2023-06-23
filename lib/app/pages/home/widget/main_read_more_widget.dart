@@ -31,58 +31,7 @@ class _MainReadMoreWidgetState extends State<MainReadMoreWidget> {
           const SizedBox(
             height: 10,
           ),
-         /* TextButton(
-            onPressed: () {
-              setState(() {
-                _isShow == false ? _trueChange() : _falseChange();
-              });
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('steelshop 자세히 보기',
-                    style: AppTheme.titleSubhead1
-                        .copyWith(color: AppTheme.light_text_tertiary),
-                    textAlign: TextAlign.left),
-                const SizedBox(
-                  width: AppTheme.spacing_xxxs_2,
-                ),
-                Icon(
-                  _isShow ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
-                  size: AppTheme.spacing_m_16,
-                  color: AppTheme.light_text_tertiary,
-                )
-              ],
-            ),
-          ),
-          _isShow
-              ? Container()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextWidget('회사명 : 동국제강'),
-                    const SizedBox(
-                      height: AppTheme.spacing_xxxs_2,
-                    ),
-                    TextWidget('대표자명 : 장세욱'),
-                    const SizedBox(
-                      height: AppTheme.spacing_xxxs_2,
-                    ),
-                    TextWidget('사업자번호 : 202-81-05158'),
-                    const SizedBox(
-                      height: AppTheme.spacing_xxxs_2,
-                    ),
-                    TextWidget('통신판매신고번호 : 2021-서울중구-1342'),
-                    const SizedBox(
-                      height: AppTheme.spacing_xxxs_2,
-                    ),
-                    TextWidget('서울 중구 을지로5길 19 (FERRUM TOWER) 페럼타워'),
-                    const SizedBox(
-                      height: AppTheme.spacing_xxxs_2,
-                    ),
-                    TextWidget('EMAIL steelshop@dongkuk.com'),
-                  ],
-                ),*/
+
           const SizedBox(
             height: AppTheme.spacing_l_20,
           ),
@@ -180,9 +129,7 @@ class _MainReadMoreWidgetState extends State<MainReadMoreWidget> {
               ),
             ],
           ),
-          const SizedBox(
-            height: AppTheme.spacing_xxxl_40,
-          ),
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

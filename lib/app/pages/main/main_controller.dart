@@ -28,11 +28,11 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
 
   void changeMenu(int param) {
     if (param == 0) {
-      appBarTitle.value = '건강정보';
+      appBarTitle.value = '';
     } else if (param == 1) {
-      appBarTitle.value = '블루투스';
+      appBarTitle.value = '웹뷰';
     } else if (param == 2) {
-      appBarTitle.value = '환경';
+      appBarTitle.value = '마이페이지';
     }
 
   }

@@ -34,19 +34,27 @@ class HomeNewsWidget extends StatelessWidget {
             ),
           ),
           _newItem('공지사항'),
-          _newItem('SGS 성적서'),
-          _newItem('전자공고'),
         ],
       ),
     );
   }
   Widget _newItem(String title) {
     return Container(
+
       margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
       padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 24),
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.gray_c_gray_100.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+        border: Border.all(color: AppTheme.gray_c_gray_100),
           borderRadius: BorderRadius.circular(10),
-          color: Colors.black12
+          color: Colors.white
       ),
       child: Column(
         children: [

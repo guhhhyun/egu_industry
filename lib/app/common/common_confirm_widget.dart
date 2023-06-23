@@ -21,14 +21,17 @@ class CommonConfirmWidget extends StatelessWidget {
       this.onCancel,
       this.onConfirm});
 
-  Widget _contentText() {
+  Widget _contentText(BuildContext context) {
     return Container(
-      child: Text(
-        contentText ?? '',
-        style:
-            AppTheme.notosans400.copyWith(color: Colors.black),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 10,
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: Text(
+          contentText ?? '',
+          style:
+              AppTheme.notosans400.copyWith(color: Colors.black),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 10,
+        ),
       ),
     );
   }
@@ -51,7 +54,7 @@ class CommonConfirmWidget extends StatelessWidget {
           ),
         ],
       ),
-      content: contentWidget == null ? _contentText() : contentWidget,
+      content: contentWidget == null ? _contentText(context) : contentWidget,
       buttonPadding: const EdgeInsets.all(0),
       insetPadding: const EdgeInsets.only(
           left: 16, right: 16),
@@ -119,6 +122,7 @@ class CommonConfirmWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(width: 14,),
                   Expanded(
                     child: TextButton(
                       style: ButtonStyle(

@@ -1,7 +1,7 @@
 
 
 
-import 'package:egu_industry/app/pages/blue_tooth/blue_tooth_controller.dart';
+import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
 import 'package:egu_industry/app/pages/home/widget/home_news_widget.dart';
 import 'package:egu_industry/app/pages/home/widget/main_icon_widget.dart';
 import 'package:egu_industry/app/pages/home/widget/main_read_more_widget.dart';
