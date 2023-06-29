@@ -42,10 +42,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
             children: [
               _calendarItem(),
               SizedBox(height: 12,),
+              _urgenTeamItem(),
+              SizedBox(height: 12,),
               _choiceButtonItem(),
               SizedBox(height: 24,),
               controller.isShowCalendar.value == true ? _calendar() : Container(),
-              _button(),
               SizedBox(height: 12,),
             ],
           ),
@@ -55,7 +56,6 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
   Widget _calendarItem() {
 
-    Get.log('${controller.dayValue}');
     return TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(
@@ -81,17 +81,133 @@ class FacilityFirstStep1Page extends StatelessWidget {
         ),*/
         child: Row(
           children: [
-            Icon(Icons.calendar_today_outlined, color: AppTheme.gray_c_gray_400,),
+            Icon(Icons.calendar_today_outlined, color: AppTheme.gray_c_gray_400, size: 20,),
             SizedBox(width: 8,),
-            Text('${controller.dayValue.value}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.gray_c_gray_400),)
+            Text('${controller.dayValue.value}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_text_secondary),)
           ],
         ),
       ),
     );
   }
 
-  Widget _choiceButtonItem() {
+  Widget _urgenTeamItem() {
     return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppTheme.gray_gray_200
+                )),
+            padding: const EdgeInsets.only(left: 16, right: 12),
+            child: DropdownButton<String>(
+                borderRadius: BorderRadius.circular(10),
+                isExpanded: true,
+                underline: Container(
+                  height: 1,
+                  color: Colors.white,
+                ),
+                icon: SvgPicture.asset(
+                  'assets/app/arrowBottom.svg',
+                  color: AppTheme.light_placeholder,
+                ),
+                dropdownColor: AppTheme.light_ui_01,
+                value: controller.selectedReadUrgency.value,
+                //  flag == 3 ? controller.selectedNoReason.value :
+                items: controller.urgencyList.map((value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: AppTheme.bodyBody1
+                          .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  controller.selectedReadUrgency.value = value!;
+                  if(controller.choiceButtonVal.value != 0) {
+                    controller.readCdConvert();
+                    controller.datasList.clear();
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    {
+                      Get.log('value[DATAS]: ${value['DATAS']}'),
+                      controller.datasLength.value = value['DATAS'].length,
+                      for(var i = 0; i < controller.datasLength.value; i++){
+                        controller.datasList.add(value['DATAS'][i]),
+                      },
+                      Get.log('datasList: ${controller.datasList}'),
+                    });
+                  }
+                  Get.log('$value 선택!!!!');
+                  // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                }),
+          ),
+        ),
+        SizedBox(width: 16,),
+        Expanded(
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: AppTheme.gray_gray_200
+                )),
+            padding: const EdgeInsets.only(left: 16, right: 12),
+            child: DropdownButton<String>(
+                borderRadius: BorderRadius.circular(10),
+                isExpanded: true,
+                underline: Container(
+                  height: 1,
+                  color: Colors.white,
+                ),
+                icon: SvgPicture.asset(
+                  'assets/app/arrowBottom.svg',
+                  color: AppTheme.light_placeholder,
+                ),
+                dropdownColor: AppTheme.light_ui_01,
+                value: controller.selectedReadEngineTeam.value,
+                //  flag == 3 ? controller.selectedNoReason.value :
+                items: controller.engineTeamList.map((value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: AppTheme.bodyBody1
+                          .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  controller.selectedReadEngineTeam.value = value!;
+                  if(controller.choiceButtonVal.value != 0) {
+                    controller.readCdConvert();
+                    controller.datasList.clear();
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    {
+                      Get.log('value[DATAS]: ${value['DATAS']}'),
+                      controller.datasLength.value = value['DATAS'].length,
+                      for(var i = 0; i < controller.datasLength.value; i++){
+                        controller.datasList.add(value['DATAS'][i]),
+                      },
+                      Get.log('datasList: ${controller.datasList}'),
+                    });
+                  }
+
+                  Get.log('$value 선택!!!!');
+                  // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _choiceButtonItem() {
+    return controller.bSelectedDayFlag.value == true && controller.selectedReadUrgency.value != '선택해주세요'
+        && controller.selectedReadEngineTeam.value != '선택해주세요' ? Row(
       children: [
         Expanded(child: TextButton(
             style: ButtonStyle(
@@ -101,7 +217,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                      side: BorderSide(color: Color(0xffe6e9ef)),
+                      side: controller.choiceButtonVal.value == 1 ? BorderSide(color: Colors.black): BorderSide(color: Color(0xffe6e9ef)),
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
@@ -113,14 +229,21 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.test[i] = false;
               }
               controller.registButton.value = false;
+              controller.readCdConvert();
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                controller.datasLength.value = value['DATAS'].length,
+                for(var i = 0; i < controller.datasLength.value; i++){
+                  controller.datasList.add(value['DATAS'][i]),
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
             },
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: controller.choiceButtonVal.value == 2
-                    || controller.choiceButtonVal.value == 3
-                    || controller.choiceButtonVal.value == 4 ? null
-                    : AppTheme.blue_blue_200,
               ),
               padding: EdgeInsets.only(top: 14, bottom: 14),
               child: Center(
@@ -149,7 +272,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                      side: BorderSide(color: Color(0xffe6e9ef)),
+                      side: controller.choiceButtonVal.value == 2 ? BorderSide(color: Colors.black): BorderSide(color: Color(0xffe6e9ef)),
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
@@ -161,26 +284,34 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.test[i] = false;
               }
               controller.registButton.value = false;
+              controller.readCdConvert();
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                controller.datasLength.value = value['DATAS'].length,
+                for(var i = 0; i < controller.datasLength.value; i++){
+                  controller.datasList.add(value['DATAS'][i]),
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
             },
             child: Container(
               padding: EdgeInsets.only(top: 14, bottom: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: controller.choiceButtonVal.value == 1
-                    || controller.choiceButtonVal.value == 3
-                    || controller.choiceButtonVal.value == 4 ? null
-                    : AppTheme.blue_blue_200,
               ),
               child: Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     controller.choiceButtonVal.value == 2 ?
                     Row(
                       children: [
-                        Icon(Icons.check_circle_outline, color: AppTheme.black,),
-                        SizedBox(width: 4,)
+                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
+                        SizedBox(width: 2,)
                       ],
-                    ) : Container(),
+                    )  : Container(),
                     Text('미조치', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
                   ],
                 ),
@@ -196,7 +327,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                      side: BorderSide(color: Color(0xffe6e9ef)),
+                      side: controller.choiceButtonVal.value == 3 ? BorderSide(color: Colors.black): BorderSide(color: Color(0xffe6e9ef)),
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
@@ -208,26 +339,34 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.test[i] = false;
               }
               controller.registButton.value = false;
+              controller.readCdConvert();
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                controller.datasLength.value = value['DATAS'].length,
+                for(var i = 0; i < controller.datasLength.value; i++){
+                  controller.datasList.add(value['DATAS'][i]),
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
             },
             child: Container(
               padding: EdgeInsets.only(top: 14, bottom: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: controller.choiceButtonVal.value == 1
-                    || controller.choiceButtonVal.value == 2
-                    || controller.choiceButtonVal.value == 4 ? null
-                    : AppTheme.blue_blue_200,
               ),
               child: Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     controller.choiceButtonVal.value == 3 ?
                     Row(
                       children: [
-                        Icon(Icons.check_circle_outline, color: AppTheme.black,),
-                        SizedBox(width: 4,)
+                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
+                        SizedBox(width: 2,)
                       ],
-                    ) : Container(),
+                    )  : Container(),
                     Text('조치완료', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
                   ],
                 ),
@@ -243,7 +382,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                      side: BorderSide(color: Color(0xffe6e9ef)),
+                      side: controller.choiceButtonVal.value == 4 ? BorderSide(color: Colors.black): BorderSide(color: Color(0xffe6e9ef)),
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
@@ -255,24 +394,32 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.test[i] = false;
               }
               controller.registButton.value = false;
+              controller.readCdConvert();
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                controller.datasLength.value = value['DATAS'].length,
+                for(var i = 0; i < controller.datasLength.value; i++){
+                  controller.datasList.add(value['DATAS'][i]),
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
             },
             child: Container(
               padding: EdgeInsets.only(top: 14, bottom: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: controller.choiceButtonVal.value == 1
-                    || controller.choiceButtonVal.value == 2
-                    || controller.choiceButtonVal.value == 3 ? null
-                    : AppTheme.blue_blue_200,
               ),
               child: Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     controller.choiceButtonVal.value == 4 ?
                     Row(
                       children: [
-                        Icon(Icons.check_circle_outline, color: AppTheme.black,),
-                        SizedBox(width: 4,)
+                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
+                        SizedBox(width: 2,)
                       ],
                     ) : Container(),
                     Text('조치 진행중', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
@@ -283,7 +430,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
         )),
 
       ],
-    );
+    ) : Container();
   }
 
   Widget _calendar() {
@@ -312,6 +459,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
         child: Column(
           children: [
             TableCalendar(
+        currentDay: DateTime.now(),
               calendarStyle:  CalendarStyle(
                   selectedDecoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -379,7 +527,10 @@ class FacilityFirstStep1Page extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Get.log('확인 클릭!!');
+                controller.dayValue.value == '날짜를 선택해주세요' ? controller.dayValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now()) : '';
+                controller.bSelectedDayFlag.value = true;
                 controller.isShowCalendar.value = false;
+
               },
               style: ButtonStyle(
                 padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
@@ -408,46 +559,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
     );
   }
 
-  Widget _button() {
-    return TextButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-              controller.bSelectedDayFlag.value == true ?
-              AppTheme.blue_blue_500 : AppTheme.light_cancel
-          ),
-          padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  side: BorderSide(color: Color(0xffe6e9ef)),
-                  borderRadius: BorderRadius.circular(10)
-              )),
-        ),
-        onPressed: controller.bSelectedDayFlag.value == true ? () {
-          Get.log('조회 클릭');
-          controller.datasList.clear();
-          HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'U', '@p_INS_DEPT' : '9999', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
-          {
-            Get.log('value[DATAS]: ${value['DATAS']}'),
-            controller.datasLength.value = value['DATAS'].length,
-            for(var i = 0; i < controller.datasLength.value; i++){
-              controller.datasList.add(value['DATAS'][i]),
-            },
-            Get.log('datasList: ${controller.datasList}'),
-          }
 
-          );
-        } : null,
-        child: Container(
-          padding: EdgeInsets.only(top: 14, bottom: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Text('조회', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
-          ),
-        )
-    );
-  }
 
   Widget _listArea() {
     controller.test.clear();
@@ -466,10 +578,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
     //  controller.noticeList[index].regDttm.toString().lastIndexOf(' ');
 
     return Obx(() => Container(
-
+              margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
               padding: EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
               decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.black),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.gray_gray_400),
                   color: controller.test[index] ? AppTheme.blue_blue_50 : AppTheme.white,
               ),
               child: Column(
@@ -480,50 +593,100 @@ class FacilityFirstStep1Page extends StatelessWidget {
                       controller.datasList.isNotEmpty ?
                         Row(
                           children: [
-                            Text(controller.datasList[index]['IR_USER'].toString(), /// 긴급 or 보통 으로
-                                style: AppTheme.titleSubhead3
-                                    .copyWith(color: AppTheme.light_text_primary)),
+                            Container(
+                              padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.red_red_100 :
+                                  Colors.greenAccent
+                              ),
+                              child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                                  style: AppTheme.bodyBody1
+                                      .copyWith(color: controller.selectedReadUrgency.value == '긴급'
+                                      ? AppTheme.red_red_400 : Colors.lightGreen)),
+                            ),
                             SizedBox(width: 4,),
-                            Text(controller.datasList[index]['RESULT_FG'] == 'N' ? '미조치' :
-                            controller.datasList[index]['RESULT_FG'] == 'Y' ? '조치완료' :
-                            controller.datasList[index]['RESULT_FG'] == 'I' ? '조치 진행중' : '',
-                                style: AppTheme.bodyBody1
-                                    .copyWith(color: AppTheme.light_success))
+                            Container(
+                              padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(3),
+                                  color:  AppTheme.gray_c_gray_100
+                              ),
+                              child: Text( controller.datasList[index]['RESULT_FG'] == 'N' ? '미조치' :
+                              controller.datasList[index]['RESULT_FG'] == 'Y' ? '조치완료' :
+                              controller.datasList[index]['RESULT_FG'] == 'I' ? '조치 진행중' : '없음',
+                                  style: AppTheme.bodyBody1
+                                      .copyWith(color: AppTheme.gray_c_gray_400)),
+                            )
                           ],
                         )
                        : Container(),
                       /// 등록한 시간과 현재시간 비교
-                      Text(
-                          controller.datasList[index]['IR_TITLE'] // 시간경과
-                              .toString(),
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_text_tertiary))
+                      Row(
+                        children: [
+                          Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
+                          SizedBox(width: 4,),
+                          Text(
+                              '${_dateDifference(index)}h 경과',
+                              style: AppTheme.titleSubhead3
+                                  .copyWith(color: AppTheme.light_text_tertiary)),
+                        ],
+                      )
                         ],
                       ),
+                  SizedBox(height: 8,),
                   /// 마노압연기 뭐시기뭐시기
                   controller.datasList.isNotEmpty ?
-                  Text(controller.datasList[index]['RESULT_FG'] == 'N' ? '미조치' :
-                      controller.datasList[index]['RESULT_FG'] == 'Y' ? '조치완료' :
-                      controller.datasList[index]['RESULT_FG'] == 'I' ? '조치 진행중' : '',
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_success))
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(_test(index),
+                              style: AppTheme.titleSubhead4
+                                  .copyWith(color: AppTheme.black)),
+                    ],
+                  )
                            : Container(),
-                  /// 설비 | 설비이상 - 가동조치중 | 대충 그런거
+
+                  /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
+                  controller.datasList.isNotEmpty ?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비' : '안전',
+                          style: AppTheme.titleSubhead3
+                              .copyWith(color: AppTheme.light_text_tertiary)),
+                      SizedBox(width: 4,),
+                      Text('|', style: AppTheme.titleSubhead3
+                          .copyWith(color: AppTheme.light_text_tertiary)),
+                      SizedBox(width: 4,),
+                      Text(controller.datasList[index]['IR_TITLE'].toString(),
+                          style: AppTheme.titleSubhead3
+                              .copyWith(color: AppTheme.light_text_tertiary)),
+                      SizedBox(width: 4,),
+                      Text('|', style: AppTheme.titleSubhead3
+                          .copyWith(color: AppTheme.light_text_tertiary)),
+                      SizedBox(width: 4,),
+                      Text(controller.selectedReadEngineTeam.value,
+                          style: AppTheme.titleSubhead3
+                              .copyWith(color: AppTheme.light_text_tertiary)),
+                    ],
+                  ) : Container(),
+                  SizedBox(height: 12,),
                   controller.datasList.isNotEmpty ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(controller.datasList[index]['IR_USER'].toString(),
-                          style: AppTheme.titleSubhead3
-                              .copyWith(color: AppTheme.light_text_primary)),
+                          style: AppTheme.bodyBody2
+                              .copyWith(color: AppTheme.light_text_tertiary)),
                       Container(
                           child: (() {
                             var firstIndex = controller.datasList[index]['IR_DATE']
-                                .toString().indexOf('T');
+                                .toString().lastIndexOf(':');
                             var lastIndex = controller.datasList[index]['IR_DATE']
                                 .toString().length;
                             return Text(
                                 controller.datasList[index]['IR_DATE']
-                                    .toString().replaceRange(firstIndex, lastIndex, ''),
+                                    .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
                                 style: AppTheme.bodyBody1
                                     .copyWith(color: AppTheme.light_text_tertiary));
                           })()
@@ -605,15 +768,13 @@ class FacilityFirstStep1Page extends StatelessWidget {
      );
   }
   Widget _bottomButton(BuildContext context) {
-    return Obx(() => BottomAppBar(
+    return BottomAppBar(
       child: TextButton(
           style: ButtonStyle(
               shape: MaterialStateProperty.all<OutlinedBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(0))),
-              backgroundColor: controller.registButton.value ?
-              MaterialStateProperty.all<Color>(AppTheme.light_primary) :
-              MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+              backgroundColor: MaterialStateProperty.all<Color>(AppTheme.light_primary) ,
               padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0))),
           onPressed: () {
@@ -632,6 +793,27 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   ),
                 )),
           )),
-    ));
+    );
+  }
+
+  String _dateDifference(int index) {
+    var start = controller.datasList[index]['IR_DATE'].toString().indexOf('.');
+    var end = controller.datasList[index]['IR_DATE'].toString().length;
+    var time = controller.datasList[index]['IR_DATE'].toString().replaceRange(start, end, '');
+    var realDate = DateTime.parse(time);
+    var times = DateTime.now().difference(realDate);
+    Get.log('realDate $realDate');
+    Get.log('times ${times.inHours.toString()}');
+    Get.log('now ${DateTime.now()}');
+    return times.inHours.toString();
+  }
+
+  String _test(int index) {
+    for(var i = 0; i < controller.machCdList.length; i++) {
+      if(controller.machCdList[i] == '${controller.datasList[index]['MACH_CODE']}') {
+        return controller.machList[i];
+      }
+    }
+    return '';
   }
 }

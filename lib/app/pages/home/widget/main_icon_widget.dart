@@ -71,18 +71,18 @@ class MainIconWidget extends StatelessWidget {
               children: [
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/phone.png',
-                    title: '돌발정비',
+                    title: '설비/안전 점검 의뢰',
                     onPressed: () {
                       Get.log('돌발정비');
-                      Get.toNamed(Routes.FACILITY);
+                      Get.toNamed(Routes.FACILITY_FIRST);
                     }),),
                 const SizedBox(width: 8,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/phone.png',
-                    title: '스크랩입고',
+                    title: '설비/안전 내역 등록',
                     onPressed: () {
                       Get.log('스크랩입고');
-                      Get.toNamed(Routes.FACILITY_FIRST);
+                      Get.toNamed(Routes.FACILITY);
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
                 const SizedBox(width: 8,),

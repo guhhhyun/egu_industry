@@ -1,10 +1,10 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CommonDialogWidget extends StatelessWidget {
-  String title;
   String? contentText;
   Widget? contentWidget;
 
@@ -13,7 +13,6 @@ class CommonDialogWidget extends StatelessWidget {
 
   CommonDialogWidget(
       {super.key,
-        required this.title,
         this.contentText,
         this.contentWidget,
         this.onOk,
@@ -21,7 +20,7 @@ class CommonDialogWidget extends StatelessWidget {
 
   Widget _contentText(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(top: 12, bottom: 12),
       child: Center(
         child: Text(
           contentText ?? '',
@@ -38,23 +37,11 @@ class CommonDialogWidget extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       scrollable: true,
-      title: Column(
-        children: [
-          const SizedBox(
-            height: 24,
-          ),
-          Text(
-            title,
-            style: TextStyle(),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
       content: contentWidget == null ? _contentText(context) : contentWidget,
       buttonPadding: const EdgeInsets.all(0),
-      insetPadding: const EdgeInsets.only(
-          left: 16, right: 16),
+      insetPadding: const EdgeInsets.all(0),
       titlePadding: const EdgeInsets.all(0),
+      contentPadding: const EdgeInsets.only(top: 16, bottom: 12),
       actions: [
         TextButton(
           style: ButtonStyle(
@@ -70,20 +57,18 @@ class CommonDialogWidget extends StatelessWidget {
           // 성공
           onPressed: () {
             Get.back();
+            Get.back();
           },
           child: Container(
-            // width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(
-              top: 20,
-              bottom: 20,
+              padding: EdgeInsets.only(top: 16, bottom: 16),
+              color: Colors.black,
+              child: Center(
+                  child: Text(
+                    '확인',
+                    style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
+                  )),
             ),
-            child: Center(
-                child: Text(
-                  '확인',
-                  style: TextStyle(),
-                )),
           ),
-        )
       ],
     );
   }

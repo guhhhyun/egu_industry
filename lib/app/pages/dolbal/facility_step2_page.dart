@@ -95,7 +95,7 @@ class FacilityStep2Page extends StatelessWidget {
                     color: AppTheme.blue_blue_200,
                   ),
                   child: Center(
-                    child: Text('${controller.selectedContainer[0]['INS_FG']}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
+                    child: Text('${controller.selectedContainer[0]['INS_FG'].toString() == 'M' ? '설비' : '안전'}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
                   ),
                 )
             ),
@@ -108,7 +108,7 @@ class FacilityStep2Page extends StatelessWidget {
                     color: AppTheme.blue_blue_200,
                   ),
                   child: Center(
-                    child: Text('${controller.selectedContainer[0]['MACH_CODE']}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
+                    child: Text(_test(), style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
                   ),
                 )
             ),
@@ -177,7 +177,7 @@ class FacilityStep2Page extends StatelessWidget {
                     color: AppTheme.blue_blue_200,
                   ),
                   child: Center(
-                      child:  Text('전기팀',
+                      child:  Text('${controller.selectedReadEngineTeam.value}',
                           style: AppTheme.bodyBody1
                               .copyWith(color: AppTheme.light_success))
                   ),
@@ -324,7 +324,7 @@ class FacilityStep2Page extends StatelessWidget {
                   child: Text(
                     value,
                     style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '전체' ? AppTheme.light_ui_07 : AppTheme.black),
+                        .copyWith(color: value == '선택해주세요' ? AppTheme.light_ui_07 : AppTheme.black),
                   ),
                 );
               }).toList() : flag == 2 ?
@@ -343,7 +343,7 @@ class FacilityStep2Page extends StatelessWidget {
                   child: Text(
                     value,
                     style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '전체' ? AppTheme.light_ui_07 : AppTheme.black),
+                        .copyWith(color: value == '선택해주세요' ? AppTheme.light_ui_07 : AppTheme.black),
                   ),
                 );
               }).toList(),
@@ -653,7 +653,14 @@ class FacilityStep2Page extends StatelessWidget {
       })()
     ));
   }
-
+  String _test() {
+    for(var i = 0; i < controller.machCdList.length; i++) {
+      if(controller.machCdList[i] == '${controller.selectedContainer[0]['MACH_CODE']}') {
+        return controller.machList[i];
+      }
+    }
+    return '';
+  }
 
 
 

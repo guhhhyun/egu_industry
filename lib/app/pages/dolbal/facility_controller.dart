@@ -21,7 +21,7 @@ class FacilityController extends GetxController {
   RxString dayValue = '날짜를 선택해주세요'.obs;
   RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
   RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
-  RxInt choiceButtonVal = 1.obs;
+  RxInt choiceButtonVal = 0.obs;
   RxBool isShowCalendar = false.obs;
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
   RxInt datasLength = 0.obs;
@@ -34,16 +34,33 @@ class FacilityController extends GetxController {
   RxString selectedEnginner = '정비자를 선택해주세요'.obs;
   RxInt selectedEnginnerIndex = 0.obs;
   RxList<String> irfgList = [''].obs;
-  RxString selectedIrFq = '전체'.obs;
+  RxString selectedIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
   RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
   RxString selectedResultFg = '전체'.obs;
   RxString resultFgCd = ''.obs;
   RxList<String> noReasonList = [''].obs;
-  RxString selectedNoReason = '전체'.obs;
+  RxString selectedNoReason = '선택해주세요'.obs;
   RxString noReasonCd = ''.obs;
   RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
   RxString rpUser = ''.obs;
+  RxList<String> urgencyList = ['선택해주세요', '보통', '긴급'].obs;
+  RxString selectedUrgency = '선택해주세요'.obs;
+  RxString selectedReadUrgency = '선택해주세요'.obs;
+  RxString urgencyReadCd = ''.obs;
+  RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
+  RxString selectedIns = '선택해주세요'.obs;
+  RxString selectedReadIns = '선택해주세요'.obs;
+  RxString insReadCd = ''.obs;
+  RxList<String> engineTeamList = [''].obs;
+  RxString selectedEngineTeam = '선택해주세요'.obs;
+  RxString selectedReadEngineTeam = '선택해주세요'.obs;
+  RxString engineTeamReadCd = ''.obs;
+  RxList<String> machList = [''].obs;
+  RxString selectedMach = '선택해주세요'.obs;
+  RxInt selectedMachIndex = 0.obs;
+  RxList<String> machCdList = [''].obs;
+  RxString selectedMachCd = ''.obs;
 
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
@@ -52,7 +69,7 @@ class FacilityController extends GetxController {
  // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
 
   void test2() async {
-    await Get.dialog(CommonDialogWidget(title: '정비 등록', contentText: '등록되었습니다.',
+    await Get.dialog(CommonDialogWidget( contentText: '등록되었습니다.',
     ));
   }
   Future<void> saveButton() async {
@@ -88,11 +105,15 @@ class FacilityController extends GetxController {
     irfgList.clear();
     noReasonList.clear();
     engineerList.clear();
+    machList.clear();
     engineerIdList.clear();
-    irfgList.add('전체');
-    noReasonList.add('전체');
+    engineTeamList.clear();
+    irfgList.add('선택해주세요');
+    noReasonList.add('선택해주세요');
     engineerList.add('정비자를 선택해주세요');
     engineerIdList.add('정비자를 선택해주세요');
+    machList.add('선택해주세요');
+    engineTeamList.add('선택해주세요');
     /// 정비자 리스트
     var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
     {
@@ -100,6 +121,16 @@ class FacilityController extends GetxController {
 
         engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
         engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
+      }
+    });
+    /// 설비
+    var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+    {
+      // Get.log('우웅ㅇ ${value}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        Get.log('우웅ㅇ ${value['DATAS']}'),
+        machList.add(value['DATAS'][i]['MACH_NAME']),
+        machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
       }
     });
     var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
@@ -116,6 +147,42 @@ class FacilityController extends GetxController {
         noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
       }
     });
+    /// 점검부서
+    var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
+    {
+      //Get.log('우웅ㅇ ${value}'),
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
+      }
+    });
+  }
+
+  void readCdConvert() {
+    switch(selectedReadUrgency.value) {
+      case "보통":
+        urgencyReadCd.value = 'N';
+        break;
+      case "긴급":
+        urgencyReadCd.value = 'U';
+        break;
+      default:
+        urgencyReadCd.value = '';
+    }
+    switch(selectedReadEngineTeam.value) {
+      case "생산팀":
+        engineTeamReadCd.value = '1110';
+        break;
+      case "공무팀":
+        engineTeamReadCd.value = '1160';
+        break;
+      case "전기팀":
+        engineTeamReadCd.value = '1170';
+        break;
+      case "기타":
+        engineTeamReadCd.value = '9999';
+      default:
+        engineTeamReadCd.value = '';
+    }
   }
 
   void cdConvert() {
@@ -171,8 +238,8 @@ class FacilityController extends GetxController {
   }
 
   void step2RegistBtn() {
-    if(selectedIrFq.value != '전체' && selectedResultFg.value != '전체'
-        && selectedNoReason.value != '전체') {
+    if(selectedIrFq.value != '선택해주세요' && selectedResultFg.value != '전체'
+        && selectedNoReason.value != '선택해주세요') {
       isStep2RegistBtn.value = true;
     }else {
       isStep2RegistBtn.value = false;

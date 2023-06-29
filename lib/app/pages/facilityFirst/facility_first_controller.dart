@@ -19,10 +19,14 @@ class FacilityFirstController extends GetxController {
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
   RxString selectedIns = '선택해주세요'.obs;
+  RxString selectedReadIns = '선택해주세요'.obs;
   RxString insCd = ''.obs;
+  RxString insReadCd = ''.obs;
   RxList<String> urgencyList = ['선택해주세요', '보통', '긴급'].obs;
   RxString selectedUrgency = '선택해주세요'.obs;
+  RxString selectedReadUrgency = '선택해주세요'.obs;
   RxString urgencyCd = ''.obs;
+  RxString urgencyReadCd = ''.obs;
   RxList<String> machList = [''].obs;
   RxString selectedMach = '선택해주세요'.obs;
   RxInt selectedMachIndex = 0.obs;
@@ -30,14 +34,19 @@ class FacilityFirstController extends GetxController {
   RxString selectedMachCd = ''.obs;
   RxList<String> irfgList = [''].obs;
   RxString selectedIrFq = '선택해주세요'.obs;
+  RxString selectedReadIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
   RxList<String> engineTeamList = [''].obs;
   RxString selectedEngineTeam = '선택해주세요'.obs;
+  RxString selectedReadEngineTeam = '선택해주세요'.obs;
   RxString engineTeamCd = ''.obs;
+  RxString engineTeamReadCd = ''.obs;
   RxString errorTime = ''.obs;
   RxString errorTime2 = ''.obs;
   RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
 
+  RxString irFileCode = ''.obs; // 파일 저장을 위한 ir코드
+  RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
 
 
 
@@ -46,9 +55,8 @@ class FacilityFirstController extends GetxController {
   RxString dayValue = '날짜를 선택해주세요'.obs;
   RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
   RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
-  RxInt choiceButtonVal = 1.obs;
+  RxInt choiceButtonVal = 0.obs;
   RxBool isShowCalendar = false.obs;
-  RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
   RxInt datasLength = 0.obs;
   RxList datasList = [].obs;
   RxList test = [].obs;
@@ -73,7 +81,7 @@ class FacilityFirstController extends GetxController {
   // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
 
   void test2() async {
-    await Get.dialog(CommonDialogWidget(title: '정비 등록', contentText: '등록되었습니다.',
+    await Get.dialog(CommonDialogWidget( contentText: '등록되었습니다.',
     ));
   }
   Future<void> saveButton() async {
@@ -84,16 +92,7 @@ class FacilityFirstController extends GetxController {
       '@p_INS_DEPT':'${engineTeamCd.value}', '@p_USER':'admin',});
     Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${a}');
 
-    /*var b = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'Q', '@p_IR_CODE':''});
-    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${b}');*/
-   /* var b = HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'Q',
-      '@p_IR_DATE':errorTime2.value,'@p_URGENCY_FG':urgencyCd.value, '@p_INS_DEPT' : engineTeamCd.value,
-      '@p_RESULT_FG' : 'A'}).then((value) =>
-    {
-      Get.log('aaaa ${value['DATAS']}'),
-
-    });
-    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${b}');*/
+    irFileCode.value = a['DATAS'][0]['IR_CODE'].toString();
 
     /// 사진파일 프로시저 추가해야함
 
@@ -180,7 +179,33 @@ class FacilityFirstController extends GetxController {
       }
     });*/
   }
-
+  void readCdConvert() {
+    switch(selectedReadUrgency.value) {
+      case "보통":
+        urgencyReadCd.value = 'N';
+        break;
+      case "긴급":
+        urgencyReadCd.value = 'U';
+        break;
+      default:
+        urgencyReadCd.value = '';
+    }
+    switch(selectedReadEngineTeam.value) {
+      case "생산팀":
+        engineTeamReadCd.value = '1110';
+        break;
+      case "공무팀":
+        engineTeamReadCd.value = '1160';
+        break;
+      case "전기팀":
+        engineTeamReadCd.value = '1170';
+        break;
+      case "기타":
+        engineTeamReadCd.value = '9999';
+      default:
+        engineTeamReadCd.value = '';
+    }
+  }
 
 
   void cdConvert() {
@@ -237,6 +262,7 @@ class FacilityFirstController extends GetxController {
       default:
         engineTeamCd.value = '';
     }
+
     switch(selectedResultFg.value) {
       case "정비 진행중":
         resultFgCd.value = 'I';

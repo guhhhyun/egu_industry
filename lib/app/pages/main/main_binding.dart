@@ -11,11 +11,11 @@ import 'main_controller.dart';
 class MainBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => MainController());
-    Get.lazyPut(() => HomeController());
-    Get.lazyPut(() => SettingController());
-    Get.lazyPut(() => BlueToothController());
-    Get.lazyPut(() => FacilityController());
-    Get.lazyPut(() => FacilityFirstController());
+    Get.lazyPut(() => MainController(), fenix: true);
+    Get.lazyPut(() => HomeController(), fenix: true);
+    Get.lazyPut(() => SettingController(), fenix: true);
+    Get.lazyPut(() => BlueToothController(), fenix: true);
+    Get.lazyPut(() => FacilityController(), fenix: true);
+    Get.lazyPut(() => FacilityFirstController(),  fenix: true);
   }
 }

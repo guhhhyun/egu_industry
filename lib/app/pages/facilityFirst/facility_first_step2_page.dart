@@ -1,8 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/common/utils.dart';
+import 'package:egu_industry/app/net/home_api.dart';
 
 import 'package:egu_industry/app/pages/dolbal/facility_controller.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
+import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -699,47 +704,86 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
   Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
-        child: (() {
-          if(controller.errorTime.value != '' && controller.selectedIns.value != '선택해주세요'
-              && controller.selectedUrgency.value != '선택해주세요'
-              && (controller.selectedMach.value != '선택해주세요' || controller.textFacilityController.text != '')
-              && controller.selectedIrFq.value != '선택해주세요' && controller.selectedEngineTeam.value != '선택해주세요'
-              && controller.textTitleController.text != '' && controller.textContentController.text != '') {
-            controller.isStep2RegistBtn.value = true;
-          }else {
-            controller.isStep2RegistBtn.value = false;
-          }
-          return TextButton(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0))),
-                  backgroundColor: controller.isStep2RegistBtn.value ?
-                  MaterialStateProperty.all<Color>(AppTheme.light_primary) :
-                  MaterialStateProperty.all<Color>(AppTheme.light_cancel),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.all(0))),
-              onPressed: controller.isStep2RegistBtn.value ? () async {
-                controller.cdConvert();
-                controller.saveButton();
-                // Get.toNamed(Routes.FACILITY);
-              } : null,
+        child: Row(
+          children: [
+            Expanded(
               child: Container(
-                height: 56,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                    child: Text(
-                      '저장',
-                      style: AppTheme.bodyBody2.copyWith(
-                        color: const Color(0xfffbfbfb),
-                      ),
+                child: TextButton(
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0))),
+                        backgroundColor:
+
+                        MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.all(0))),
+                    onPressed: () async {
+                      Get.back();
+                      Get.delete<FacilityFirstController>();
+                     //  Get.toNamed(Routes.FACILITY);
+                    },
+                    child: Container(
+                      height: 56,
+                      // width: MediaQuery.of(context).size.width,
+                      child: Center(
+                          child: Text(
+                            '목록',
+                            style: AppTheme.bodyBody2.copyWith(
+                              color: const Color(0xfffbfbfb),
+                            ),
+                          )),
                     )),
-              ));
-        })()
+              )
+            ),
+            SizedBox(width: 12,),
+            Expanded(
+              child: Container(
+                child: (() {
+                  if(controller.errorTime.value != '' && controller.selectedIns.value != '선택해주세요'
+                      && controller.selectedUrgency.value != '선택해주세요'
+                      && (controller.selectedMach.value != '선택해주세요' || controller.textFacilityController.text != '')
+                      && controller.selectedIrFq.value != '선택해주세요' && controller.selectedEngineTeam.value != '선택해주세요'
+                      && controller.textTitleController.text != '' && controller.textContentController.text != '') {
+                    controller.isStep2RegistBtn.value = true;
+                  }else {
+                    controller.isStep2RegistBtn.value = false;
+                  }
+                  return TextButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(0))),
+                          backgroundColor: controller.isStep2RegistBtn.value ?
+                          MaterialStateProperty.all<Color>(AppTheme.light_primary) :
+                          MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              const EdgeInsets.all(0))),
+                      onPressed: controller.isStep2RegistBtn.value ? () async {
+                        controller.cdConvert();
+                        controller.saveButton();
+                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', ));
+                      } : null,
+                      child: Container(
+                        height: 56,
+                       // width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Text(
+                              '저장',
+                              style: AppTheme.bodyBody2.copyWith(
+                                color: const Color(0xfffbfbfb),
+                              ),
+                            )),
+                      ));
+                })(),
+              ),
+            ),
+          ],
+        )
     ));
   }
 
-/*/// 파일 저장쿼리 넘기기
+/// 파일 저장쿼리 넘기기
   void _submmit() async {
     try {
       if (formKey.currentState?.validate() == true) {
@@ -756,7 +800,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           var path = resultFile1!.files.first.path ?? '';
 
           if (maxFileSize < resultFile1!.files.first.size) {
-            Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
+          //  Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
 
@@ -768,7 +812,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           var path = resultFile2!.files.first.path ?? '';
 
           if (maxFileSize < resultFile2!.files.first.size) {
-            Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
+           // Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
 
@@ -778,23 +822,24 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         }
         var formData = FormData.fromMap(queryParameters);
 
-        bLoading.value = true;
+        var path = resultFile1!.files.first.path ?? '';
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':'${controller.irFileCode.value}',
+          '@p_FILE_NAME':'${resultFile2!.files.first.name}', '@p_SVR_FILE_PATH': path, '@p_SEQ':'0'});
 
-        var retVal = await HomeApi.to.reqInsertInquiry(formData: formData);
-
-        if (retVal.success) {
+       /* if (retVal.success) {
           Get.back(result: true);
           Utils.showToast(msg: '등록이 완료되었습니다.');
         }
       } else {
         Utils.showToast(msg: '필수 입력값이 필요합니다.');
+      }*/
       }
     } catch (err) {
       Get.log('_submmit err = ${err.toString()} ', isError: true);
     } finally {
-      bLoading.value = false;
+
     }
-  }*/
+  }
 
 
 }
