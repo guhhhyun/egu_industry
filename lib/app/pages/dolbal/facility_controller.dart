@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/dolbal/modal_user_list_widget.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,8 +20,8 @@ class FacilityController extends GetxController {
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue = '날짜를 선택해주세요'.obs;
-  RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
-  RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
+  RxString dayStartValue = '선택해주세요'.obs;
+  RxString dayEndValue = '선택해주세요'.obs;
   RxInt choiceButtonVal = 0.obs;
   RxBool isShowCalendar = false.obs;
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
@@ -56,6 +57,8 @@ class FacilityController extends GetxController {
   RxString selectedEngineTeam = '선택해주세요'.obs;
   RxString selectedReadEngineTeam = '선택해주세요'.obs;
   RxString engineTeamReadCd = ''.obs;
+  RxList<bool> isEngineerSelectedList = [false].obs;
+  RxList<String> engineerSelectedList = [''].obs;
   RxList<String> machList = [''].obs;
   RxString selectedMach = '선택해주세요'.obs;
   RxInt selectedMachIndex = 0.obs;
@@ -68,36 +71,20 @@ class FacilityController extends GetxController {
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
  // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
 
-  void test2() async {
-    await Get.dialog(CommonDialogWidget( contentText: '등록되었습니다.',
-    ));
-  }
+
   Future<void> saveButton() async {
     await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
-      , '@p_IR_FG':'${irfqCd}', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':'${rpUser.value}',
-      '@p_RP_CONTENT':'${textContentController.text}', '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
+      , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':rpUser.value,
+      '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
       '@p_RP_DEPT':'9999', '@p_USER':'admin',});
 
-    /// 수정필
 
-
-   /* 저장 쿼리
-    exec USP_MBS0300_S01 @p_WORK_TYPE = 'N'
-    ,@p_RP_CODE      = ''
-    ,@p_IR_CODE      = 'IR230609000001'
-    ,@p_IR_FG      = 'IR'
-    ,@p_MACH_CODE   = '1'
-    ,@p_RP_USER      = 'admin'
-    ,@p_RP_CONTENT   = '6단1호기 돌발 정비 요청'
-    ,@p_START_DT   = '2023-06-09'
-    ,@p_END_DT      = '2023-06-11'
-    ,@p_RESULT_FG   = 'Y'
-    ,@p_NO_REASON   = ''
-    ,@p_RP_DEPT      = '9999'
-    ,@p_USER      = 'admin'
-    ※ 앞에 ’@p_’ 붙이는 항목은 모바일 입력 항목입니다.
-    ※  @p_USER는 접속자 ID입니다.*/
+  }
+  void clear() {
+    textContentController.clear();
+    dayStartValue.value = '선택해주세요';
+    dayEndValue.value = '선택해주세요';
   }
 
 
@@ -106,21 +93,21 @@ class FacilityController extends GetxController {
     noReasonList.clear();
     engineerList.clear();
     machList.clear();
+    engineerSelectedList.clear();
+    isEngineerSelectedList.clear();
     engineerIdList.clear();
     engineTeamList.clear();
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
-    engineerList.add('정비자를 선택해주세요');
-    engineerIdList.add('정비자를 선택해주세요');
     machList.add('선택해주세요');
     engineTeamList.add('선택해주세요');
     /// 정비자 리스트
     var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
     {
       for(var i = 0; i < value['DATAS'].length; i++) {
-
         engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
         engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
+        isEngineerSelectedList.add(false)
       }
     });
     /// 설비
@@ -246,16 +233,31 @@ class FacilityController extends GetxController {
     }
   }
 
+  void showModalUserChoice({required BuildContext context, required int index}) {
+    Get.log('showModalUserChoice');
+
+    Get.bottomSheet(
+        backgroundColor: Colors.white,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20.0), topLeft: Radius.circular(20.0))),
+        ModalUserListWidget()
+    );
+  }
+
 
 
 
   @override
   void onInit() {
     irfgConvert();
+    clear();
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+  }
 
   @override
   void onReady() {

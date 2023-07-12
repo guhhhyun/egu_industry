@@ -438,6 +438,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
     var lastDay = DateTime.utc(2070, 12, 31);
     return Obx(
           () => Container(
+
         padding: EdgeInsets.only(bottom: 24),
         decoration: BoxDecoration(
             color: AppTheme.light_ui_background,
@@ -455,7 +456,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   offset: const Offset(1, 0))
             ]),
         margin: const EdgeInsets.only(
-            left: AppTheme.spacing_m_16, right: AppTheme.spacing_m_16),
+            left: AppTheme.spacing_m_16, right: AppTheme.spacing_m_16, bottom: 50),
         child: Column(
           children: [
             TableCalendar(
@@ -491,7 +492,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   titleTextStyle: AppTheme.titleSubhead3
                       .copyWith(color: AppTheme.light_text_primary),
                   leftChevronIcon: SvgPicture.asset(
-                    'assets/app/arrow2Right.svg',
+                    'assets/app/arrow2Left.svg',
                     width: 24,
                   ),
                   leftChevronPadding: const EdgeInsets.only(left: 0),
@@ -517,14 +518,16 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 // focusedDay = _focusedDay;
 
 
-                controller.bSelectedDayFlag.value = true;
+              //  controller.bSelectedDayFlag.value = true;
                 //  controller.isShowCalendar.value = false;
                 controller.selectedDay.value = _focusedDay;
-                controller.dayValue.value = DateFormat('yyyy-MM-dd').format(controller.selectedDay.value);
+                controller.dayValue.value = controller.dayValue.value = DateFormat('yyyy-MM-dd').format(controller.selectedDay.value);
+                controller.bSelectedDayFlag.value = true;
+                controller.isShowCalendar.value = false;
               },
             ),
             SizedBox(height: 12,),
-            TextButton(
+            /*TextButton(
               onPressed: () {
                 Get.log('확인 클릭!!');
                 controller.dayValue.value == '날짜를 선택해주세요' ? controller.dayValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now()) : '';
@@ -550,7 +553,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   child: Text('확인', style: AppTheme.bodyBody2.copyWith(color: AppTheme.white),),
                 ),
               ),
-            ),
+            ),*/
             SizedBox(height: 12,),
 
           ],
@@ -652,13 +655,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비' : '안전',
-                          style: AppTheme.titleSubhead3
-                              .copyWith(color: AppTheme.light_text_tertiary)),
-                      SizedBox(width: 4,),
-                      Text('|', style: AppTheme.titleSubhead3
-                          .copyWith(color: AppTheme.light_text_tertiary)),
-                      SizedBox(width: 4,),
+
                       Text(controller.datasList[index]['IR_TITLE'].toString(),
                           style: AppTheme.titleSubhead3
                               .copyWith(color: AppTheme.light_text_tertiary)),

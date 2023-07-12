@@ -38,7 +38,7 @@ class CommonAppbarWidget extends StatelessWidget {
       title: titleWidget ??
               Text(
                 title,
-                style: AppTheme.notosans400.copyWith(color: Colors.black),
+                style: AppTheme.titleSubhead4.copyWith(color: Colors.black),
               ),
       backgroundColor: Colors.white,
       iconTheme: const IconThemeData(

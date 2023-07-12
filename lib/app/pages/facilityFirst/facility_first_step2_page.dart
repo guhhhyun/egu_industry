@@ -518,7 +518,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         : TextButton(
       style: ButtonStyle(
         backgroundColor:
-        MaterialStateProperty.all<Color>(AppTheme.light_ui_03),
+        MaterialStateProperty.all<Color>(AppTheme.gray_gray_100),
         padding: MaterialStateProperty.all<EdgeInsets>(
             const EdgeInsets.all(0)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(

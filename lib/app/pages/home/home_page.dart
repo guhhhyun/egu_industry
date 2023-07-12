@@ -29,26 +29,28 @@ class HomePage extends StatelessWidget {
       //  controller.reqMarketList();
         return Future.value();
       },
-      child: CustomScrollView(
-        slivers: [
-          //MainHeader(),
-          MainSlideWidget(),
-          const MainIconWidget(),
+      child: Material(
+        child: CustomScrollView(
+          slivers: [
+            //MainHeader(),
+            MainSlideWidget(),
+            const MainIconWidget(),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppTheme.spacing_xxxl_40),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppTheme.spacing_xxxl_40),
-          ),
-          // 공지 리스트
-          HomeNewsWidget(),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: AppTheme.spacing_xxxl_40),
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(height: AppTheme.spacing_xxxl_40),
+            ),
+            // 공지 리스트
+            HomeNewsWidget(),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppTheme.spacing_xxxl_40),
-          ),
-          MainReadMoreWidget()
-        ],
+            const SliverToBoxAdapter(
+              child: SizedBox(height: AppTheme.spacing_xxxl_40),
+            ),
+            MainReadMoreWidget()
+          ],
+        ),
       ),
     );
   }

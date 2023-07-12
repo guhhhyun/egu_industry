@@ -43,11 +43,21 @@ class FacilityStep2Page extends StatelessWidget {
   Widget _bodyArea(BuildContext context) {
     return SliverToBoxAdapter(
         child: Obx(() => Container(
-          padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+          color: AppTheme.white,
           child: Column(
             children: [
               _topDataItem(),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 12,
+                color: AppTheme.gray_gray_100,
+              ),
               _inputArea(context),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 12,
+                color: AppTheme.gray_gray_100,
+              ),
               _partChoiceBody()
             ],
           ),
@@ -70,154 +80,202 @@ class FacilityStep2Page extends StatelessWidget {
   }
 */
   Widget _topDataItem() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14, right: 8, left: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                    child: Text('${controller.selectedContainer[0]['IR_CODE']}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
-                  ),
-                )
-            ),
-            SizedBox(width: 8,),
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                    child: Text('${controller.selectedContainer[0]['INS_FG'].toString() == 'M' ? '설비' : '안전'}', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
-                  ),
-                )
-            ),
-            SizedBox(width: 8,),
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                    child: Text(_test(), style: AppTheme.bodyBody1.copyWith(color: AppTheme.black),),
-                  ),
-                )
-            ),
+    return Container(
+      padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, top: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.red_red_100 :
+                    Colors.greenAccent
+                ),
+                child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                    style: AppTheme.bodyCaption
+                        .copyWith(color: controller.selectedReadUrgency.value == '긴급'
+                        ? AppTheme.red_red_400 : Colors.lightGreen)),
+              ),
+              SizedBox(width: 6,),
+              Container(
+                padding: EdgeInsets.only(left: 6, right: 6, top: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color:  AppTheme.gray_c_gray_100
+                ),
+                child: Text( controller.selectedContainer[0]['RESULT_FG'] == 'N' ? '미조치' :
+                controller.selectedContainer[0]['RESULT_FG'] == 'Y' ? '조치완료' :
+                controller.selectedContainer[0]['RESULT_FG'] == 'I' ? '조치 진행중' : '없음',
+                    style: AppTheme.bodyCaption
+                        .copyWith(color: AppTheme.gray_c_gray_400)),
+              ),
+            ],
+          ),
+          SizedBox(height: 16,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(_test(),
+                  style: AppTheme.titleDisplay1
+                      .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 2,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(controller.selectedContainer[0]['IR_TITLE'].toString(),
+                  style: AppTheme.titleHeadline
+                      .copyWith(color: AppTheme.light_text_secondary)),
+            ],
+          ),
+          const SizedBox(height: 30,),
+          Container(
+            height: 1, color: AppTheme.gray_c_gray_100,
+          ),
+          const SizedBox(height: 30,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('번호',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Text('${controller.selectedContainer[0]['IR_CODE']}',
+                            style: AppTheme.bodyBody2
+                                .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('의뢰자',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Text('${controller.selectedContainer[0]['IR_USER']}',
+                  style: AppTheme.bodyBody2
+                      .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('점검부서',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Text(_deptText(),
+                  style: AppTheme.bodyBody2
+                      .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('구분',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Text('${controller.selectedContainer[0]['INS_FG'].toString() == 'M' ? '설비' : '안전'}',
+                  style: AppTheme.bodyBody2
+                      .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('장애일시',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Container(
+                  child: (() {
+                    var firstIndex = controller.selectedContainer[0]['IR_DATE']
+                        .toString().lastIndexOf(':');
+                    var lastIndex = controller.selectedContainer[0]['IR_DATE']
+                        .toString().length;
+                    return Text(
+                        controller.selectedContainer[0]['IR_DATE']
+                            .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
+                        style: AppTheme.bodyBody2
+                            .copyWith(color: AppTheme.black));
+                  })()
+              ),
+            ],
+          ),
+          const SizedBox(height: 12,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('경과시간',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Text('${_dateDifference()}h',
+                  style: AppTheme.bodyBody2
+                      .copyWith(color: AppTheme.black)),
+            ],
+          ),
+          const SizedBox(height: 40,),
 
-          ],
-        ),
-        SizedBox(height: 8,),
-        Row(
-          children: [
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                      child:  Text(controller.selectedContainer[0]['RESULT_FG'] == 'N' ? '미조치' :
-                      controller.selectedContainer[0]['RESULT_FG'] == 'Y' ? '조치완료' :
-                      controller.selectedContainer[0]['RESULT_FG'] == 'I' ? '조치 진행중' : '',
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_success))
-                  ),
-                )
-            ),
-            const SizedBox(width: 8,),
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                      child:  Text('${controller.selectedContainer[0]['IR_DATE']}',
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_success))
-                  ),
-                )
-            ),
-          ],
-        ),
-        const SizedBox(height: 8,),
-        Row(
-          children: [
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                      child:  Text('${controller.selectedContainer[0]['IR_USER']}',
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_success))
-                  ),
-                )
-            ),
-            SizedBox(width: 8,),
-            Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(top: 14, bottom: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: AppTheme.blue_blue_200,
-                  ),
-                  child: Center(
-                      child:  Text('${controller.selectedReadEngineTeam.value}',
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: AppTheme.light_success))
-                  ),
-                )
-            ),
-          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _inputTitle(String title) {
+    return Expanded(
+        child: Container(
+          padding: EdgeInsets.only(top: 16),
+          child: Text(title, style: AppTheme.titleSubhead4.copyWith(color: AppTheme.black),),
         )
-      ],
     );
   }
 
   Widget _inputArea(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          SizedBox(height: 24,),
-          Row(
-            children: [
-              Icon(Icons.circle, size: 8,),
-              SizedBox(width: 8,),
-              Text('정비내역 등록',
-                  style: AppTheme.titleHeadline
-                      .copyWith(color: AppTheme.black))
-            ],
-          ),
-
-          SizedBox(height: 12,),
-          _inputEngineerItem(context),
-          SizedBox(height: 12,),
-          _dropDownItem(context, '정비유형', 1),
-          SizedBox(height: 12,),
-          _dropDownItem(context, '정비상태', 2),
-          SizedBox(height: 12,),
-          _startEndCalendarItem(context),
-          SizedBox(height: 12,),
-          _dropDownItem(context, '미조치 사유', 3),
-          SizedBox(height: 12,),
-          _engineContentItem()
-        ],
+    return Container(
+      padding: EdgeInsets.only(left: 18, right: 18, top: 40),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            SizedBox(height: 30,),
+            Obx(() => _inputEngineerItem(context)),
+            SizedBox(height: 30,),
+            Row(
+              children: [
+                _inputTitle('정비유형'),
+                _inputTitle('정비상태'),
+              ],
+            ),
+            const SizedBox(height: 12,),
+            Row(
+              children: [
+                _dropDownItem(context, 1),
+                SizedBox(width: 12,),
+                _dropDownItem(context, 2),
+              ],
+            ),
+            SizedBox(height: 30,),
+            Row(
+              children: [
+                _inputTitle('미조치 사유'),
+              ],
+            ),
+            const SizedBox(height: 12,),
+            Row(
+              children: [
+                _dropDownItem(context,  3),
+              ],
+            ),
+            SizedBox(height: 30,),
+            _startEndCalendarItem(context),
+            SizedBox(height: 30,),
+            _engineContentItem(),
+            SizedBox(height: 70,),
+          ],
+        ),
       ),
     );
   }
@@ -226,139 +284,98 @@ class FacilityStep2Page extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('정비자 (검색으로 바꿔야할듯)',
-            style: AppTheme.bodyBody1
+        Text('정비자',
+            style: AppTheme.titleSubhead4
                 .copyWith(color: AppTheme.black)),
         SizedBox(height: 4,),
-        Container(
-          height: 50,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              border: const Border(
-                  top: BorderSide(color: AppTheme.light_ui_08),
-                  bottom:
-                  BorderSide(color: AppTheme.light_ui_08),
-                  right:
-                  BorderSide(color: AppTheme.light_ui_08),
-                  left:
-                  BorderSide(color: AppTheme.light_ui_08))),
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.only(left: 12, right: 12),
-          child: DropdownButton<String>(
-              borderRadius: BorderRadius.circular(3),
-              isExpanded: true,
-              underline: Container(
-                height: 1,
-                color: Colors.white,
-              ),
-              icon: SvgPicture.asset(
-                'assets/app/arrowBottom.svg',
-                color: AppTheme.light_ui_08,
-              ),
-              dropdownColor: AppTheme.light_ui_01,
-              value: controller.selectedEnginner.value,
-              items: controller.engineerList.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '정비자를 선택해주세요' ? AppTheme.light_ui_07 : AppTheme.black),
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                controller.selectedEnginnerIndex.value = controller.engineerList.indexOf(value);
-                controller.rpUser.value = controller.engineerIdList[controller.selectedEnginnerIndex.value];
-                controller.selectedEnginner.value = value!;
+        InkWell(
+          onTap: () {
+             controller.showModalUserChoice(context: context, index: 0);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                border: const Border(
+                    bottom:
+                    BorderSide(color: AppTheme.light_ui_08),
+                   )),
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.only(right: 12, top: 16, bottom: 16),
+            child: Text(controller.selectedEnginner.value, style: AppTheme.bodyBody1.copyWith(
+                color: controller.selectedEnginner.value == '정비자를 선택해주세요'
+                    ?AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),)
 
-                Get.log('$value 선택!!!!');
-                // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-              }),
+          ),
         ),
 
       ],
     );
   }
 
-  Widget _dropDownItem(BuildContext context, String title, int flag) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title,
-            style: AppTheme.bodyBody1
-                .copyWith(color: AppTheme.black)),
-        SizedBox(height: 4,),
-        Container(
-          height: 50,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              border: const Border(
-                  top: BorderSide(color: AppTheme.light_ui_08),
-                  bottom:
-                  BorderSide(color: AppTheme.light_ui_08),
-                  right:
-                  BorderSide(color: AppTheme.light_ui_08),
-                  left:
-                  BorderSide(color: AppTheme.light_ui_08))),
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.only(left: 12, right: 12),
-          child: DropdownButton<String>(
-              borderRadius: BorderRadius.circular(3),
-              isExpanded: true,
-              underline: Container(
-                height: 1,
-                color: Colors.white,
-              ),
-              icon: SvgPicture.asset(
-                'assets/app/arrowBottom.svg',
-                color: AppTheme.light_ui_08,
-              ),
-              dropdownColor: AppTheme.light_ui_01,
-              value: flag == 1 ? controller.selectedIrFq.value :
-                    flag == 2 ? controller.selectedResultFg.value : controller.selectedNoReason.value,
-                  //  flag == 3 ? controller.selectedNoReason.value :
-              items: flag == 1 ? controller.irfgList.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '선택해주세요' ? AppTheme.light_ui_07 : AppTheme.black),
+  Widget _dropDownItem(BuildContext context, int flag) {
+    return Expanded(
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            border: const Border(
+              bottom:
+              BorderSide(color: AppTheme.light_ui_08),
+            )),
+        padding: const EdgeInsets.only(right: 12),
+        child: DropdownButton<String>(
+                  isExpanded: true,
+                  underline: Container(
+                    height: 1,
+                    color: Colors.white,
                   ),
-                );
-              }).toList() : flag == 2 ?
-              controller.resultFgList.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '전체' ? AppTheme.light_ui_07 : AppTheme.black),
+                  icon: SvgPicture.asset(
+                    'assets/app/arrowBottom.svg',
+                    color: AppTheme.light_ui_08,
                   ),
-                );
-              }).toList() : controller.noReasonList.map((value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: AppTheme.titleSubhead3
-                        .copyWith(color: value == '선택해주세요' ? AppTheme.light_ui_07 : AppTheme.black),
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                flag == 1 ?
-                controller.selectedIrFq.value = value! :
-                flag == 2 ?
-                controller.selectedResultFg.value = value! :
-                controller.selectedNoReason.value = value!;
+                  dropdownColor: AppTheme.light_ui_01,
+                  value: flag == 1 ? controller.selectedIrFq.value :
+                        flag == 2 ? controller.selectedResultFg.value : controller.selectedNoReason.value,
+                      //  flag == 3 ? controller.selectedNoReason.value :
+                  items: flag == 1 ? controller.irfgList.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: AppTheme.bodyBody1
+                            .copyWith(color: value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
+                      ),
+                    );
+                  }).toList() : flag == 2 ?
+                  controller.resultFgList.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: AppTheme.bodyBody1
+                            .copyWith(color: value == '전체' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
+                      ),
+                    );
+                  }).toList() : controller.noReasonList.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: AppTheme.bodyBody1
+                            .copyWith(color: value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    flag == 1 ?
+                    controller.selectedIrFq.value = value! :
+                    flag == 2 ?
+                    controller.selectedResultFg.value = value! :
+                    controller.selectedNoReason.value = value!;
 
-                Get.log('$value 선택!!!!');
-               // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-              }),
-        ),
-      ],
+                    Get.log('$value 선택!!!!');
+                   // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                  }),
+
+      ),
     );
   }
   /// 정비날짜 정하기
@@ -367,63 +384,67 @@ class FacilityStep2Page extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('정비날짜',
-            style: AppTheme.bodyBody1
+            style: AppTheme.titleSubhead4
                 .copyWith(color: AppTheme.black)),
-        SizedBox(height: 4,),
+        SizedBox(height: 12,),
         Row(
           children: [
             Expanded(
               child: Container(
                 child: TextButton(
                   style: ButtonStyle(
-
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )),
                   ),
                   onPressed: () async{
                     var datePicked = await DatePicker.showSimpleDatePicker(
                       context,
                       initialDate: DateTime(1994),
-                      firstDate: DateTime(2023),
+                      firstDate: DateTime.now(),
                       lastDate: DateTime(2060),
                       dateFormat: "yyyy-MM-dd",
                       locale: DateTimePickerLocale.ko,
                       looping: true,
                     );
-                    int startIndex = datePicked.toString().indexOf(' ');
-                    int lastIndex = datePicked.toString().length;
-                    controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    Get.log('${controller.dayStartValue.value}');
-                    final snackBar =
-                    SnackBar(content: Text("Date Picked $datePicked"));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                    if(datePicked != null) {
+                      int startIndex = datePicked.toString().indexOf(' ');
+                      int lastIndex = datePicked.toString().length;
+                      controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                    }else {
+                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    }
+                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    }
                   },
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
                         border: const Border(
-                            top: BorderSide(color: AppTheme.light_ui_08),
+
                             bottom:
                             BorderSide(color: AppTheme.light_ui_08),
-                            right:
-                            BorderSide(color: AppTheme.light_ui_08),
-                            left:
-                            BorderSide(color: AppTheme.light_ui_08))),
+                           )),
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 12, right: 12),
-                    child: Center(
-                      child: Text('${controller.dayStartValue.value}', style: AppTheme.bodyBody1
-                          .copyWith(color: AppTheme.black)),
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('${controller.dayStartValue.value}', style: AppTheme.bodyBody1
+                            .copyWith(color: controller.dayEndValue.value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black
+                            , fontSize: 17),),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-            SizedBox(width: 4,),
+            SizedBox(width: 12,),
+            Container(height: 50, child: Center(
+              child: Text('~',style: AppTheme.bodyBody1
+                .copyWith(color: AppTheme.black)),
+            ),),
+            SizedBox(width: 12,),
             Expanded(
               child: Container(
                 child: TextButton(
@@ -438,38 +459,46 @@ class FacilityStep2Page extends StatelessWidget {
                     var datePicked = await DatePicker.showSimpleDatePicker(
                       context,
                       initialDate: DateTime(1994),
-                      firstDate: DateTime(2023),
+                      firstDate: DateTime.now(),
                       lastDate: DateTime(2060),
                       dateFormat: "yyyy-MM-dd",
                       locale: DateTimePickerLocale.ko,
                       looping: true,
                     );
-                    int startIndex = datePicked.toString().indexOf(' ');
-                    int lastIndex = datePicked.toString().length;
-                    controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    Get.log('${controller.dayEndValue.value}');
-                    final snackBar =
-                    SnackBar(content: Text("Date Picked $datePicked"));
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    if(datePicked != null) {
+                      int startIndex = datePicked.toString().indexOf(' ');
+                      int lastIndex = datePicked.toString().length;
+                      controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                    }else {
+                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    }
+                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                    }
+
+                    Get.log("Date Picked ${datePicked.toString()}");
+                  //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
+
                         border: const Border(
-                            top: BorderSide(color: AppTheme.light_ui_08),
+
                             bottom:
                             BorderSide(color: AppTheme.light_ui_08),
-                            right:
-                            BorderSide(color: AppTheme.light_ui_08),
-                            left:
-                            BorderSide(color: AppTheme.light_ui_08))),
+                           )),
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 12, right: 12),
-                    child: Center(
-                      child: Text('${controller.dayEndValue.value}', style: AppTheme.bodyBody1
-                          .copyWith(color: AppTheme.black)),
+                    padding: const EdgeInsets.only( right: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('${controller.dayEndValue.value}', style: AppTheme.bodyBody1
+                            .copyWith(color: controller.dayEndValue.value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black
+                            , fontSize: 17),),
+                      ],
                     ),
+
                   ),
                 ),
               ),
@@ -489,36 +518,32 @@ class FacilityStep2Page extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('정비내용',
-            style: AppTheme.bodyBody1
+            style: AppTheme.titleSubhead4
                 .copyWith(color: AppTheme.black)),
-        SizedBox(height: 4,),
+        SizedBox(height: 24,),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: AppTheme.black),
+            border: Border(
+              bottom: BorderSide(color: AppTheme.black)
+            ),
             // borderRadius: BorderRadius.circular(5)
           ),
           width: double.infinity,
           child: TextFormField(
+              maxLength: 100,
               maxLines: 5,
               controller: controller.textContentController,
               textInputAction: TextInputAction.search,
               keyboardType: TextInputType.text,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
+                hintStyle: TextStyle(fontSize: 17, color: AppTheme.gray_gray_400),
                 fillColor: Colors.white,
                 filled: true,
-                // prefixIcon: const Icon(Icons.search),
-                /*suffixIcon: controller.searchText.isEmpty
-                    ? null
-                    : IconButton(
-                  icon: SvgPicture.asset('assets/app/clear.svg', width: 24, height: 24,),
-                  onPressed: () {
-                    Get.log('삭제 아이콘');
-                    controller.clearSearch();
-                  },
-                ),*/
                 hintText: '내용을 입력해주세요',
                 border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(0)
               ),
+              
               showCursor: true,
 
               // onChanged: ((value) => controller.submitSearch(value)),
@@ -529,93 +554,110 @@ class FacilityStep2Page extends StatelessWidget {
   }
 
   Widget _partChoiceBody() {
-    return Column(
-        children: [
-          SizedBox(height: 24,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.circle, size: 8,),
-                  SizedBox(width: 8,),
-                  Text('사용부품 정보 등록',
-                      style: AppTheme.titleHeadline
-                          .copyWith(color: AppTheme.black))
-                ],
-              ),
-              TextButton(
-                style: ButtonStyle(
-                  /*backgroundColor: MaterialStateProperty.all<Color>(
-                      AppTheme.light_success
-                  ),*/
-                  padding: MaterialStateProperty.all(EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
 
-                          borderRadius: BorderRadius.circular(100)
-                      )),
-                ),
-                onPressed: () {
-                  Get.log('추가');
-                },
-                child: Container(
-                      padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-                      color: AppTheme.light_success,
-                      child: Center(
-                        child: Text('추가', style: AppTheme.bodyBody1.copyWith(color: AppTheme.white),),
-                      ),
-                    ),
-              ),
-                //  SizedBox(width: 4,),
-                  /*Container(
-                    padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
-                    color: AppTheme.light_cancel,
-                    child: Center(
-                      child: Text('삭제', style: AppTheme.bodyBody1.copyWith(color: AppTheme.white),),
-                    ),
-                  )*/
-
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 20, bottom: 20),
-            child: Column(
+    return Container(
+      padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+      child: Column(
+          children: [
+            SizedBox(height: 24,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
-                    SizedBox(width: 4,),
-                    Text(
-                      '부품~~~~~~~~~~~~',
-                      style: AppTheme.titleSubhead4.copyWith(
-                        color: AppTheme.black,
+                Text('사용부품 정보 등록',
+                        style: AppTheme.titleHeadline
+                            .copyWith(color: AppTheme.black)),
+                TextButton(
+                  style: ButtonStyle(
+                    /*backgroundColor: MaterialStateProperty.all<Color>(
+                        AppTheme.light_success
+                    ),*/
+                    padding: MaterialStateProperty.all(EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+
+                            borderRadius: BorderRadius.circular(100)
+                        )),
+                  ),
+                  onPressed: () {
+                    Get.log('추가');
+                  },
+                  child: Container(
+                        padding: EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppTheme.gray_gray_300)
+                        ),
+                        child: Center(
+                          child: Text('추가', style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_text_secondary),),
+                        ),
                       ),
-                    )
-                  ],
                 ),
-                SizedBox(height: 12,),
-                Row(
-                  children: [
-                    Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
-                    SizedBox(width: 4,),
-                    Text(
-                      '부품2~~~~~~~~~~~~',
-                      style: AppTheme.titleSubhead4.copyWith(
-                        color: AppTheme.black,
+                  //  SizedBox(width: 4,),
+                    /*Container(
+                      padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
+                      color: AppTheme.light_cancel,
+                      child: Center(
+                        child: Text('삭제', style: AppTheme.bodyBody1.copyWith(color: AppTheme.white),),
                       ),
-                    )
-                  ],
-                )
+                    )*/
+
               ],
             ),
-          )
-        ],
+            Container(
+              padding: EdgeInsets.only(top: 20, bottom: 20),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: AppTheme.gray_gray_300)
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
+                        SizedBox(width: 4,),
+                        Text(
+                          '부품~~~~~~~~~~~~',
+                          style: AppTheme.titleSubhead4.copyWith(
+                            color: AppTheme.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    padding: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: AppTheme.gray_gray_300)
+                        )
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
+                        SizedBox(width: 4,),
+                        Text(
+                          '부품2~~~~~~~~~~~~',
+                          style: AppTheme.titleSubhead4.copyWith(
+                            color: AppTheme.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+      ),
     );
   }
 
   Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
+      color: AppTheme.white,
       child: (() {
         if(controller.selectedIrFq.value != '전체' && controller.selectedResultFg.value != '전체'
             && controller.selectedNoReason.value != '전체'
@@ -637,6 +679,9 @@ class FacilityStep2Page extends StatelessWidget {
             onPressed: controller.isStep2RegistBtn.value ? () async {
               controller.cdConvert();
               controller.saveButton();
+              Get.dialog(
+                  CommonDialogWidget(contentText: '저장되었습니다', )
+              );
              // Get.toNamed(Routes.FACILITY);
             } : null,
             child: Container(
@@ -661,7 +706,34 @@ class FacilityStep2Page extends StatelessWidget {
     }
     return '';
   }
+  String _dateDifference() {
+    var start = controller.selectedContainer[0]['IR_DATE'].toString().indexOf('.');
+    var end = controller.selectedContainer[0]['IR_DATE'].toString().length;
+    var time = controller.selectedContainer[0]['IR_DATE'].toString().replaceRange(start, end, '');
+    var realDate = DateTime.parse(time);
+    var times = DateTime.now().difference(realDate);
+    Get.log('realDate $realDate');
+    Get.log('times ${times.inHours.toString()}');
+    Get.log('now ${DateTime.now()}');
+    return times.inHours.toString();
+  }
 
-
+  String _deptText() {
+    switch(controller.selectedContainer[0]['INS_DEPT'].toString()) {
+      case "1110":
+        return '생산팀';
+        break;
+      case "1160":
+        return '공무팀';
+        break;
+      case "1170":
+        return '전기팀';
+        break;
+      case "9999":
+        return '기타';
+      default:
+        return '';
+    }
+  }
 
 }

@@ -8,36 +8,61 @@ class MainIconWidget extends StatelessWidget {
 
   Widget _buttonArea(
       {required String title,
+        required String subTitle,
         required String imgUrl,
         required Function() onPressed}) {
     return Container(
-        child: InkWell(
-          onTap: onPressed,
-          child: Container(
-                decoration: BoxDecoration(
+        child: Container(
+          child: InkWell(
+            onTap: onPressed,
+            child: Container(
+                  decoration: BoxDecoration(
 
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: AppTheme.gray_c_gray_200)
-                ),
-                padding: EdgeInsets.only(top: 21, bottom: 21),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: AppTheme.gray_c_gray_200)
+                  ),
+                  padding: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 20),
 
-                child: Column(
-                  children: [
-                    Ink.image(
-                      image: AssetImage(imgUrl),
-                      width: 24,
-                      height: 24,
-                    ),
-                    const SizedBox(height: 4,),
-                    Text(
-                      title,
-                      style: AppTheme.bodyBody1.copyWith(
-                        color: AppTheme.light_text_cto,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: AppTheme.bodyBody2.copyWith(
+                                  color: AppTheme.light_text_cto,
+                                ),
+                              ),
+                              Text(
+                                subTitle,
+                                style: AppTheme.bodyBody2.copyWith(
+                                  color: AppTheme.light_text_cto,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Ink.image(
+                            image: AssetImage(imgUrl),
+                            width: 24,
+                            height: 24,
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
                 ),
-              ),
+          ),
         ),
 
     );
@@ -48,9 +73,9 @@ class MainIconWidget extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.only(
-          left: AppTheme.spacing_m_16,
+          left: AppTheme.spacing_l_20,
           top: AppTheme.spacing_xl_24,
-          right: AppTheme.spacing_m_16,
+          right: AppTheme.spacing_l_20,
         ),
         child: Column(
           children: [
@@ -71,116 +96,98 @@ class MainIconWidget extends StatelessWidget {
               children: [
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/phone.png',
-                    title: '설비/안전 점검 의뢰',
+                    title: '설비/안전',
+                    subTitle: '점검의뢰',
                     onPressed: () {
                       Get.log('돌발정비');
                       Get.toNamed(Routes.FACILITY_FIRST);
                     }),),
-                const SizedBox(width: 8,),
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/phone.png',
-                    title: '설비/안전 내역 등록',
+                    title: '설비/안전',
+                    subTitle: '내역등록',
                     onPressed: () {
-                      Get.log('스크랩입고');
+                      Get.log('설비/안전 내역 등록');
                       Get.toNamed(Routes.FACILITY);
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
-                Expanded(child:  _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '스크랩투입대기',
+                const SizedBox(width: 16,),
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/icon-delivery-24-on.png',
+                    title: '제품',
+                    subTitle: '위치이동',
                     onPressed: () {
-                      Get.log('스크랩투입대기');
-                      //  Get.toNamed(Routes.COIL_MAIN);
+                      Get.log('제품 위치이동');
+                      //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
+
+
               ],
             ),
-            const SizedBox(height: 8,),
+            const SizedBox(height: 16,),
             Row(
               children: [
                 Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '슬라브입고',
+                    imgUrl: 'assets/app/icon_box_24.png',
+                    title: '재고실사',
+                    subTitle: '',
                     onPressed: () {
-                      Get.log('슬라브입고');
+                      Get.log('재고실사');
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '제품외주이동',
-                    onPressed: () {
-                      Get.log('제품외주이동');
-                      //  Get.toNamed(Routes.BAR_MAIN);
-                    }),),
-                const SizedBox(width: 8,),
-                Expanded(child:  _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '제품입고',
-                    onPressed: () {
-                      Get.log('제품입고');
-                      //  Get.toNamed(Routes.COIL_MAIN);
-                    }),),
-              ],
-            ),
-            const SizedBox(height: 8,),
-            Row(
-              children: [
-                Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '제품위치이동',
+                    imgUrl: 'assets/app/icon_factory_24.png',
+                    title: '공정이동',
+                    subTitle: '',
                     onPressed: () {
                       Get.log('제품위치이동');
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '재고실사등록',
+                    imgUrl: 'assets/app/icon_factory_24.png',
+                    title: '공정이동',
+                    subTitle: '',
+                    onPressed: () {
+                      Get.log('제품위치이동');
+                      //  Get.toNamed(Routes.BAR_MAIN);
+                    }),),
+              ],
+            ),
+            const SizedBox(height: 16,),
+            Row(
+              children: [
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/icon_factory_24.png',
+                    title: '공정조회',
+                    subTitle: '',
                     onPressed: () {
                       Get.log('재고실사등록');
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
-                Expanded(child:  _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '공정이동등록',
-                    onPressed: () {
-                      Get.log('공정이동등록');
-                      //  Get.toNamed(Routes.COIL_MAIN);
-                    }),),
-
-              ],
-            ),
-            const SizedBox(height: 8,),
-            Row(
-              children: [
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '포승공정 조회',
+                    imgUrl: 'assets/app/icon-notice-24.png',
+                    title: '제품포장',
+                    subTitle: '검수',
                     onPressed: () {
                       Get.log('포승공정 조회');
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '제품 제고현황',
+                    imgUrl: 'assets/app/icon-receive-24-on.png',
+                    title: '스크랩',
+                    subTitle: '라벨 발행',
                     onPressed: () {
                       Get.log('제품 제고현황');
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
-                const SizedBox(width: 8,),
-                Expanded(child:  _buttonArea(
-                    imgUrl: 'assets/app/phone.png',
-                    title: '설비가동 모니터링',
-                    onPressed: () {
-                      Get.log('설비가동 모니터링');
-                      //  Get.toNamed(Routes.COIL_MAIN);
-                    }),),
-
               ],
             ),
+
           ],
         ),
       ),

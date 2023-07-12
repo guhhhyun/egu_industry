@@ -492,7 +492,7 @@ class FacilityPage extends StatelessWidget {
                   titleTextStyle: AppTheme.titleSubhead3
                       .copyWith(color: AppTheme.light_text_primary),
                   leftChevronIcon: SvgPicture.asset(
-                    'assets/app/arrow2Right.svg',
+                    'assets/app/arrow2Left.svg',
                     width: 24,
                   ),
                   leftChevronPadding: const EdgeInsets.only(left: 0),
@@ -514,15 +514,15 @@ class FacilityPage extends StatelessWidget {
                 Get.log('_focusedDay = ${_focusedDay.toString()}');
                 // focusedDay = _focusedDay;
 
-
-                controller.bSelectedDayFlag.value = true;
                 //  controller.isShowCalendar.value = false;
                 controller.selectedDay.value = _focusedDay;
                 controller.dayValue.value = DateFormat('yyyy-MM-dd').format(controller.selectedDay.value);
+                controller.bSelectedDayFlag.value = true;
+                controller.isShowCalendar.value = false;
               },
             ),
             SizedBox(height: 12,),
-            TextButton(
+            /*TextButton(
               onPressed: () {
                 Get.log('확인 클릭!!');
                 controller.dayValue.value == '날짜를 선택해주세요' ? controller.dayValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now()) : '';
@@ -548,7 +548,7 @@ class FacilityPage extends StatelessWidget {
                   child: Text('확인', style: AppTheme.bodyBody2.copyWith(color: AppTheme.white),),
                 ),
               ),
-            ),
+            ),*/
             SizedBox(height: 12,),
 
           ],
@@ -607,8 +607,8 @@ class FacilityPage extends StatelessWidget {
         padding: EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.gray_gray_400),
-          color: controller.test[index] ? AppTheme.blue_blue_50 : AppTheme.white,
+          border: controller.test[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.gray_gray_400) ,
+          color: AppTheme.white,
         ),
         child: Center(
           child: Column(
@@ -678,13 +678,6 @@ class FacilityPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비' : '안전',
-                      style: AppTheme.titleSubhead3
-                          .copyWith(color: AppTheme.light_text_tertiary)),
-                  SizedBox(width: 4,),
-                  Text('|', style: AppTheme.titleSubhead3
-                      .copyWith(color: AppTheme.light_text_tertiary)),
-                  SizedBox(width: 4,),
                   Text(controller.datasList[index]['IR_TITLE'].toString(),
                       style: AppTheme.titleSubhead3
                           .copyWith(color: AppTheme.light_text_tertiary)),
@@ -695,6 +688,19 @@ class FacilityPage extends StatelessWidget {
                   Text(controller.selectedReadEngineTeam.value,
                       style: AppTheme.titleSubhead3
                           .copyWith(color: AppTheme.light_text_tertiary)),
+                ],
+              ) : Container(),
+              SizedBox(height: 8,),
+              controller.datasList.isNotEmpty ?
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(controller.datasList[index]['IR_CONTENT'].toString(),
+                      style: AppTheme.titleSubhead3
+                          .copyWith(color: AppTheme.light_text_tertiary),
+                      overflow: TextOverflow.ellipsis,
+                  ),
+
                 ],
               ) : Container(),
               SizedBox(height: 12,),
