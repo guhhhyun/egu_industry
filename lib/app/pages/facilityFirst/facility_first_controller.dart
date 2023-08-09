@@ -143,7 +143,7 @@ class FacilityFirstController extends GetxController {
     });
   }
   void readCdConvert() {
-    switch(selectedReadUrgency.value) {
+    switch(selectedReadUrgency.value) { 
       case "보통":
         urgencyReadCd.value = 'N';
         break;
