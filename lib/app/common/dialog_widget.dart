@@ -1,4 +1,5 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/pages/dolbal/facility_page.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 class CommonDialogWidget extends StatelessWidget {
   String? contentText;
   Widget? contentWidget;
+  int? flag;
 
   Function()? onOk;
 
@@ -17,6 +19,7 @@ class CommonDialogWidget extends StatelessWidget {
         this.contentText,
         this.contentWidget,
         this.onOk,
+        this.flag
       });
 
   Widget _contentText(BuildContext context) {
@@ -51,14 +54,11 @@ class CommonDialogWidget extends StatelessWidget {
                     const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(5)))),
-                /*backgroundColor: MaterialStateProperty.all<Color>(
-                  AppTheme.light_primary,
-                ),*/
-                padding:
-                MaterialStateProperty.all(const EdgeInsets.all(0))),
+                padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
             // 성공
             onPressed: () {
-              Get.offAll(HomePage());
+              Get.back();
+              Get.back();
             },
             child: Container(
                 padding: EdgeInsets.only(top: 16, bottom: 16),

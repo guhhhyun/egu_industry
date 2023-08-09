@@ -68,10 +68,78 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 // enlargeCenterPage: false,
               ),
               items: [
-                _sliderContainer('assets/app/image_28.png'),
-                _sliderContainer('assets/app/image_56.png'),
-                _sliderContainer('assets/app/image_57.png'),
-                _sliderContainer('assets/app/image_58.png'),
+                Stack(
+                  children: [
+                    _sliderContainer('assets/app/image_28.png'),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('단동', style: AppTheme.newTitleDisplay.copyWith(color: AppTheme.white),),
+                          Text('Red Brass', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
+                          SizedBox(height: 14,),
+                          Text('단동 1종 ~ 3종', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: [
+                    _sliderContainer('assets/app/image_56.png'),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('동', style: AppTheme.newTitleDisplay.copyWith(color: AppTheme.white),),
+                          Text('Copper', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
+                          SizedBox(height: 14,),
+                          Text('타프피치동/일산탈동/무산소동', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: [
+                    _sliderContainer('assets/app/image_57.png'),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('황동', style: AppTheme.newTitleDisplay.copyWith(color: AppTheme.white),),
+                          Text('Brass', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
+                          SizedBox(height: 14,),
+                          Text('황동 1종 ~ 3종', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: [
+                    _sliderContainer('assets/app/image_58.png'),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('인청동', style: AppTheme.newTitleDisplay.copyWith(color: AppTheme.white),),
+                          Text('Phodphor Bronze', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
+                          SizedBox(height: 14,),
+                          Text('인청동 1종 ~ 3종', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 /*_btnSliderContainer(
                   imgUrl: 'assets/app/slide02.png',
                   onpress: () => Get.to(const BarIntroPage(),
@@ -106,9 +174,9 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Image.asset('assets/app/icon-notice-24.png', color: AppTheme.white, width: 30, height: 30,),
+                            Image.asset('assets/app/Vector.png', color: AppTheme.white, width: 30, height: 30,),
                             SizedBox(width: 14,),
-                            Icon(Icons.print_outlined, color: AppTheme.white, size: 32,)
+                            Image.asset('assets/app/printer.png', color: AppTheme.white, width: 30, height: 30,),
                           ],
                         ),
                       ],

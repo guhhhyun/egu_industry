@@ -11,12 +11,15 @@ import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.d
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
+as picker;
 
 class FacilityFirstStep2Page extends StatefulWidget {
   const FacilityFirstStep2Page({Key? key}) : super(key: key);
@@ -37,7 +40,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, ),
+          CommonAppbarWidget(title: '설비/안전 점검 - 의뢰내역 등록', isLogo: false, isFirstPage: false ),
           _bodyArea(context),
           //_streamBuilder()
 
@@ -57,22 +60,34 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _basicContainerItem(context, '의뢰번호', '자동생성'),
-              SizedBox(height: 30,),
-              _basicContainerItem(context, '장애일시', '${controller.errorTime.value}'),
-              SizedBox(height: 30,),
+              _basicContainerItem(context, '의뢰번호', '자동생성', 1),
+              SizedBox(height: 45,),
+              _basicContainerItem(context, '장애일시', '${controller.errorTime.value}', 2),
+              controller.isErrorDateChoice.value == true ?
+              Column(
+                children: [
+                  SizedBox(height: 16,),
+                  _errorDateSelect(),
+                ],
+              ) : Container(),
+              SizedBox(height: 45,),
               _inspectionGubunItem(context),
-              SizedBox(height: 30,),
-             _facilityChoiceItem(context),
-              SizedBox(height: 30,),
+              controller.selectedIns.value == '안전점검' ? Container() :
+              Column(
+                children: [
+                  SizedBox(height: 45,),
+                  _facilityChoiceItem(context),
+                ],
+              ),
+              SizedBox(height: 45,),
               controller.selectedMach.value == '선택해주세요' ? _anotherFacilityItem() : Container(),
-              SizedBox(height: 30,),
+              SizedBox(height: 45,),
               _engineTeamItem(context),
-              SizedBox(height: 30,),
+              SizedBox(height: 45,),
               _titleTextFieldItem(),
-              SizedBox(height: 30,),
+              SizedBox(height: 45,),
               _contentTextFieldItem(),
-              SizedBox(height: 30,),
+              SizedBox(height: 45,),
               _fileArea()
               // _topDataItem(),
               //_inputArea(context),
@@ -98,21 +113,43 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 */
 
   /// 의뢰번호, 장애일시
-  Widget _basicContainerItem(BuildContext context, String title, String content) {
+  Widget _basicContainerItem(BuildContext context, String title, String content, int flag) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
         Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(top: 14, bottom: 14),
+          padding: EdgeInsets.only(top: flag == 1 ? 14 : 0, bottom: flag == 1 ? 14 : 0),
           decoration: BoxDecoration(
             border: Border(bottom: BorderSide(color: AppTheme.gray_gray_200))
           ),
-          child: Text(content
-            , style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_placeholder),),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(content
+                , style: AppTheme.a16400.copyWith(color: flag == 1 ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),),
+              flag == 2 ?
+              TextButton(
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                ),
+                onPressed: () {
+                  controller.isErrorDateChoice.value = true;
+                },
+                child: Container(
+                  padding: EdgeInsets.only(left: 6, right: 6, top: 4, bottom: 4),
+                  decoration: BoxDecoration(
+                    color: AppTheme.red_red_100,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Text('수정', style: AppTheme.bodyBody1.copyWith(color: AppTheme.black)),
+                ),
+              ) : Container()
+            ],
+          ),
         )
       ],
     );
@@ -124,8 +161,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('점검/의뢰 구분',
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
         Row(
           children: [
             Expanded(
@@ -155,8 +192,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         value: value,
                         child: Text(
                           value,
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -196,8 +233,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         value: value,
                         child: Text(
                           value,
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -221,8 +258,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('설비',
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
         Container(
                 height: 50,
                 decoration: BoxDecoration(
@@ -249,8 +286,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         value: value,
                         child: Text(
                           value,
-                          style: AppTheme.bodyBody1
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -260,7 +297,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       controller.selectedMach.value = value!;
 
                       Get.log('$value 선택!!!!');
-                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                       Get.log(controller.selectedMachCd.value);
                     }),
               ),
 
@@ -274,8 +311,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('설비 외',
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
         SizedBox(height: 4,),
         Container(
           decoration: BoxDecoration(
@@ -286,6 +323,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           ),
           width: double.infinity,
           child: TextFormField(
+            style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
            // maxLines: 5,
             controller: controller.textFacilityController,
             textInputAction: TextInputAction.search,
@@ -295,7 +333,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               fillColor: Colors.white,
               filled: true,
               hintText: '설비가 없는경우 직접 입력해주세요',
-              hintStyle: AppTheme.bodyBody1.copyWith(color: AppTheme.light_placeholder),
+              hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
               border: InputBorder.none,
             ),
             showCursor: true,
@@ -316,8 +354,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('정비유형',
-                      style: AppTheme.titleSubhead4
-                          .copyWith(color: AppTheme.light_text_primary)),
+                      style: AppTheme.a15700
+                          .copyWith(color: AppTheme.black)),
                   Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -344,8 +382,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             value: value,
                             child: Text(
                               value,
-                              style: AppTheme.bodyBody1
-                                  .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                              style: AppTheme.a16400
+                                  .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                             ),
                           );
                         }).toList(),
@@ -365,8 +403,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('점검부서',
-                      style: AppTheme.titleSubhead4
-                          .copyWith(color: AppTheme.light_text_primary)),
+                      style: AppTheme.a15700
+                          .copyWith(color: AppTheme.black)),
                   Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -393,8 +431,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             value: value,
                             child: Text(
                               value,
-                              style: AppTheme.bodyBody1
-                                  .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.black),
+                              style: AppTheme.a16400
+                                  .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                             ),
                           );
                         }).toList(),
@@ -419,8 +457,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('의뢰제목',
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
         SizedBox(height: 4,),
         Container(
           decoration: BoxDecoration(
@@ -431,6 +469,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           ),
           width: double.infinity,
           child: TextFormField(
+            style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
             // maxLines: 5,
             maxLength: 30,
             controller: controller.textTitleController,
@@ -442,7 +481,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               filled: true,
               counterText:'',
               hintText: '제목을 입력해주세요',
-              hintStyle: AppTheme.bodyBody1.copyWith(color: AppTheme.light_placeholder),
+              hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
               border: InputBorder.none,
             ),
             showCursor: true,
@@ -468,9 +507,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('상세내용',
-            style: AppTheme.titleSubhead4
-                .copyWith(color: AppTheme.light_text_primary)),
-        SizedBox(height: 4,),
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
+        SizedBox(height: 16,),
         Container(
           decoration: BoxDecoration(
               border: Border(
@@ -480,6 +519,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           ),
           width: double.infinity,
           child: TextFormField(
+            style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
             maxLength: 60,
             maxLines: 5,
             controller: controller.textContentController,
@@ -491,7 +531,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               fillColor: Colors.white,
               filled: true,
               hintText: '내용을 입력해주세요',
-              hintStyle: AppTheme.bodyBody1.copyWith(color: AppTheme.light_placeholder),
+              hintStyle: AppTheme.a16400.copyWith(color: AppTheme.light_placeholder),
               border: InputBorder.none,
             ),
             showCursor: true,
@@ -532,11 +572,13 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             type: FileType.custom,
             allowedExtensions: ['jpg', 'pdf', 'png'],
           );
+          controller.filePath.value = resultFile1!.files.first.path!;
         } else if (resultFile2 == null) {
           resultFile2 = await FilePicker.platform.pickFiles(
             type: FileType.custom,
             allowedExtensions: ['jpg', 'pdf', 'png'],
           );
+          controller.filePath2.value = resultFile1!.files.first.path!;
         }
 
         setState(() {});
@@ -585,7 +627,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       children: [
         Text(
           '사진(최대 4장)',
-          style: AppTheme.titleSubhead4
+          style: AppTheme.a15700
               .copyWith(color: AppTheme.light_text_primary),
         ),
         const SizedBox(
@@ -593,8 +635,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         ),
         Text(
           '의뢰내용과 관련된 사진을 올려주세요',
-          style: AppTheme.bodyBody1
-              .copyWith(color: AppTheme.light_text_tertiary),
+          style: AppTheme.a16400
+              .copyWith(color: AppTheme.a969696),
         ),
         const SizedBox(
           height: AppTheme.spacing_m_16,
@@ -704,6 +746,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
   Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
+        surfaceTintColor: AppTheme.white,
         child: Row(
           children: [
             Expanded(
@@ -712,10 +755,10 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                     style: ButtonStyle(
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                             RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0))),
+                                borderRadius: BorderRadius.circular(10))),
                         backgroundColor:
 
-                        MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+                        MaterialStateProperty.all<Color>(AppTheme.aE2E2E2),
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             const EdgeInsets.all(0))),
                     onPressed: () async {
@@ -730,7 +773,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                           child: Text(
                             '목록',
                             style: AppTheme.bodyBody2.copyWith(
-                              color: const Color(0xfffbfbfb),
+                              color: AppTheme.a6c6c6c,
                             ),
                           )),
                     )),
@@ -753,16 +796,20 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       style: ButtonStyle(
                           shape: MaterialStateProperty.all<OutlinedBorder>(
                               RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0))),
+                                  borderRadius: BorderRadius.circular(10))),
                           backgroundColor: controller.isStep2RegistBtn.value ?
-                          MaterialStateProperty.all<Color>(AppTheme.light_primary) :
+                          MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
                           MaterialStateProperty.all<Color>(AppTheme.light_cancel),
                           padding: MaterialStateProperty.all<EdgeInsets>(
                               const EdgeInsets.all(0))),
                       onPressed: controller.isStep2RegistBtn.value ? () async {
+                        controller.filePathList.clear();
                         controller.cdConvert();
                         controller.saveButton();
-                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', ));
+                        _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        SchedulerBinding.instance!.addPostFrameCallback((_) {
+                           Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1,));
+                        });
                       } : null,
                       child: Container(
                         height: 56,
@@ -771,7 +818,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             child: Text(
                               '저장',
                               style: AppTheme.bodyBody2.copyWith(
-                                color: const Color(0xfffbfbfb),
+                                color: AppTheme.white,
                               ),
                             )),
                       ));
@@ -789,10 +836,6 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       if (formKey.currentState?.validate() == true) {
         formKey.currentState?.save();
 
-        var queryParameters = <String, dynamic>{};
-      //  queryParameters['inquiryCd'] = selectCategory.code;
-      //  queryParameters['title'] = titleTextController.text;
-      //  queryParameters['content'] = contentTextController.text;
 
         const maxFileSize = 1024 * 1024 * 10;
 
@@ -803,9 +846,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           //  Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
-
           if (path != '') {
-            queryParameters['ex_file0'] = await MultipartFile.fromFile(path);
+            controller.filePathList.add(path);
+        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
           }
         }
         if (resultFile2 != null) {
@@ -817,14 +860,17 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           }
 
           if (path != '') {
-            queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
+            controller.filePathList.add(path);
+           // queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
           }
         }
-        var formData = FormData.fromMap(queryParameters);
 
-        var path = resultFile1!.files.first.path ?? '';
-        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':'${controller.irFileCode.value}',
-          '@p_FILE_NAME':'${resultFile2!.files.first.name}', '@p_SVR_FILE_PATH': path, '@p_SEQ':'0'});
+        Map<String, dynamic> path = {
+          'PATH': controller.filePathList
+        };
+
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
+          '@p_FILE_NAME':resultFile2!.files.first.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0'});
 
        /* if (retVal.success) {
           Get.back(result: true);
@@ -839,6 +885,54 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
     } finally {
 
     }
+  }
+
+  Widget _errorDateSelect() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            child: TextButton(
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+              ),
+              onPressed: () async{
+                var datePicked = await DatePicker.showDateTimePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime(2018, 3, 5),
+                    maxTime: DateTime.now(), onChanged: (date) {
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      controller.isErrorDateChoice.value = false;
+                      var firstIndex = date
+                          .toString().lastIndexOf(':');
+                      var lastIndex = date
+                          .toString().length;
+                      controller.errorTime.value = date.toString().replaceRange(firstIndex, lastIndex, '');
+                    }, currentTime: DateTime.now(), locale: LocaleType.ko);
+
+                Get.log('${datePicked}');
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: AppTheme.gray_gray_200))
+                ),
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('날짜를 선택해주세요', style: AppTheme.bodyBody1
+                        .copyWith(color: AppTheme.black),),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
 

@@ -21,17 +21,20 @@ class SplashPage extends StatelessWidget {
               flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(
-                    child: SizedBox(
-                        //width : 100,
-                        height: 75,
-                        child: Text(
-                          "D'Health",
-                          style: AppTheme.notosans600
-                              .copyWith(color: AppTheme.dongkuk_blue, fontSize: 30),
-                        ),),
-                  ),
+                   Center(child: Image.asset('assets/app/egu.png', width: 50, height: 50,)),
+                   SizedBox(height: 4,),
+                   Center(
+                     child: SizedBox(
+                          //width : 100,
+                          height: 75,
+                          child: Text(
+                            "이구산업",
+                            style: AppTheme.notosans600
+                                .copyWith(color: AppTheme.dongkuk_blue, fontSize: 30),
+                          ),),
+                   ),
                 ],
               ),
             ),

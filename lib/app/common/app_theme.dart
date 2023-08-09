@@ -88,7 +88,12 @@ class AppTheme {
 
 
 
-
+  static const newTitle = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w900,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 20.0);
 
   static const titleDisplay5 = TextStyle(
   letterSpacing: -0.6,
@@ -96,6 +101,12 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 40.0);
+  static const newTitleDisplay = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 38.0);
   static const titleDisplay4 = TextStyle(
   letterSpacing: -0.6,
   fontWeight: FontWeight.w700,
@@ -120,6 +131,46 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 24.0);
+  static const a22700 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 22.0);
+  static const a24400 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 24.0);
+  static const a18700 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 18.0);
+  static const a18400 = TextStyle(
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 18.0);
+  static const a16400 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 16.0);
+  static const a16700 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 16.0);
+  static const a16600 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w600,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 16.0);
   static const titleHeadline = TextStyle(
   letterSpacing: -0.6,
   fontWeight: FontWeight.w700,
@@ -137,6 +188,42 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 18.0);
+  static const a15500 = TextStyle(
+      fontWeight: FontWeight.w500,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 15.0);
+  static const a15700 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 15.0);
+  static const a15800 = TextStyle(
+      fontWeight: FontWeight.w800,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 15.0);
+  static const a14700 = TextStyle(
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 14.0);
+  static const a14500 = TextStyle(
+      fontWeight: FontWeight.w500,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 14.0);
+  static const a14400 = TextStyle(
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 14.0);
+
+  static const new18500 = TextStyle(
+      fontWeight: FontWeight.w600,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 18.0);
   static const titleSubhead3 = TextStyle(
   fontWeight: FontWeight.w600,
   fontFamily: 'SUIT',
@@ -172,6 +259,12 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 14.0);
+  static const newBody = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w500,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 14.0);
   static const bodyBody1 = TextStyle(
   letterSpacing: -0.6,
   fontWeight: FontWeight.w400,
@@ -184,6 +277,18 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 12.0);
+  static const a12500 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w500,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 12.0);
+  static const a12400 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w400,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 12.0);
   static const bodyCaption = TextStyle(
   letterSpacing: -0.6,
   fontWeight: FontWeight.w400,
@@ -202,6 +307,23 @@ class AppTheme {
   fontFamily: "SUIT",
   fontStyle: FontStyle.normal,
   fontSize: 10.0);
+
+  static const a959595 = const Color(0xff959595);
+  static const a969696 = const Color(0xff969696);
+  static const a787878 = const Color(0xff787878);
+  static const aBCBCBC = const Color(0xffbcbcbc);
+  static const a6c6c6c = const Color(0xff6c6c6c);
+  static const af3f3f3 = const Color(0xfff3f3f3);
+  static const af7f7f7 = const Color(0xfff7f7f7);
+  static const ae2e2e2 = const Color(0xffe2e2e2);
+  static const a4b4b4b = const Color(0xff4b4b4b);
+  static const a18b858 = const Color(0xff18b858);
+  static const aecf9f2 = const Color(0xffecf9f2);
+  static const af34f39 = const Color(0xfff34f39);
+  static const afef1ef = const Color(0xfffef1ef);
+  static const af4f4f4 = const Color(0xfff4f4f4);
+  static const ac7c7c7 = const Color(0xffc7c7c7);
+
 
   static const light_ui_background = const Color(0xffffffff);
   static const black = const Color(0xff000000);
@@ -222,6 +344,7 @@ class AppTheme {
   static const light_ui_up_04 = const Color(0xffffffff);
   static const light_ui_up_03 = const Color(0xffffffff);
   static const light_primary = const Color(0xff002452);
+  static const a1f1f1f = const Color(0xff1f1f1f);
   static const light_primary_press = const Color(0xff00123a);
   static const light_secondary = const Color(0xffc50b2f);
   static const light_secondary_press = const Color(0xffb80022);
@@ -230,6 +353,7 @@ class AppTheme {
   static const light_danger_press = const Color(0xffd21236);
   static const light_danger = const Color(0xffe5243d);
   static const light_cancel_press = const Color(0xff9e9e9e);
+  static const aE2E2E2 = const Color(0xffe2e2e2);
   static const light_cancel = const Color(0xffbdbdbd);
   static const light_success = const Color(0xff2087d6);
   static const light_error = const Color(0xfff9560e);

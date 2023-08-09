@@ -47,6 +47,9 @@ class FacilityFirstController extends GetxController {
 
   RxString irFileCode = ''.obs; // 파일 저장을 위한 ir코드
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
+  RxString filePath = ''.obs;
+  RxString filePath2 = ''.obs;
+  RxList<String> filePathList = [''].obs;
 
 
 
@@ -78,6 +81,8 @@ class FacilityFirstController extends GetxController {
   RxBool bSelectedDayFlag = false.obs;
   RxBool bSelectedStartDayFlag = false.obs; // 작업 시작일 날짜
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
+
+  RxBool isErrorDateChoice = false.obs;
   // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
 
   void test2() async {
@@ -91,38 +96,11 @@ class FacilityFirstController extends GetxController {
       '@p_FAILURE_DT':'${errorTime2.value}', '@p_IR_FG':'${irfqCd.value}', '@p_URGENCY_FG':'${urgencyCd.value}',
       '@p_INS_DEPT':'${engineTeamCd.value}', '@p_USER':'admin',});
     Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${a}');
+    // irFileCode.value = a.toString();
 
-    irFileCode.value = a['DATAS'][0]['IR_CODE'].toString();
 
     /// 사진파일 프로시저 추가해야함
 
-    /*파일 저장 쿼리
-    EXEC USP_MBS0200_S01 @p_WORK_TYPE = 'FILE_N',
-    @p_IR_CODE      = 'IR230609000001',
-    @p_FILE_NAME   = '의뢰 견적서1',
-    @p_SVR_FILE_PATH      = 'D:\files\MOB\MBS0200\2023-06-09\IR230609000001.jpg',
-    @p_SEQ         = 0
-    ※ 앞에 ’@p_’ 붙이는 항목은 모바일 입력 항목입니다.
-    ※  @p_USER는 접속자 ID입니다.
-    ※ 파일은 경로 저장 형식입니다.*/
-
-
-    /* 저장 쿼리
-    저장 쿼리
-      EXEC USP_MBS0200_S01 @p_WORK_TYPE = 'N', @p_IR_CODE   = ''
-      ,@p_INS_FG      = 'M' // m은 설비점검 s는 안전점검,
-      ,@p_MACH_CODE   = '1'
-      ,@p_MACH_ETC   = '6단1호기2'
-      ,@p_IR_TITILE   = '6단 1호기 안전 점검2'
-      ,@p_IR_CONTENT   = '6단 1호기의 안전점검 실행2.'
-      ,@p_IR_USER       = 'admin'
-      ,@p_FAILURE_DT    = '2023-06-09'
-      ,@p_IR_FG       = '010'
-      ,@p_URGENCY_FG    = 'U'
-      ,@p_INS_DEPT    = '9999'
-      ,@p_USER   = 'admin'
-      ※ 앞에 ’@p_’ 붙이는 항목은 모바일 입력 항목입니다.
-      ※  @p_USER는 접속자 ID입니다.*/
   }
 
 
@@ -141,12 +119,11 @@ class FacilityFirstController extends GetxController {
     {
      // Get.log('우웅ㅇ ${value}'),
       for(var i = 0; i < value['DATAS'].length; i++) {
-         Get.log('우웅ㅇ ${value['DATAS']}'),
         machList.add(value['DATAS'][i]['MACH_NAME']),
         machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
       }
     });
-
+    Get.log('$engineer');
     /// 정비유형
     var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
     {
@@ -164,20 +141,6 @@ class FacilityFirstController extends GetxController {
         engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
       }
     });
-    /*var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
-    {
-      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        irfgList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
-    var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
-    {
-      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });*/
   }
   void readCdConvert() {
     switch(selectedReadUrgency.value) {

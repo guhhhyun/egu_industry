@@ -11,21 +11,56 @@ class ModalUserListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 40, bottom: 24, left: 16, right: 16),
-        height: 500,
-        child: CustomScrollView(
-          slivers: [
-            _title(),
-            _listArea()
-          ],
+        padding: EdgeInsets.only(top: 40, bottom: 24, left: 16, right: 16),
+          height: 500,
+          child: CustomScrollView(
+            slivers: [
+              _title(),
+              _listArea(),
+             // _bottom(context)
+            ],
+          ),
+    );
+  }
+
+  Widget _bottom(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Scaffold(
+        bottomNavigationBar:  BottomAppBar(
+          surfaceTintColor: AppTheme.white,
+          child: TextButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  backgroundColor: controller.registButton.value ?
+                  MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
+                  MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.all(0))),
+              onPressed: controller.registButton.value ? () {
+               Get.back();
+              } : null,
+              child: Container(
+                height: 56,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: Text(
+                      '저장',
+                      style: AppTheme.a15700.copyWith(
+                        color: AppTheme.black,
+                      ),
+                    )),
+              )),
         ),
+      ),
     );
   }
 
   Widget _title() {
     return SliverToBoxAdapter(
       child: Container(
-        padding: EdgeInsets.only(left: 12, bottom: 24),
+        padding: EdgeInsets.only(left: 12, bottom: 20),
           child: Text('작업자 선택', style: AppTheme.titleHeadline.copyWith(color: AppTheme.black),
           )),
     );
@@ -60,17 +95,16 @@ class ModalUserListWidget extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.only(right: 12, top: 16, bottom: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   controller.isEngineerSelectedList[index] == false ?
-                  Icon(Icons.check_circle, color: AppTheme.gray_c_gray_300) : Icon(Icons.check_circle, color: AppTheme.black),
-                  SizedBox(width: 8,),
-                  Text('${controller.engineerList[index]}', style: AppTheme.bodyBody2.copyWith(color: AppTheme.gray_gray_400, fontSize: 17),),
+                  Icon(Icons.check_circle, color: AppTheme.gray_c_gray_300, size: 23,) : Icon(Icons.check_circle, color: AppTheme.black, size: 23),
+                  SizedBox(width: 15,),
+                  Text('${controller.engineerList[index]}', style: AppTheme.a16700.copyWith(color: AppTheme.black),),
                 ],
               ),
-              Text('dldldldl', style: AppTheme.bodyBody2.copyWith(color: AppTheme.gray_gray_400, fontSize: 17))
+
             ],
           )),
     ));

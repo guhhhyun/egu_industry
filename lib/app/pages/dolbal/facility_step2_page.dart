@@ -7,8 +7,10 @@ import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
 import 'package:egu_industry/app/pages/dolbal/facility_controller.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,6 +25,7 @@ class FacilityStep2Page extends StatelessWidget {
 
   FacilityController controller = Get.find();
   final formKey = GlobalKey<FormState>();
+  final ScrollController myScrollWorks = ScrollController();
 
 
   @override
@@ -30,7 +33,7 @@ class FacilityStep2Page extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, ),
+          CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, isFirstPage: false ),
           _bodyArea(context),
          //_streamBuilder()
 
@@ -58,7 +61,7 @@ class FacilityStep2Page extends StatelessWidget {
                 height: 12,
                 color: AppTheme.gray_gray_100,
               ),
-              _partChoiceBody()
+              _partChoiceBody(context)
             ],
           ),
         ),)
@@ -87,30 +90,29 @@ class FacilityStep2Page extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 6, right: 6, top: 3, bottom: 3),
+                padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.red_red_100 :
-                    Colors.greenAccent
+                    color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
+                    AppTheme.aecf9f2
                 ),
                 child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
-                    style: AppTheme.bodyCaption
+                    style: AppTheme.bodyBody1
                         .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                        ? AppTheme.red_red_400 : Colors.lightGreen)),
+                        ? AppTheme.af34f39 : AppTheme.a18b858)),
               ),
-              SizedBox(width: 6,),
+              const SizedBox(width: 6,),
               Container(
-                padding: EdgeInsets.only(left: 6, right: 6, top: 3, bottom: 3),
+                padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color:  AppTheme.gray_c_gray_100
+                    color:  AppTheme.af4f4f4
                 ),
-                child: Text( controller.selectedContainer[0]['RESULT_FG'] == 'N' ? '미조치' :
-                controller.selectedContainer[0]['RESULT_FG'] == 'Y' ? '조치완료' :
-                controller.selectedContainer[0]['RESULT_FG'] == 'I' ? '조치 진행중' : '없음',
-                    style: AppTheme.bodyCaption
-                        .copyWith(color: AppTheme.gray_c_gray_400)),
-              ),
+
+                child: Text( controller.selectedContainer[0]['INS_FG'] == 'M' ? '설비점검' : '안전점검',
+                    style: AppTheme.bodyBody1
+                        .copyWith(color: AppTheme.a969696)),
+              )
             ],
           ),
           SizedBox(height: 16,),
@@ -118,7 +120,7 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(_test(),
-                  style: AppTheme.titleDisplay1
+                  style: AppTheme.a22700
                       .copyWith(color: AppTheme.black)),
             ],
           ),
@@ -127,8 +129,8 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(controller.selectedContainer[0]['IR_TITLE'].toString(),
-                  style: AppTheme.titleHeadline
-                      .copyWith(color: AppTheme.light_text_secondary)),
+                  style: AppTheme.a18400
+                      .copyWith(color: AppTheme.a6c6c6c)),
             ],
           ),
           const SizedBox(height: 30,),
@@ -140,10 +142,10 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('번호',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Text('${controller.selectedContainer[0]['IR_CODE']}',
-                            style: AppTheme.bodyBody2
+                            style: AppTheme.a16400
                                 .copyWith(color: AppTheme.black)),
             ],
           ),
@@ -152,10 +154,10 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('의뢰자',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Text('${controller.selectedContainer[0]['IR_USER']}',
-                  style: AppTheme.bodyBody2
+                  style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],
           ),
@@ -164,10 +166,10 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('점검부서',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Text(_deptText(),
-                  style: AppTheme.bodyBody2
+                  style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],
           ),
@@ -176,20 +178,37 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('구분',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Text('${controller.selectedContainer[0]['INS_FG'].toString() == 'M' ? '설비' : '안전'}',
-                  style: AppTheme.bodyBody2
+                  style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],
           ),
           const SizedBox(height: 12,),
+         /* Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('정비유형',
+                  style: AppTheme.bodyBody1
+                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+              Container(
+                  child: (() {
+                    return Text(
+                        controller.selectedContainer[0]['IR_FG'].toString(),
+                        style: AppTheme.bodyBody2
+                            .copyWith(color: AppTheme.black));
+                  })()
+              ),
+            ],
+          ),
+          const SizedBox(height: 12,),*/
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('장애일시',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Container(
                   child: (() {
                     var firstIndex = controller.selectedContainer[0]['IR_DATE']
@@ -199,7 +218,7 @@ class FacilityStep2Page extends StatelessWidget {
                     return Text(
                         controller.selectedContainer[0]['IR_DATE']
                             .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
-                        style: AppTheme.bodyBody2
+                        style: AppTheme.a16400
                             .copyWith(color: AppTheme.black));
                   })()
               ),
@@ -210,10 +229,10 @@ class FacilityStep2Page extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('경과시간',
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: AppTheme.light_text_tertiary, fontSize: 18)),
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a959595)),
               Text('${_dateDifference()}h',
-                  style: AppTheme.bodyBody2
+                  style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],
           ),
@@ -235,43 +254,47 @@ class FacilityStep2Page extends StatelessWidget {
 
   Widget _inputArea(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 18, right: 18, top: 40),
+      padding: EdgeInsets.only(left: 18, right: 18),
       child: Form(
         key: formKey,
         child: Column(
           children: [
-            SizedBox(height: 30,),
+            SizedBox(height: 40,),
             Obx(() => _inputEngineerItem(context)),
-            SizedBox(height: 30,),
+            SizedBox(height: 40,),
             Row(
               children: [
-                _inputTitle('정비유형'),
+
                 _inputTitle('정비상태'),
               ],
             ),
             const SizedBox(height: 12,),
             Row(
               children: [
-                _dropDownItem(context, 1),
-                SizedBox(width: 12,),
                 _dropDownItem(context, 2),
               ],
             ),
-            SizedBox(height: 30,),
-            Row(
-              children: [
-                _inputTitle('미조치 사유'),
-              ],
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
-                _dropDownItem(context,  3),
-              ],
-            ),
-            SizedBox(height: 30,),
+            SizedBox(height: 25,),
+            controller.selectedResultFg.value == '미조치' ?
+                Column(
+                  children: [
+                    SizedBox(height: 15,),
+                    Row(
+                      children: [
+                        _inputTitle('미조치 사유'),
+                      ],
+                    ),
+                    const SizedBox(height: 12,),
+                    Row(
+                      children: [
+                        _dropDownItem(context,  3),
+                      ],
+                    ),
+                  ],
+                ) : Container(),
+            SizedBox(height: 40,),
             _startEndCalendarItem(context),
-            SizedBox(height: 30,),
+            SizedBox(height: 60,),
             _engineContentItem(),
             SizedBox(height: 70,),
           ],
@@ -290,7 +313,7 @@ class FacilityStep2Page extends StatelessWidget {
         SizedBox(height: 4,),
         InkWell(
           onTap: () {
-             controller.showModalUserChoice(context: context, index: 0);
+             controller.showModalUserChoice(context: context);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -553,7 +576,7 @@ class FacilityStep2Page extends StatelessWidget {
     );
   }
 
-  Widget _partChoiceBody() {
+  Widget _partChoiceBody(BuildContext context) {
 
     return Container(
       padding: EdgeInsets.only(left: 18, right: 18, top: 24),
@@ -578,8 +601,9 @@ class FacilityStep2Page extends StatelessWidget {
                             borderRadius: BorderRadius.circular(100)
                         )),
                   ),
-                  onPressed: () {
+                  onPressed: () async{
                     Get.log('추가');
+                    controller.showModalPartChoice(context: context);
                   },
                   child: Container(
                         padding: EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
@@ -587,7 +611,7 @@ class FacilityStep2Page extends StatelessWidget {
                           border: Border.all(color: AppTheme.gray_gray_300)
                         ),
                         child: Center(
-                          child: Text('추가', style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_text_secondary),),
+                          child: Text('추가/삭제', style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_text_secondary),),
                         ),
                       ),
                 ),
@@ -603,65 +627,87 @@ class FacilityStep2Page extends StatelessWidget {
               ],
             ),
             Container(
-              padding: EdgeInsets.only(top: 20, bottom: 20),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: AppTheme.gray_gray_300)
-                      )
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
-                        SizedBox(width: 4,),
-                        Text(
-                          '부품~~~~~~~~~~~~',
-                          style: AppTheme.titleSubhead4.copyWith(
-                            color: AppTheme.black,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 12,),
-                  Container(
-                    padding: EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: AppTheme.gray_gray_300)
-                        )
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.remove_circle, size: 25, color: AppTheme.red_red_900,),
-                        SizedBox(width: 4,),
-                        Text(
-                          '부품2~~~~~~~~~~~~',
-                          style: AppTheme.titleSubhead4.copyWith(
-                            color: AppTheme.black,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
+              height: 200,
+              child: PrimaryScrollController(
+                controller: myScrollWorks,
+                child: CupertinoScrollbar(
+                    isAlwaysShown: true,
+                  child: CustomScrollView(
+                physics: BouncingScrollPhysics(),
+                slivers: [
+                  controller.partSelectedList.length != 0 ?
+                  _listArea() : SliverToBoxAdapter( child: Container(),)
                 ],
               ),
-            )
+            ),)),
+            SizedBox(height: 40,)
           ],
       ),
     );
   }
 
+  Widget _listArea() {
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _listItem(index: index, context: context);
+        }, childCount: controller.partSelectedList.length));
+  }
+  Widget _listItem({required BuildContext context,required int index}) {
+
+    return Container(
+      padding: const EdgeInsets.only(top: 20, bottom: 20, right: 24),
+      child: Container(
+            padding: const EdgeInsets.only(bottom: 20),
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppTheme.gray_gray_300)
+                )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+               Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${controller.partSelectedList[index]['ITEM_NAME']}',
+                          style: AppTheme.a16400.copyWith(
+                            color: AppTheme.a1f1f1f,
+                          ),
+                        ),
+                        SizedBox(height: 6,),
+                        Text(
+                          '${controller.partSelectedList[index]['ITEM_SPEC']}',
+                          style: AppTheme.a16400.copyWith(
+                            color: AppTheme.a1f1f1f,
+                          ),
+                        ),
+
+                  ],
+                ),
+                Text(
+                  controller.partSelectedQtyList.isEmpty ? '1' :
+                  '${controller.partSelectedQtyList[index]}',
+                  style: AppTheme.a16400.copyWith(
+                    color: AppTheme.a1f1f1f,
+                  ),
+                )
+              ],
+            ),
+          ),
+    );
+  }
+
   Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
-      color: AppTheme.white,
+        color: AppTheme.white,
+        surfaceTintColor: AppTheme.white,
       child: (() {
-        if(controller.selectedIrFq.value != '전체' && controller.selectedResultFg.value != '전체'
+        if(controller.selectedResultFg.value != '전체'
             && controller.selectedNoReason.value != '전체'
-        && controller.selectedEnginner.value != '정비자를 선택해주세요') {
+        && controller.selectedEnginner.value != '정비자를 선택해주세요' &&  controller.dayStartValue.value != '선택해주세요' &&
+            controller.dayEndValue.value != '선택해주세요' && controller.textContentController.text != '') {
           controller.isStep2RegistBtn.value = true;
         }else {
           controller.isStep2RegistBtn.value = false;
@@ -670,19 +716,21 @@ class FacilityStep2Page extends StatelessWidget {
             style: ButtonStyle(
                 shape: MaterialStateProperty.all<OutlinedBorder>(
                     RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0))),
+                        borderRadius: BorderRadius.circular(10))),
                 backgroundColor: controller.isStep2RegistBtn.value ?
-                MaterialStateProperty.all<Color>(AppTheme.light_primary) :
+                MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
                 MaterialStateProperty.all<Color>(AppTheme.light_cancel),
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(0))),
             onPressed: controller.isStep2RegistBtn.value ? () async {
               controller.cdConvert();
               controller.saveButton();
-              Get.dialog(
-                  CommonDialogWidget(contentText: '저장되었습니다', )
-              );
-             // Get.toNamed(Routes.FACILITY);
+
+              SchedulerBinding.instance!.addPostFrameCallback((_) {
+                Get.dialog(
+                    CommonDialogWidget(contentText: '저장되었습니다', flag: 2,)
+                );
+              });
             } : null,
             child: Container(
               height: 56,

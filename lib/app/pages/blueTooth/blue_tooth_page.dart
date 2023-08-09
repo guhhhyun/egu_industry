@@ -18,7 +18,7 @@ class BluetoothPage extends StatelessWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          CommonAppbarWidget(title: '설비/안전 조회 및 등록', isLogo: false, )
+          CommonAppbarWidget(title: '설비/안전 조회 및 등록', isLogo: false, isFirstPage: true )
         ],
       ),
 

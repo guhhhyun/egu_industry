@@ -1,4 +1,5 @@
 
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,6 +12,7 @@ class CommonAppbarWidget extends StatelessWidget {
   String title;
   Widget? titleWidget;
   bool isLogo;
+  bool isFirstPage;
 
   PreferredSizeWidget? bottom;
 
@@ -19,7 +21,9 @@ class CommonAppbarWidget extends StatelessWidget {
       required this.title,
       required this.isLogo,
       this.titleWidget,
-      this.bottom})
+      this.bottom,
+      required this.isFirstPage
+      })
       : super(key: key);
 
   Widget _homeIcon() {
@@ -34,11 +38,22 @@ class CommonAppbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      titleSpacing: 0,
+      leading: TextButton(
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+        ),
+        onPressed: () {
+          isFirstPage ?
+          Get.offAll(HomePage()) : Get.back();
+        },
+        child: SvgPicture.asset('assets/app/arrow2Left.svg', color: AppTheme.black,),
+      ),
       centerTitle: false,
       title: titleWidget ??
               Text(
                 title,
-                style: AppTheme.titleSubhead4.copyWith(color: Colors.black),
+                style: AppTheme.a18700.copyWith(color: Colors.black),
               ),
       backgroundColor: Colors.white,
       iconTheme: const IconThemeData(

@@ -19,13 +19,13 @@ class HomeNewsWidget extends StatelessWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('LATEST NEWS', style: AppTheme.titleDisplay2)
+                    Text('LATEST NEWS', style: AppTheme.newTitle)
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('동국제강의 최신 소식을 확인해보세요.', style: AppTheme.titleSubhead4.copyWith(color: AppTheme.gray_c_gray_400))
+                    Text('이구산업의 최신 소식을 확인해보세요.', style: AppTheme.bodyBody2.copyWith(color: AppTheme.a969696))
                   ],
                 ),
                 const SizedBox(height: 32,),
@@ -61,47 +61,27 @@ class HomeNewsWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                  fontSize: 18
-              ),),
+              Text(title, style: AppTheme.a16700.copyWith(color: AppTheme.black)),
               IconButton(onPressed: () {
                 Get.log('$title 더보기 클릭');
-              }, icon: Icon(Icons.add))
+              }, icon: Icon(Icons.add, size: 18, color: AppTheme.black,))
             ],
           ),
           const SizedBox(height: 12,),
           /// 여긴 api 불러와서 list 최신 3개만 뿌려줘야함 --------------------
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('ㄴㅇㄴㅇㄴㅇㄴㅇ', style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black,
-                  fontSize: 18
-              ),),
-              Text('ㄴㅇㄴㅇㄴㅇ', style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black,
-                  fontSize: 18
-              ),),
-            ],
-          ),
-          SizedBox(height: 8,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('ㄴㅇㄴㅇㄴㅇㄴㅇ', style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black,
-                  fontSize: 18
-              ),),
-              Text('ㄴㅇㄴㅇㄴㅇ', style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black,
-                  fontSize: 18
-              ),),
+              Text('ㄴㅇㄴㅇㄴㅇㄴㅇ', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
+              Text('ㄴㅇㄴㅇㄴㅇ', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
+            ],
+          ),
+          const SizedBox(height: 8,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('ㄴㅇㄴㅇㄴㅇㄴㅇ', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
+              Text('ㄴㅇㄴㅇㄴㅇ', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
             ],
           ),
           /// ---------------------------------------------------

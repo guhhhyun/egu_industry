@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/dolbal/modal_part_list_widget.dart';
 import 'package:egu_industry/app/pages/dolbal/modal_user_list_widget.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,11 @@ class FacilityController extends GetxController {
   RxString engineTeamReadCd = ''.obs;
   RxList<bool> isEngineerSelectedList = [false].obs;
   RxList<String> engineerSelectedList = [''].obs;
+  RxList partList = [].obs; // 부품리스트
+  RxList<bool> isPartSelectedList = [false].obs;
+  RxList partSelectedList = [].obs;
+  RxList<int> partQtyList = [1].obs;
+  RxList<int> partSelectedQtyList = [1].obs;
   RxList<String> machList = [''].obs;
   RxString selectedMach = '선택해주세요'.obs;
   RxInt selectedMachIndex = 0.obs;
@@ -69,7 +75,7 @@ class FacilityController extends GetxController {
   RxBool bSelectedDayFlag = false.obs;
   RxBool bSelectedStartDayFlag = false.obs; // 작업 시작일 날짜
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
- // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
+
 
 
   Future<void> saveButton() async {
@@ -79,12 +85,34 @@ class FacilityController extends GetxController {
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
       '@p_RP_DEPT':'9999', '@p_USER':'admin',});
 
+    // 부품 저장 프로시저
+   /* await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':''
+      , '@p_ITEM_NAME':'', '@p_ITEM_SPEC':'', '@p_USE_QTY':'',});*/
 
   }
+
+
+
   void clear() {
+    partList.clear();
+    partQtyList.clear();
+    partSelectedQtyList.clear();
+    isPartSelectedList.clear();
     textContentController.clear();
     dayStartValue.value = '선택해주세요';
     dayEndValue.value = '선택해주세요';
+  }
+
+  Future<void> partConvert(String machCode) async {
+    var part = await HomeApi.to.PROC('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q_PART',  '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}',}).then((value) =>
+    {
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        isPartSelectedList.add(false),
+        partQtyList.add(1)
+      },
+      partList.addAll(value['DATAS']),
+    });
+    Get.log('part:  ${part}');
   }
 
 
@@ -101,6 +129,8 @@ class FacilityController extends GetxController {
     noReasonList.add('선택해주세요');
     machList.add('선택해주세요');
     engineTeamList.add('선택해주세요');
+
+
     /// 정비자 리스트
     var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
     {
@@ -115,21 +145,19 @@ class FacilityController extends GetxController {
     {
       // Get.log('우웅ㅇ ${value}'),
       for(var i = 0; i < value['DATAS'].length; i++) {
-        Get.log('우웅ㅇ ${value['DATAS']}'),
         machList.add(value['DATAS'][i]['MACH_NAME']),
         machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
       }
     });
+    Get.log('이거봥 ${engineer2}');
     var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
     {
-      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
       for(var i = 0; i < value['DATAS'].length; i++) {
         irfgList.add(value['DATAS'][i]['TEXT'].toString()),
       }
     });
     var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
     {
-      Get.log('뭦ㅇ미인ㅇㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇ ${value['DATAS']}'),
       for(var i = 0; i < value['DATAS'].length; i++) {
         noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
       }
@@ -233,7 +261,7 @@ class FacilityController extends GetxController {
     }
   }
 
-  void showModalUserChoice({required BuildContext context, required int index}) {
+  void showModalUserChoice({required BuildContext context}) {
     Get.log('showModalUserChoice');
 
     Get.bottomSheet(
@@ -241,8 +269,20 @@ class FacilityController extends GetxController {
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0), topLeft: Radius.circular(20.0))),
+                topRight: Radius.circular(25.0), topLeft: Radius.circular(25.0))),
         ModalUserListWidget()
+    );
+  }
+  void showModalPartChoice({required BuildContext context}) {
+    Get.log('showModalUserChoice');
+
+    Get.bottomSheet(
+        backgroundColor: Colors.white,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(25.0), topLeft: Radius.circular(25.0))),
+        ModalPartListWidget()
     );
   }
 
