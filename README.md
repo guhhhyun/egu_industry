@@ -1,6 +1,6 @@
 # egu_industry
 
-A new Flutter project.
+이구산업 모바일 프로젝트
 
 ## Getting Started
 
