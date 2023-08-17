@@ -77,7 +77,7 @@ class FacilityController extends GetxController {
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
 
 
-
+  /// 정비자랑 부품쪽 여쭤봐야함
   Future<void> saveButton() async {
     await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
       , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':rpUser.value,
@@ -85,7 +85,7 @@ class FacilityController extends GetxController {
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
       '@p_RP_DEPT':'9999', '@p_USER':'admin',});
 
-    // 부품 저장 프로시저
+    // 부품 저장 프로시저 032
    /* await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':''
       , '@p_ITEM_NAME':'', '@p_ITEM_SPEC':'', '@p_USE_QTY':'',});*/
 

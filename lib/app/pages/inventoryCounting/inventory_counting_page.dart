@@ -22,13 +22,15 @@ class InventoryCountingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.white,
-      body: CustomScrollView(
-        slivers: [
-          CommonAppbarWidget(title: '재고실사', isLogo: false, isFirstPage: true ),
-          _topArea(),
-          _listArea()
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            CommonAppbarWidget(title: '재고실사', isLogo: false, isFirstPage: true ),
+            _topArea(),
+            _listArea()
 
-        ],
+          ],
+        ),
       ),
      // bottomNavigationBar: _bottomButton(context), //  등록
     );
@@ -71,6 +73,8 @@ class InventoryCountingPage extends StatelessWidget {
             style: AppTheme.a15700
                 .copyWith(color: AppTheme.black)),
         const SizedBox(height: 10,),
+        _scrapDropdown(true),
+        SizedBox(height: 10,),
         TextButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
@@ -211,10 +215,8 @@ class InventoryCountingPage extends StatelessWidget {
               padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0))),
           onPressed: () async{
-            var ab = '';
-            controller.selectedLocationMap['FKF_NM'] == '선택해주세요' ? ab = '' : ab = '2';
             var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.dayValue.value
-              ,'@p_GUBUN':'$ab' }).then((value) =>
+              ,'@p_GUBUN':'${controller.selectedCheckLocationMap['DETAIL_CD']}' }).then((value) =>
             {
               if(value['DATAS'] != null) {
                 controller.productList.value = value['DATAS']
@@ -244,9 +246,9 @@ class InventoryCountingPage extends StatelessWidget {
                 .copyWith(color: AppTheme.black)),
         const SizedBox(height: 10,),
         _scrapDropdown(false),
-        SizedBox(height: 10,),
-        controller.selectedLocationMap['FKF_NM'] != '선택해주세요' ?
-        Container(
+        const SizedBox(height: 10,),
+        controller.selectedSaveLocationMap['DETAIL_NM'] != '선택해주세요' ?
+       Container(
           child: Center(
             child: Container(
               padding: const EdgeInsets.only(left: 16),
@@ -264,18 +266,25 @@ class InventoryCountingPage extends StatelessWidget {
                 keyboardType: TextInputType.text,
                 decoration: InputDecoration(
                   suffixIcon: InkWell(
-                      onTap: () async{
+                      onTap:  () async {
                         Get.log('조회 돋보기 클릭!');
-                        controller.saveButton();
-                        var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                          , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                              : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                          , '@p_GUBUN':'2'}).then((value) =>
-                        {
-                          if(value['DATAS'] != null) {
-                            controller.productList.value = value['DATAS']
-                          }
-                        });
+                        if(controller.textController.text != '') {
+                          controller.saveButton();
+                          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                            , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                                : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                            , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                          {
+                            if(value['DATAS'] != null) {
+                              controller.productList.value = value['DATAS']
+                            }
+                          });
+
+                          SchedulerBinding.instance!.addPostFrameCallback((_) {
+                            Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                          });
+                        }
+
                       },
                       child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
                   ),
@@ -327,28 +336,33 @@ class InventoryCountingPage extends StatelessWidget {
                       color: AppTheme.light_placeholder,
                     ),
                     dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedLocationMap['FKF_NM'],
+                    value: isCheck ? controller.selectedCheckLocationMap['DETAIL_NM'] : controller.selectedSaveLocationMap['DETAIL_NM'],
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.locationList.map((value) {
                       return DropdownMenuItem<String>(
-                        value: value['FKF_NM'],
+                        value: value['DETAIL_NM'],
                         child: Text(
-                          value['FKF_NM'],
+                          value['DETAIL_NM'],
                           style: AppTheme.a16400
-                              .copyWith(color: value['FKF_NM'] == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: value['DETAIL_NM'] == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
                       controller.locationList.map((e) {
-                        if(e['FKF_NM'] == value) {
-                          controller.selectedLocationMap['FKF_NO'] = e['FKF_NO'];
-                          controller.selectedLocationMap['FKF_NM'] = e['FKF_NM'];
+                        if(e['DETAIL_NM'] == value) {
+                          if(isCheck) {
+                            controller.selectedCheckLocationMap['DETAIL_CD'] = e['DETAIL_CD'];
+                            controller.selectedCheckLocationMap['DETAIL_NM'] = e['DETAIL_NM'];
+                          }else {
+                            controller.selectedSaveLocationMap['DETAIL_CD'] = e['DETAIL_CD'];
+                            controller.selectedSaveLocationMap['DETAIL_NM'] = e['DETAIL_NM'];
+                          }
                         }
 
                         //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
                       }).toList();
-                      Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      isCheck ? Get.log('${ controller.selectedCheckLocationMap} 선택!!!!') : Get.log('${ controller.selectedSaveLocationMap} 선택!!!!');
                     }),
               ),
             ),
@@ -413,7 +427,7 @@ class InventoryCountingPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(controller.productList[index]['CST_NM'],
+              Text(controller.productList[index]['CST_NM'] == null ? '' : controller.productList[index]['CST_NM'],
                   style: AppTheme.a16700
                       .copyWith(color: AppTheme.black)),
               SizedBox(width: 4,),
@@ -423,7 +437,7 @@ class InventoryCountingPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(controller.productList[index]['CMP_NM'].toString(),
+                  Text(controller.productList[index]['CMP_NM'] == null ? '' : controller.productList[index]['CMP_NM'].toString(),
                       style: AppTheme.a16400
                           .copyWith(color: AppTheme.black)),
                 ],
@@ -433,48 +447,47 @@ class InventoryCountingPage extends StatelessWidget {
               : Container(),
           /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
           controller.productList.isNotEmpty ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          Wrap(
             children: [
 
               Text(controller.productList[index]['RP'].toString(),
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('|', style: AppTheme.a14400
                   .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text(controller.productList[index]['STT_NM'].toString(),
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('|', style: AppTheme.a16400
                   .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('${controller.productList[index]['THIC'].toString()} (THIC)',
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('|', style: AppTheme.a14400
                   .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('${controller.productList[index]['WIDTH'].toString()} (WIDTH)',
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('|', style: AppTheme.a14400
                   .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
               Text('${controller.productList[index]['WEIGHT'].toString()} (WEIGHT)',
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a6c6c6c)),
             ],
           ) : Container(),
-          SizedBox(height: 12,),
+          const SizedBox(height: 12,),
           controller.productList.isNotEmpty ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(controller.productList[index]['PASS'].toString() == true ? '합격': '불합',
+              Text(controller.productList[index]['PASS'] == true ? '합격': '불합',
                   style: AppTheme.a14400
                       .copyWith(color: AppTheme.a959595)),
             ],
@@ -509,7 +522,7 @@ class InventoryCountingPage extends StatelessWidget {
                 controller.saveButton();
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
-                      CommonDialogWidget(contentText: '등록되었습니다', flag: 2,)
+                      CommonDialogWidget(contentText: '등록되었습니다', flag: 2, pageFlag: 4,)
                   );
                 });
               },

@@ -23,12 +23,14 @@ class FacilityFirstStep1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.white,
-      body: CustomScrollView(
-        slivers: [
-          CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
-          _bodyArea(),
-          _listArea()
-        ],
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
+            _bodyArea(),
+            _listArea()
+          ],
+        ),
       ),
       bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
@@ -135,9 +137,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
-                      controller.datasLength.value = value['DATAS'].length,
-                      for(var i = 0; i < controller.datasLength.value; i++){
-                        controller.datasList.add(value['DATAS'][i]),
+                      if(value['DATAS'] != null) {
+                        controller.datasLength.value = value['DATAS'].length,
+                        for(var i = 0; i < controller.datasLength.value; i++){
+                          controller.datasList.add(value['DATAS'][i]),
+                        },
                       },
                       Get.log('datasList: ${controller.datasList}'),
                     });
@@ -189,9 +193,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
-                      controller.datasLength.value = value['DATAS'].length,
-                      for(var i = 0; i < controller.datasLength.value; i++){
-                        controller.datasList.add(value['DATAS'][i]),
+                      if(value['DATAS'] != null) {
+                        controller.datasLength.value = value['DATAS'].length,
+                        for(var i = 0; i < controller.datasLength.value; i++){
+                          controller.datasList.add(value['DATAS'][i]),
+                        },
                       },
                       Get.log('datasList: ${controller.datasList}'),
                     });
@@ -236,9 +242,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
               {
                 controller.datasList.clear(),
                 Get.log('value[DATAS]: ${value['DATAS']}'),
-                controller.datasLength.value = value['DATAS'].length,
-                for(var i = 0; i < controller.datasLength.value; i++){
-                  controller.datasList.add(value['DATAS'][i]),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
                 },
                 Get.log('datasList: ${controller.datasList}'),
               });
@@ -293,9 +301,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
               {
                 controller.datasList.clear(),
                 Get.log('value[DATAS]: ${value['DATAS']}'),
-                controller.datasLength.value = value['DATAS'].length,
-                for(var i = 0; i < controller.datasLength.value; i++){
-                  controller.datasList.add(value['DATAS'][i]),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
                 },
                 Get.log('datasList: ${controller.datasList}'),
               });
@@ -349,9 +359,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
               {
                 controller.datasList.clear(),
                 Get.log('value[DATAS]: ${value['DATAS']}'),
-                controller.datasLength.value = value['DATAS'].length,
-                for(var i = 0; i < controller.datasLength.value; i++){
-                  controller.datasList.add(value['DATAS'][i]),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
                 },
                 Get.log('datasList: ${controller.datasList}'),
               });
@@ -405,9 +417,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
               {
                 controller.datasList.clear(),
                 Get.log('value[DATAS]: ${value['DATAS']}'),
-                controller.datasLength.value = value['DATAS'].length,
-                for(var i = 0; i < controller.datasLength.value; i++){
-                  controller.datasList.add(value['DATAS'][i]),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
                 },
                 Get.log('datasList: ${controller.datasList}'),
               });
@@ -428,7 +442,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                         SizedBox(width: 2,)
                       ],
                     ) : Container(),
-                    Text('조치 진행중', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
+                    Text('진행중', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
                   ],
                 ),
               ),
@@ -530,6 +544,20 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.dayValue.value = controller.dayValue.value = DateFormat('yyyy-MM-dd').format(controller.selectedDay.value);
                 controller.bSelectedDayFlag.value = true;
                 controller.isShowCalendar.value = false;
+                if(controller.choiceButtonVal.value != 0) {
+                  controller.datasList.clear();
+                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                  {
+                    Get.log('value[DATAS]: ${value['DATAS']}'),
+                    if(value['DATAS'] != null) {
+                      controller.datasLength.value = value['DATAS'].length,
+                      for(var i = 0; i < controller.datasLength.value; i++){
+                        controller.datasList.add(value['DATAS'][i]),
+                      },
+                    },
+                    Get.log('datasList: ${controller.datasList}'),
+                  });
+                }
               },
             ),
             SizedBox(height: 12,),
@@ -599,6 +627,21 @@ class FacilityFirstStep1Page extends StatelessWidget {
                               ),
 
                               child: Text( controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비점검' : '안전점검',
+                                  style: AppTheme.a12500
+                                      .copyWith(color: AppTheme.a969696)),
+                            ),
+                            SizedBox(width: 4,),
+                            controller.datasList[index]['RESULT_FG'].toString() == '' ? Container() :
+                            Container(
+                              padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color:  AppTheme.af4f4f4
+                              ),
+
+                              child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
+                                  : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
+                                   controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
                                   style: AppTheme.a12500
                                       .copyWith(color: AppTheme.a969696)),
                             )
@@ -679,6 +722,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
   }
   Widget _bottomButton(BuildContext context) {
     return BottomAppBar(
+      color: AppTheme.white,
       surfaceTintColor: AppTheme.white,
       child: Container(
         child: TextButton(

@@ -38,13 +38,15 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CommonAppbarWidget(title: '설비/안전 점검 - 의뢰내역 등록', isLogo: false, isFirstPage: false ),
-          _bodyArea(context),
-          //_streamBuilder()
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            CommonAppbarWidget(title: '설비/안전 점검 - 의뢰내역 등록', isLogo: false, isFirstPage: false ),
+            _bodyArea(context),
+            //_streamBuilder()
 
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
@@ -746,6 +748,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
   Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
+        color: AppTheme.white,
         surfaceTintColor: AppTheme.white,
         child: Row(
           children: [
@@ -763,7 +766,6 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             const EdgeInsets.all(0))),
                     onPressed: () async {
                       Get.back();
-                      Get.delete<FacilityFirstController>();
                      //  Get.toNamed(Routes.FACILITY);
                     },
                     child: Container(
@@ -808,7 +810,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         controller.saveButton();
                         _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         SchedulerBinding.instance!.addPostFrameCallback((_) {
-                           Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1,));
+                           Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 1,));
                         });
                       } : null,
                       child: Container(

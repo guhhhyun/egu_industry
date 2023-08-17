@@ -27,6 +27,7 @@ class ModalUserListWidget extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Scaffold(
         bottomNavigationBar:  BottomAppBar(
+          color: AppTheme.white,
           surfaceTintColor: AppTheme.white,
           child: TextButton(
               style: ButtonStyle(

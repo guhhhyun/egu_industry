@@ -70,7 +70,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
               items: [
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/image_28.png'),
+                    _sliderContainer('assets/app/Group_225.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -88,7 +88,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/image_56.png'),
+                    _sliderContainer('assets/app/Group_226.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -106,7 +106,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/image_57.png'),
+                    _sliderContainer('assets/app/Group_227.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -124,7 +124,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/image_58.png'),
+                    _sliderContainer('assets/app/Group_228.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -135,6 +135,25 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                           Text('Phodphor Bronze', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
                           SizedBox(height: 14,),
                           Text('인청동 1종 ~ 3종', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Stack(
+                  children: [
+                    _sliderContainer('assets/app/Group_229.png'),
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('기타합급', style: AppTheme.newTitleDisplay.copyWith(color: AppTheme.white),),
+                          Text('Alloy', style: AppTheme.a24400.copyWith(color: AppTheme.white),),
+                          SizedBox(height: 14,),
+                          Text('C194/LFC/주석동/C4250', style: AppTheme.a16400.copyWith(color: AppTheme.white),),
+                          Text('뇌관용동/네이벌 황동', style: AppTheme.a16400.copyWith(color: AppTheme.white),)
                         ],
                       ),
                     ),
@@ -202,7 +221,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.black45
                                 ),
-                                child: Center(child: Text('${mainSlideIndex + 1} / 4', style: TextStyle(
+                                child: Center(child: Text('${mainSlideIndex + 1} / 5', style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Colors.white
                                 ),)),

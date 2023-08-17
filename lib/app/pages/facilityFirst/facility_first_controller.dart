@@ -86,7 +86,7 @@ class FacilityFirstController extends GetxController {
   // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
 
   void test2() async {
-    await Get.dialog(CommonDialogWidget( contentText: '등록되었습니다.',
+    await Get.dialog(CommonDialogWidget( contentText: '등록되었습니다.', pageFlag: 1,
     ));
   }
   Future<void> saveButton() async {
@@ -136,14 +136,13 @@ class FacilityFirstController extends GetxController {
     /// 점검부서
     var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
     {
-      //Get.log('우웅ㅇ ${value}'),
       for(var i = 0; i < value['DATAS'].length; i++) {
         engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
       }
     });
   }
   void readCdConvert() {
-    switch(selectedReadUrgency.value) { 
+    switch(selectedReadUrgency.value) {
       case "보통":
         urgencyReadCd.value = 'N';
         break;

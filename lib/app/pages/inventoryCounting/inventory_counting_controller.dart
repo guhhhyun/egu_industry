@@ -15,7 +15,8 @@ class InventoryCountingController extends GetxController {
   RxList<dynamic> locationList = [].obs; // 위치 정보 리스트
   RxList locationCdList = [''].obs; // 위치 정보 리스트
   RxString selectedLocation = '선택해주세요'.obs;
-  RxMap<String, String> selectedLocationMap = {'FKF_NO':'', 'FKF_NM': ''}.obs;
+  RxMap<String, String> selectedCheckLocationMap = {'DETAIL_CD':'', 'DETAIL_NM': ''}.obs;
+  RxMap<String, String> selectedSaveLocationMap = {'DETAIL_CD':'', 'DETAIL_NM': ''}.obs;
   RxBool isButton = false.obs;
 
 
@@ -23,17 +24,20 @@ class InventoryCountingController extends GetxController {
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정
   Future<void> saveButton() async {
-    await HomeApi.to.PROC('USP_MBS0500_S01', {'@p_WORK_TYPE':'N', '@p_BARCODE_NO': textController.text
-      , '@p_RACK_BARCODE':'W01RA000000', '@p_GUBUN':'2', '@p_USER':'admin'});
+   var a = await HomeApi.to.PROC('USP_MBS0500_S01', {'@p_WORK_TYPE':'N', '@p_BARCODE_NO': textController.text
+      , '@p_RACK_BARCODE': null, '@p_GUBUN':'${selectedSaveLocationMap['DETAIL_CD']}', '@p_USER':'admin'});
+   Get.log('구구ㅜ : $a');
   }
 
   Future<void> loactionConvert() async {
     locationList.clear();
-    selectedLocationMap.clear();
-    selectedLocationMap.addAll({'FKF_NO':'', 'FKF_NM': '선택해주세요'});
-    var location = await HomeApi.to.BIZ_DATA('L_BSS030').then((value) =>
+    selectedCheckLocationMap.clear();
+    selectedSaveLocationMap.clear();
+    selectedCheckLocationMap.addAll({'DETAIL_CD':'', 'DETAIL_NM': '선택해주세요'});
+    selectedSaveLocationMap.addAll({'DETAIL_CD':'', 'DETAIL_NM': '선택해주세요'});
+    var location = await HomeApi.to.BIZ_DATA('L_BSS031').then((value) =>
     {
-      value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '선택해주세요'}),
+      value['DATAS'].insert(0, {'DETAIL_CD':'', 'DETAIL_NM': '선택해주세요'}),
 
       locationList.value = value['DATAS']
     });

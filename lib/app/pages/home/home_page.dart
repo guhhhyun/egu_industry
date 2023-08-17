@@ -30,12 +30,12 @@ class HomePage extends StatelessWidget {
         return Future.value();
       },
       child: Material(
+        color: AppTheme.white,
         child: CustomScrollView(
           slivers: [
             //MainHeader(),
             MainSlideWidget(),
             const MainIconWidget(),
-
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
@@ -44,7 +44,6 @@ class HomePage extends StatelessWidget {
             ),
             // 공지 리스트
             HomeNewsWidget(),
-
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),

@@ -171,6 +171,12 @@ class AppTheme {
       fontFamily: 'SUIT',
       fontStyle: FontStyle.normal,
       fontSize: 16.0);
+  static const a16500 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w500,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 16.0);
   static const titleHeadline = TextStyle(
   letterSpacing: -0.6,
   fontWeight: FontWeight.w700,

@@ -31,13 +31,15 @@ class FacilityStep2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, isFirstPage: false ),
-          _bodyArea(context),
-         //_streamBuilder()
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, isFirstPage: false ),
+            _bodyArea(context),
+           //_streamBuilder()
 
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
@@ -394,6 +396,7 @@ class FacilityStep2Page extends StatelessWidget {
                     controller.selectedResultFg.value = value! :
                     controller.selectedNoReason.value = value!;
 
+
                     Get.log('$value 선택!!!!');
                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
                   }),
@@ -420,9 +423,14 @@ class FacilityStep2Page extends StatelessWidget {
                   ),
                   onPressed: () async{
                     var datePicked = await DatePicker.showSimpleDatePicker(
+                      titleText: '날짜 선택',
+                      itemTextStyle: AppTheme.a16400,
                       context,
-                      initialDate: DateTime(1994),
-                      firstDate: DateTime.now(),
+                      confirmText: '확인',
+                      cancelText: '취소',
+                      textColor: AppTheme.black,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
                       lastDate: DateTime(2060),
                       dateFormat: "yyyy-MM-dd",
                       locale: DateTimePickerLocale.ko,
@@ -480,9 +488,14 @@ class FacilityStep2Page extends StatelessWidget {
                   ),
                   onPressed: () async{
                     var datePicked = await DatePicker.showSimpleDatePicker(
+                      titleText: '날짜 선택',
+                      itemTextStyle: AppTheme.a16400,
                       context,
-                      initialDate: DateTime(1994),
-                      firstDate: DateTime.now(),
+                      confirmText: '확인',
+                      cancelText: '취소',
+                      textColor: AppTheme.black,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
                       lastDate: DateTime(2060),
                       dateFormat: "yyyy-MM-dd",
                       locale: DateTimePickerLocale.ko,
@@ -504,10 +517,8 @@ class FacilityStep2Page extends StatelessWidget {
                   },
                   child: Container(
                     height: 50,
-                    decoration: BoxDecoration(
-
-                        border: const Border(
-
+                    decoration: const BoxDecoration(
+                        border: Border(
                             bottom:
                             BorderSide(color: AppTheme.light_ui_08),
                            )),
@@ -728,7 +739,7 @@ class FacilityStep2Page extends StatelessWidget {
 
               SchedulerBinding.instance!.addPostFrameCallback((_) {
                 Get.dialog(
-                    CommonDialogWidget(contentText: '저장되었습니다', flag: 2,)
+                    CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 2,)
                 );
               });
             } : null,

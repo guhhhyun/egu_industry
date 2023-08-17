@@ -1,3 +1,4 @@
+import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,6 +12,8 @@ class CommonBottomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() => NavigationBar(
+      backgroundColor: AppTheme.white,
+        surfaceTintColor: AppTheme.white,
       onDestinationSelected: (selected) {
         controller.changeMenu(selected);
 

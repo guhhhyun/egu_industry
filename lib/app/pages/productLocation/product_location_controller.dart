@@ -12,8 +12,9 @@ class ProductLocationController extends GetxController {
   RxList<dynamic> locationList = [].obs; // 위치 정보 리스트
   RxList locationCdList = [''].obs; // 위치 정보 리스트
   RxString selectedLocation = '선택해주세요'.obs;
-  RxMap<String, String> selectedLocationMap = {'FKF_NO':'', 'FKF_NM': ''}.obs;
+  RxMap<String, String> selectedLocationMap = {'RACK_BARCODE':'', 'AREA': ''}.obs;
   RxBool isButton = false.obs;
+  RxBool isBcCode = false.obs;
 
 
   Future<void> checkButton() async {
@@ -21,7 +22,8 @@ class ProductLocationController extends GetxController {
         {'@p_WORK_TYPE': 'Q', '@p_BARCODE_NO': textController.text}).then((value) =>
     {
       if(value['DATAS'] != null) {
-        productList.value = value['DATAS']
+        productList.value = value['DATAS'],
+        isBcCode.value = true
       }
     });
     Get.log('바코드 조회 쿼리: $a');
@@ -29,18 +31,21 @@ class ProductLocationController extends GetxController {
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정
   Future<void> saveButton() async {
-    await HomeApi.to.PROC('USP_MBS0400_S01', {'@p_WORK_TYPE':'U', '@p_BARCODE_NO': textController.text
-      , '@p_RACK_BARCODE':'W01RA000000', '@p_USER':'admin'});
+    var a = await HomeApi.to.PROC('USP_MBS0400_S01', {'@p_WORK_TYPE':'U', '@p_BARCODE_NO': textController.text
+      , '@p_RACK_BARCODE':selectedLocationMap['RACK_BARCODE'], '@p_USER':'admin'});
+    Get.log('이동 결과: ${a}');
   }
 
   Future<void> loactionConvert() async {
+
     locationList.clear();
     selectedLocationMap.clear();
-    selectedLocationMap.addAll({'FKF_NO':'', 'FKF_NM': '선택해주세요'});
+    selectedLocationMap.addAll({'RACK_BARCODE':'', 'AREA': '선택해주세요'});
     var location = await HomeApi.to.BIZ_DATA('L_BSS030').then((value) =>
     {
-      value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '선택해주세요'}),
-      locationList.value = value['DATAS']
+      value['DATAS'].insert(0, {'RACK_BARCODE':'', 'AREA': '선택해주세요'}),
+      locationList.value = value['DATAS'],
+
     });
     Get.log('위치 : $locationList');
   }

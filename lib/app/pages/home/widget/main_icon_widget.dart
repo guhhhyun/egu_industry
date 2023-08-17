@@ -11,65 +11,60 @@ class MainIconWidget extends StatelessWidget {
         required String subTitle,
         required String imgUrl,
         required Function() onPressed}) {
-    return Container(
-        child: Column(
-          children: [
-            Container(
-              child: InkWell(
-                onTap: onPressed,
-                child: Container(
-                      decoration: BoxDecoration(
+    return Column(
+      children: [
+        InkWell(
+          onTap: onPressed,
+          child: Container(
+                decoration: BoxDecoration(
 
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: AppTheme.gray_c_gray_200)
-                      ),
-                      padding: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 20),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: AppTheme.gray_c_gray_200)
+                ),
+                padding: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 20),
 
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Ink.image(
-                                image: AssetImage(imgUrl),
-                                width: 24,
-                                height: 24,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 4,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    style: AppTheme.newBody.copyWith(
-                                      color: AppTheme.a787878,
-                                    ),
-                                  ),
-                                  Text(
-                                    subTitle,
-                                    style: AppTheme.newBody.copyWith(
-                                      color: AppTheme.a787878,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                            ],
-                          ),
-
-                        ],
-                      ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Ink.image(
+                          image: AssetImage(imgUrl),
+                          width: 24,
+                          height: 24,
+                        ),
+                      ],
                     ),
-              ),
-            ),
-          ],
-        ),
+                    SizedBox(height: 4,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: AppTheme.newBody.copyWith(
+                                color: AppTheme.a787878,
+                              ),
+                            ),
+                            Text(
+                              subTitle,
+                              style: AppTheme.newBody.copyWith(
+                                color: AppTheme.a787878,
+                              ),
+                            ),
+                          ],
+                        ),
 
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+        ),
+      ],
     );
   }
 
@@ -79,7 +74,7 @@ class MainIconWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.only(
           left: AppTheme.spacing_l_20,
-          top: AppTheme.spacing_xl_24,
+          top: 12,
           right: AppTheme.spacing_l_20,
         ),
         child: Column(
@@ -100,7 +95,9 @@ class MainIconWidget extends StatelessWidget {
             const SizedBox(height: 27,),
             Row(
               children: [
-                Expanded(child: _buttonArea(
+                Expanded(
+
+                  child: _buttonArea(
                     imgUrl: 'assets/app/checklist-1.png',
                     title: '설비/안전',
                     subTitle: '점검의뢰',
@@ -109,7 +106,8 @@ class MainIconWidget extends StatelessWidget {
                       Get.toNamed(Routes.FACILITY_FIRST);
                     }),),
                 const SizedBox(width: 12,),
-                Expanded(child: _buttonArea(
+                Expanded(
+                 child: _buttonArea(
                     imgUrl: 'assets/app/online-test-1.png',
                     title: '설비/안전',
                     subTitle: '내역등록',
@@ -119,7 +117,8 @@ class MainIconWidget extends StatelessWidget {
                       //  Get.toNamed(Routes.BAR_MAIN);
                     }),),
                 const SizedBox(width: 12,),
-                Expanded(child: _buttonArea(
+                Expanded(
+                  child: _buttonArea(
                     imgUrl: 'assets/app/Group-1.png',
                     title: '제품',
                     subTitle: '위치이동',
@@ -149,7 +148,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '',
                     onPressed: () {
                       Get.log('공정이동');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                      Get.toNamed(Routes.PROCESS_TRANSFER);
                     }),),
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(
@@ -158,7 +157,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '',
                     onPressed: () {
                       Get.log('공정조회');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                      Get.toNamed(Routes.PROCESS_CHECK);
                     }),),
               ],
             ),
@@ -171,7 +170,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '조회',
                     onPressed: () {
                       Get.log('제품재고 조회');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                      Get.toNamed(Routes.INVENTORY_CHECK);
                     }),),
                 const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
@@ -180,7 +179,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '검수',
                     onPressed: () {
                       Get.log('제품포장 검수');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                        Get.toNamed(Routes.FACILITY_MONITORING);
                     }),),
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(

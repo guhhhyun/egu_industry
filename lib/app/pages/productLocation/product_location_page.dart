@@ -17,14 +17,16 @@ class ProductLocationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.white,
-      body: CustomScrollView(
-        slivers: [
-          CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
-          _topArea(),
-          _bodyArea(),
-          _locationItem()
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
+            _topArea(),
+            _bodyArea(),
+            _locationItem()
 
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: _bottomButton(context), //  등록
     );
@@ -85,30 +87,30 @@ class ProductLocationPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             color: AppTheme.white
         ),
-        child: Column(
+        child: Obx(() =>Column(
           children: [
-            _bodyItem('BC No.', controller.textController.text),
+            _bodyItem('BC No.', controller.productList.isEmpty ? '' : controller.productList[0]['BARCODE_NO'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('거래처', 'aaaaaaaa'),
+            _bodyItem('거래처', controller.productList.isEmpty ? '' : controller.productList[0]['CST_NM'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('품종', 'aaaaaaaaaa'),
+            _bodyItem('품종', controller.productList.isEmpty ? '' : controller.productList[0]['CMP_NM'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('R/P', 'ccccccccc'),
+            _bodyItem('R/P', controller.productList.isEmpty ? '' : controller.productList[0]['SHP_NM'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('질별', 'dddddddddddd'),
+            _bodyItem('질별', controller.productList.isEmpty ? '' : controller.productList[0]['STT_NM'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('두께', 'eeeeeeeeee'),
+            _bodyItem('두께', controller.productList.isEmpty ? '' : controller.productList[0]['THIC'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('폭', 'ff'),
+            _bodyItem('폭', controller.productList.isEmpty ? '' : controller.productList[0]['WIDTH'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('합불', 'gggggggg'),
+            _bodyItem('합불', controller.productList.isEmpty ? '' : controller.productList[0]['PASS'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('위치', 'awewewe'),
+            _bodyItem('위치', controller.productList.isEmpty ? '' : controller.productList[0]['LOC_AREA'].toString()),
             const SizedBox(height: 20,),
-            _bodyItem('무게', 'qrqrqrq'),
+            _bodyItem('무게', controller.productList.isEmpty ? '' : controller.productList[0]['WEIGHT'].toString()),
             const SizedBox(height: 20,),
           ],
-        ),
+        ),)
       ),
     );
   }
@@ -166,26 +168,24 @@ class ProductLocationPage extends StatelessWidget {
                             color: AppTheme.light_placeholder,
                           ),
                           dropdownColor: AppTheme.light_ui_01,
-                          value: controller.selectedLocationMap['FKF_NM'],
+                          value: controller.selectedLocationMap['AREA'],
                           //  flag == 3 ? controller.selectedNoReason.value :
                           items: controller.locationList.map((value) {
                             return DropdownMenuItem<String>(
-                              value: value['FKF_NM'],
+                              value: value['AREA'].toString(),
                               child: Text(
-                                value['FKF_NM'],
+                                value['AREA'].toString(),
                                 style: AppTheme.a16400
-                                    .copyWith(color: value['FKF_NM'] == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                                    .copyWith(color: value['AREA'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                               ),
                             );
                           }).toList(),
                           onChanged: (value) {
                             controller.locationList.map((e) {
-                              if(e['FKF_NM'] == value) {
-                                controller.selectedLocationMap['FKF_NO'] = e['FKF_NO'];
-                                controller.selectedLocationMap['FKF_NM'] = e['FKF_NM'];
+                              if(e['AREA'] == value) {
+                                controller.selectedLocationMap['RACK_BARCODE'] = e['RACK_BARCODE'];
+                                controller.selectedLocationMap['AREA'] = e['AREA'];
                               }
-
-                              //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
                             }).toList();
                             Get.log('${ controller.selectedLocationMap} 선택!!!!');
                           }),
@@ -203,8 +203,10 @@ class ProductLocationPage extends StatelessWidget {
         color: AppTheme.white,
         surfaceTintColor: AppTheme.white,
         child: (() {
-          if(controller.selectedLocationMap['FKF_NM'] != '선택해주세요') {
-            controller.isButton.value = true;
+          if(controller.selectedLocationMap['AREA'] != '선택해주세요') {
+            if(controller.isBcCode.value == true) {
+              controller.isButton.value = true;
+            }
           }else {
             controller.isButton.value = false;
           }
@@ -220,9 +222,10 @@ class ProductLocationPage extends StatelessWidget {
                       const EdgeInsets.all(0))),
               onPressed: controller.isButton.value ? () {
                 controller.saveButton();
+                Get.log('저장 버튼 클릭');
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
-                      CommonDialogWidget(contentText: '저장되었습니다', flag: 2,)
+                      CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 3,)
                   );
                 });
               } : null,

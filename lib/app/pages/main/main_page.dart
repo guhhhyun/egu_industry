@@ -103,14 +103,14 @@ class MainPage extends StatelessWidget {
           switch (controller.selected.value) {
             case 0:
               return HomePage();
-            case 1:
+           /* case 1:
               return BluetoothPage();
             case 2:
-              return SettingPage();
+              return SettingPage();*/
             default:
               return HomePage();
           }
-        }),
-        bottomNavigationBar: CommonBottomWidget()));
+        })));
+       // bottomNavigationBar: CommonBottomWidget()));
   }
 }
