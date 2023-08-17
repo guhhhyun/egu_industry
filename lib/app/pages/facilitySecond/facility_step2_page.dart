@@ -4,7 +4,7 @@ import 'package:egu_industry/app/common/common_confirm_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
-import 'package:egu_industry/app/pages/dolbal/facility_controller.dart';
+import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/cupertino.dart';

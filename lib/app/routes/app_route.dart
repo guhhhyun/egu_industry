@@ -1,6 +1,6 @@
 
-import 'package:egu_industry/app/pages/dolbal/facility_binding.dart';
-import 'package:egu_industry/app/pages/dolbal/facility_page.dart';
+import 'package:egu_industry/app/pages/facilitySecond/facility_binding.dart';
+import 'package:egu_industry/app/pages/facilitySecond/facility_page.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_binding.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_binding.dart';

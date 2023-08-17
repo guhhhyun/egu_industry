@@ -1,9 +1,4 @@
 import 'package:egu_industry/app/common/app_theme.dart';
-import 'package:egu_industry/app/pages/dolbal/facility_page.dart';
-import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
-import 'package:egu_industry/app/pages/home/home_page.dart';
-import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_page.dart';
-import 'package:egu_industry/app/pages/productLocation/product_location_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

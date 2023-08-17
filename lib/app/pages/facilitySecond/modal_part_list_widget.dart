@@ -1,5 +1,5 @@
 import 'package:egu_industry/app/common/app_theme.dart';
-import 'package:egu_industry/app/pages/dolbal/facility_controller.dart';
+import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

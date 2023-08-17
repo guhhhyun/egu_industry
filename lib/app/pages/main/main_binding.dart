@@ -1,6 +1,6 @@
 
 import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
-import 'package:egu_industry/app/pages/dolbal/facility_controller.dart';
+import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/pages/setting/setting_controller.dart';
