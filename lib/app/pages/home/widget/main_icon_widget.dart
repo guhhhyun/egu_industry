@@ -179,20 +179,32 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '검수',
                     onPressed: () {
                       Get.log('제품포장 검수');
-                        Get.toNamed(Routes.FACILITY_MONITORING);
+                      //  Get.toNamed(Routes.PACKAGING_INSPEC);
                     }),),
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/product-development-2.png',
                     title: '스크랩',
-                    subTitle: '라벨 발행',
+                    subTitle: '라벨발행',
                     onPressed: () {
-                      Get.log('제품 제고현황');
-                      //  Get.toNamed(Routes.BAR_MAIN);
+                      Get.log('스크랩 라벨발행');
+                      Get.toNamed(Routes.SCRAP_LABEL);
                     }),),
               ],
             ),
-
+            const SizedBox(height: 12,),
+            Row(
+              children: [
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/Group-5.png',
+                    title: '설비가동',
+                    subTitle: '모니터링',
+                    onPressed: () {
+                      Get.log('설비가동 모니터링');
+                      Get.toNamed(Routes.FACILITY_MONITORING);
+                    }),),
+              ],
+            ),
           ],
         ),
       ),

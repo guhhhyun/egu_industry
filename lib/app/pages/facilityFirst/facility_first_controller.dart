@@ -27,8 +27,9 @@ class FacilityFirstController extends GetxController {
   RxString selectedReadUrgency = '선택해주세요'.obs;
   RxString urgencyCd = ''.obs;
   RxString urgencyReadCd = ''.obs;
-  RxList<String> machList = [''].obs;
+  RxList<dynamic> machList = [].obs;
   RxString selectedMach = '선택해주세요'.obs;
+  RxMap<String, String> selectedMachMap = {'MACH_CODE':'', 'MACH_NAME': ''}.obs;
   RxInt selectedMachIndex = 0.obs;
   RxList<String> machCdList = [''].obs;
   RxString selectedMachCd = ''.obs;
@@ -77,6 +78,7 @@ class FacilityFirstController extends GetxController {
   RxString noReasonCd = ''.obs;
   RxString rpUser = ''.obs;
 
+
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
   RxBool bSelectedStartDayFlag = false.obs; // 작업 시작일 날짜
@@ -91,7 +93,7 @@ class FacilityFirstController extends GetxController {
   }
   Future<void> saveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'N', '@p_IR_CODE':''
-      , '@p_INS_FG':'${insCd.value}', '@p_MACH_CODE':'${selectedMachCd.value}', '@p_MACH_ETC':'${selectedMach.value}',
+      , '@p_INS_FG':'${insCd.value}', '@p_MACH_CODE':selectedMachMap['MACH_CODE'], '@p_MACH_ETC':selectedMachMap['MACH_NAME'],
       '@p_IR_TITLE':'${textTitleController.text}', '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':'admin',
       '@p_FAILURE_DT':'${errorTime2.value}', '@p_IR_FG':'${irfqCd.value}', '@p_URGENCY_FG':'${urgencyCd.value}',
       '@p_INS_DEPT':'${engineTeamCd.value}', '@p_USER':'admin',});
@@ -109,19 +111,18 @@ class FacilityFirstController extends GetxController {
     irfgList.clear();
     engineTeamList.clear();
     machCdList.clear();
+    selectedMachMap.clear();
     machList.add('선택해주세요');
     irfgList.add('선택해주세요');
     engineTeamList.add('선택해주세요');
-
+    selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '전체'});
 
     /// 설비
     var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
     {
      // Get.log('우웅ㅇ ${value}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        machList.add(value['DATAS'][i]['MACH_NAME']),
-        machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
-      }
+      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '전체'}),
+      machList.value = value['DATAS']
     });
     Get.log('$engineer');
     /// 정비유형

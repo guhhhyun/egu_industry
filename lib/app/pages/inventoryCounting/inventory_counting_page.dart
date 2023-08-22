@@ -219,7 +219,12 @@ class InventoryCountingPage extends StatelessWidget {
               ,'@p_GUBUN':'${controller.selectedCheckLocationMap['DETAIL_CD']}' }).then((value) =>
             {
               if(value['DATAS'] != null) {
-                controller.productList.value = value['DATAS']
+                controller.productList.value = value['DATAS'],
+                for(var i = 0; i < controller.productList.length; i++) {
+                  if(controller.productList[i]['CST_NM'] == null) {
+                    controller.productList.remove(controller.productList[i])
+                  }
+                }
               }
             }); /// 구분도 여쭤봐야함
             Get.log('조회 결과~~~~~ $a');
@@ -276,10 +281,14 @@ class InventoryCountingPage extends StatelessWidget {
                             , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
                           {
                             if(value['DATAS'] != null) {
-                              controller.productList.value = value['DATAS']
+                              controller.productList.value = value['DATAS'],
+                              for(var i = 0; i < controller.productList.length; i++) {
+                                if(controller.productList[i]['CST_NM'].toString() == null) {
+                                  controller.productList.remove(controller.productList[i])
+                                } 
+                              }
                             }
                           });
-
                           SchedulerBinding.instance!.addPostFrameCallback((_) {
                             Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
                           });

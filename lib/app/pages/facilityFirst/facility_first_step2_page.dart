@@ -80,7 +80,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 ],
               ),
               SizedBox(height: 45,),
-              controller.selectedMach.value == '선택해주세요' ? _anotherFacilityItem() : Container(),
+              controller.selectedMachMap['MACH_NAME'] == '전체' ? _anotherFacilityItem() : Container(),
               SizedBox(height: 45,),
               _engineTeamItem(context),
               SizedBox(height: 45,),
@@ -267,7 +267,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       bottom: BorderSide(color: AppTheme.gray_gray_200),
                     )),
                 padding: const EdgeInsets.only( right: 12),
-                child: DropdownButton<String>(
+                child: DropdownButton(
                     borderRadius: BorderRadius.circular(3),
                     isExpanded: true,
                     underline: Container(
@@ -279,25 +279,27 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       color: AppTheme.light_placeholder,
                     ),
                     dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedMach.value,
+                    value: controller.selectedMachMap['MACH_NAME'],
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.machList.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
+                      return DropdownMenuItem<String>(
+                        value: value['MACH_NAME'],
                         child: Text(
-                          value,
+                          value['MACH_NAME'],
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.selectedMachIndex.value = controller.machList.indexOf(value);
-                      controller.selectedMachCd.value = controller.machCdList[controller.selectedMachIndex.value];
-                      controller.selectedMach.value = value!;
-
-                      Get.log('$value 선택!!!!');
-                       Get.log(controller.selectedMachCd.value);
+                      controller.machList.map((e) {
+                        if(e['MACH_NAME'] == value) {
+                          controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                          controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                        }
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
+                       Get.log('설비 코드 ::::::::: ${controller.selectedMachMap['MACH_CODE']}');
                     }),
               ),
 
@@ -785,7 +787,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 child: (() {
                   if(controller.errorTime.value != '' && controller.selectedIns.value != '선택해주세요'
                       && controller.selectedUrgency.value != '선택해주세요'
-                      && (controller.selectedMach.value != '선택해주세요' || controller.textFacilityController.text != '')
+                      && (controller.selectedMachMap['MACH_NAME'] != '전체' || controller.textFacilityController.text != '')
                       && controller.selectedIrFq.value != '선택해주세요' && controller.selectedEngineTeam.value != '선택해주세요'
                       && controller.textTitleController.text != '' && controller.textContentController.text != '') {
                     controller.isStep2RegistBtn.value = true;

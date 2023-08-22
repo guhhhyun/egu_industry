@@ -22,7 +22,7 @@ class InventoryCountingController extends GetxController {
 
 
 
-  /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정
+  /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정 /////// 바코드 유효성 검사도 여쭤봐야함
   Future<void> saveButton() async {
    var a = await HomeApi.to.PROC('USP_MBS0500_S01', {'@p_WORK_TYPE':'N', '@p_BARCODE_NO': textController.text
       , '@p_RACK_BARCODE': null, '@p_GUBUN':'${selectedSaveLocationMap['DETAIL_CD']}', '@p_USER':'admin'});
@@ -38,7 +38,6 @@ class InventoryCountingController extends GetxController {
     var location = await HomeApi.to.BIZ_DATA('L_BSS031').then((value) =>
     {
       value['DATAS'].insert(0, {'DETAIL_CD':'', 'DETAIL_NM': '선택해주세요'}),
-
       locationList.value = value['DATAS']
     });
     Get.log('위치 : $locationList');

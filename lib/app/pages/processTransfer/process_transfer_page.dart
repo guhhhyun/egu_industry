@@ -1,10 +1,12 @@
 
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/dialog_widget.dart';
 
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -219,19 +221,19 @@ class ProcessTransferPage extends StatelessWidget {
                     child: Text(
                       value,
                       style: AppTheme.a16500
-                          .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          .copyWith(color: value == '처리여부 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
                 onChanged: (value) {
                   controller.selectedMovYn.value = value!;
-                  value == '처리' ? controller.selectedMovYnCd.value = 'Y' : controller.selectedMovYnCd.value = 'N';
+                  value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
                   Get.log('$value 선택!!!!');
                   // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
                 }),
           ),
         ),
-        SizedBox(width: 16,),
+        const SizedBox(width: 16,),
         Expanded(
           child: Container(
             height: 50,
@@ -261,7 +263,7 @@ class ProcessTransferPage extends StatelessWidget {
                     child: Text(
                       value['FKF_NM'],
                       style: AppTheme.a16500
-                          .copyWith(color: value['FKF_NM'] == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          .copyWith(color: value['FKF_NM'] == '지게차 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
@@ -316,7 +318,7 @@ class ProcessTransferPage extends StatelessWidget {
                         child: Text(
                           value['MACH_NAME'],
                           style: AppTheme.a16500
-                              .copyWith(color: value['MACH_NAME'] == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                              .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -368,7 +370,7 @@ class ProcessTransferPage extends StatelessWidget {
                     child: Text(
                       value['FKF_NM'],
                       style: AppTheme.a16500
-                          .copyWith(color: value['FKF_NM'] == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          .copyWith(color: value['FKF_NM'] == '지게차 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
@@ -416,7 +418,7 @@ class ProcessTransferPage extends StatelessWidget {
 
       },
       child: Container(
-        margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
+        margin: EdgeInsets.only(left: 4, right: 4, bottom: 18),
         padding: EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -605,8 +607,12 @@ class ProcessTransferPage extends StatelessWidget {
                 onPressed: controller.registButton.value ?  controller.selectedSaveFkfNm['FKF_NM'] != '선택해주세요' ? () async{
                   Get.log('저장 클릭!!');
                   for(var i = 0; i < controller.processSelectedList.length; i++) {
-                    controller.saveButton(i);
+                    await controller.saveButton(i);
                   }
+                  SchedulerBinding.instance!.addPostFrameCallback((_) {
+                    Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 5,));
+                    controller.processSelectedList.clear();
+                  });
                 } : null : null,
                 child: Container(
                   height: 56,

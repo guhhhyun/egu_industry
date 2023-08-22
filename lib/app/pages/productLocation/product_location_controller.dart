@@ -23,10 +23,19 @@ class ProductLocationController extends GetxController {
     {
       if(value['DATAS'] != null) {
         productList.value = value['DATAS'],
-        isBcCode.value = true
+          /*if(value['DATAS']['BARCODE_NO'] != null) {
+            isBcCode.value = true
+          }else {
+            isBcCode.value = false
+          }*/
       }
     });
     Get.log('바코드 조회 쿼리: $a');
+    if(productList.isNotEmpty) {
+      isBcCode.value = true;
+    }else {
+      isBcCode.value = false;
+    }
   }
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정

@@ -802,11 +802,12 @@ class FacilityPage extends StatelessWidget {
   }
 
   String _test(int index) {
-    for(var i = 0; i < controller.machCdList.length; i++) {
-      if(controller.machCdList[i] == '${controller.datasList[index]['MACH_CODE']}') {
-        return controller.machList[i];
+    for(var u = 0; u < controller.machList.length; u++) {
+      if(controller.machList[u]['MACH_CODE'].toString() == controller.datasList[index]['MACH_CODE'].toString()) {
+        return controller.machList[u]['MACH_NAME'];
       }
     }
+
     return '';
   }
 

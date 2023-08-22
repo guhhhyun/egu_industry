@@ -1,4 +1,5 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +59,7 @@ class CommonDialogWidget extends StatelessWidget {
             onPressed: () {
               pageFlag == 1 ?
               Get.offAllNamed(Routes.FACILITY_FIRST) :  pageFlag == 2 ? Get.offAllNamed(Routes.FACILITY) :  pageFlag == 3 ? Get.offAllNamed(Routes.PRODUCT_LOCATION) :
-              pageFlag == 4 ? Get.back() : Get.offAllNamed(Routes.MAIN);
+              pageFlag == 4 ? Get.back() : pageFlag == 5 ? {Get.back(), Get.find<ProcessTransferController>().refresh() }  : Get.offAllNamed(Routes.MAIN);
             //  Get.back();
             //  Get.back();
             },

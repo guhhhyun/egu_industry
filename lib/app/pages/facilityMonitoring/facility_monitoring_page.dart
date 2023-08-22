@@ -8,7 +8,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 
 class FacilityMonitoringPage extends StatelessWidget {
@@ -44,7 +43,7 @@ class FacilityMonitoringPage extends StatelessWidget {
             const SizedBox(height: 12,),
             _checkButton(),
             const SizedBox(height: 12,),
-            _listItem(context: context, index: 1),
+          //  _listItem(context: context, index: 1),
           ],
         ),
       ),
@@ -58,7 +57,7 @@ class FacilityMonitoringPage extends StatelessWidget {
         Text('공정라인',
             style: AppTheme.a15700
                 .copyWith(color: AppTheme.black)),
-        SizedBox(height: 8,),
+        const SizedBox(height: 8,),
         Row(
           children: [
             Expanded(
@@ -109,81 +108,86 @@ class FacilityMonitoringPage extends StatelessWidget {
 
 
   Widget _checkButton() {
-    return Container(
-      child: TextButton(
-          style: ButtonStyle(
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.all(0))),
-          onPressed: () async{
-            controller.checkButton();
-          },
-          child: SizedBox(
-            height: 56,
-            child: Center(
-                child: Text(
-                  '검색',
-                  style: AppTheme.bodyBody2.copyWith(
-                    color: const Color(0xfffbfbfb),
-                  ),
-                )),
-          )),
-    );
+    return TextButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10))),
+            backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
+            padding: MaterialStateProperty.all<EdgeInsets>(
+                const EdgeInsets.all(0))),
+        onPressed: () async{
+          controller.checkButton();
+        },
+        child: SizedBox(
+          height: 56,
+          child: Center(
+              child: Text(
+                '검색',
+                style: AppTheme.bodyBody2.copyWith(
+                  color: const Color(0xfffbfbfb),
+                ),
+              )),
+        ));
   }
 
 
 
   Widget _listArea() {
-
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           return _listItem(index: index, context: context);
-        }, childCount: controller.monitoringList.length)));
+        }, childCount: controller.monitoringList.length)
+    )
+
+    );
   }
 
 
   /// obx 추가
   Widget _listItem({required BuildContext context, required int index}) {
     return Container(
-      margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
-      padding: EdgeInsets.only(top: 24, bottom: 18, left: 18, right: 18),
+      margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
+      padding: const EdgeInsets.only(top: 20, bottom: 18, left: 24, right: 24),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppTheme.aE2E2E2),
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            stops: [0.03, 0],
-            colors: [AppTheme.red_red_800, AppTheme.white], // List of colors
+            stops: const [0.025, 0],
+            colors: [controller.monitoringList[index]['STATUS_NM'] == '가동'
+                ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
+                ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
+                ? AppTheme.af34f39 : AppTheme.a18b858, AppTheme.white], // List of colors
           ),
           boxShadow: [
             BoxShadow(
               color: AppTheme.gray_c_gray_100.withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 3), // changes position of shadow
             ),
           ]
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /*Container(
-            padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+          Container(
+            padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
-                AppTheme.aecf9f2
+                color: controller.monitoringList[index]['STATUS_NM'] == '가동'
+                    ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
+                    ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
+                    ? AppTheme.af34f39 : AppTheme.a18b858
             ),
-            child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
-                style: AppTheme.a12500
-                    .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                    ? AppTheme.af34f39 : AppTheme.a18b858)),
-          ),*/
-         /* controller.monitoringList.isNotEmpty ?
+            child: Text(controller.monitoringList[index]['STATUS_NM'], /// 가동, 비가동, 설비이상
+                style: AppTheme.a12700
+                    .copyWith(color: AppTheme.white)),
+          ),
+          const SizedBox(height: 8,),
+          controller.monitoringList.isNotEmpty ?
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -193,29 +197,27 @@ class FacilityMonitoringPage extends StatelessWidget {
             ],
           )
               : Container(),
-          SizedBox(height: 4,),
-          controller.monitoringList.isNotEmpty ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(controller.monitoringList[index]['ALARM_CODE'],
-                  style: AppTheme.a15700
-                      .copyWith(color: AppTheme.black)),
-            ],
-          )
-              : Container(),
-          SizedBox(height: 4,),
+          const SizedBox(height: 12,),
           controller.monitoringList.isNotEmpty ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('${controller.monitoringList[index]['LEAD_TIME'].toString()}',
+                  Text(controller.monitoringList[index]['ALARM_VAL'] != '' ? '알람코드: ${controller.monitoringList[index]['ALARM_VAL']}' : '',
                       style: AppTheme.a14400
                           .copyWith(color: AppTheme.a959595)),
                 ],
               ),
-              Container(
+              Row(
+                children: [
+                  Text(controller.monitoringList[index]['LEAD_TIME'].toString(),
+                      style: AppTheme.a14400
+                          .copyWith(color: AppTheme.a959595)),
+                ],
+              ),
+
+              /*Container(
                   child: (() {
                     return Text(
                         controller.monitoringList[index]['IST_DT']
@@ -223,24 +225,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                         style: AppTheme.a14400
                             .copyWith(color: AppTheme.a959595));
                   })()
-              ),
+              ),*/
             ],
-          ) : Container(),*/
-          Row(
-            children: [
-              Text('data')
-            ],
-          ),
-          Row(
-            children: [
-              Text('data')
-            ],
-          ),
-          Row(
-            children: [
-              Text('data')
-            ],
-          )
+          ) : Container(),
         ],
       ),
 

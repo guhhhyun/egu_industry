@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_controller.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -8,10 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 
-class ProductLocationPage extends StatelessWidget {
-  ProductLocationPage({super.key});
+class PackagingInspecPage extends StatelessWidget {
+  PackagingInspecPage({super.key});
 
-  ProductLocationController controller = Get.find();
+  PackagingInspecController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +21,15 @@ class ProductLocationPage extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
+            CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
             _topArea(),
             _bodyArea(),
-            _locationItem()
+          //  _locationItem()
 
           ],
         ),
       ),
-      bottomNavigationBar: _bottomButton(context), //  등록
+     // bottomNavigationBar: _bottomButton(context), //  등록
     );
   }
 
@@ -80,37 +81,64 @@ class ProductLocationPage extends StatelessWidget {
   Widget _bodyArea() {
     return SliverToBoxAdapter(
       child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-        padding: const EdgeInsets.all(28),
-        decoration: BoxDecoration(
-            border: Border.all(color: AppTheme.ae2e2e2),
-            borderRadius: BorderRadius.circular(10),
-            color: AppTheme.white
-        ),
-        child: Obx(() =>Column(
-          children: [
-            _bodyItem('BC No.', controller.productList.isEmpty ? '' : controller.productList[0]['BARCODE_NO'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('거래처', controller.productList.isEmpty ? '' : controller.productList[0]['CST_NM'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('품종', controller.productList.isEmpty ? '' : controller.productList[0]['CMP_NM'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('R/P', controller.productList.isEmpty ? '' : controller.productList[0]['SHP_NM'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('질별', controller.productList.isEmpty ? '' : controller.productList[0]['STT_NM'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('두께', controller.productList.isEmpty ? '' : controller.productList[0]['THIC'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('폭', controller.productList.isEmpty ? '' : controller.productList[0]['WIDTH'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('합불', controller.productList.isEmpty ? '' : controller.productList[0]['PASS'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('위치', controller.productList.isEmpty ? '' : controller.productList[0]['LOC_AREA'].toString()),
-            const SizedBox(height: 20,),
-            _bodyItem('무게', controller.productList.isEmpty ? '' : controller.productList[0]['WEIGHT'].toString()),
-            const SizedBox(height: 20,),
-          ],
-        ),)
+          margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+              border: Border.all(color: AppTheme.ae2e2e2),
+              borderRadius: BorderRadius.circular(10),
+              color: AppTheme.white
+          ),
+          child: Obx(() =>Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('PNO',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.a959595)),
+                  Text('${controller.productList[0]['PACK_NO']}',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.black)),
+                ],
+              ),
+              const SizedBox(height: 12,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('SPEC',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.a959595)),
+                  Text('${controller.productList[0]['SPEC']}',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.black)),
+                ],
+              ),
+              const SizedBox(height: 12,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('품명',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.a959595)),
+                  Text('${controller.productList[0]['CMP_NM']}',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.black)),
+                ],
+              ),
+              const SizedBox(height: 12,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('회사명',
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.a959595)),
+                  Text('${controller.productList[0]['']}', // CST_NM 인데 ''로 되어있음
+                      style: AppTheme.a16400
+                          .copyWith(color: AppTheme.black)),
+                ],
+              ),
+            ],
+          ),)
       ),
     );
   }
@@ -122,8 +150,8 @@ class ProductLocationPage extends StatelessWidget {
           width: 103,
           padding: const EdgeInsets.only(top: 12, bottom: 12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: AppTheme.af7f7f7
+              borderRadius: BorderRadius.circular(5),
+              color: AppTheme.af7f7f7
           ),
           child: Center(child: Text(title, style: AppTheme.a16600.copyWith(color: AppTheme.black),)),
         ),
@@ -133,7 +161,7 @@ class ProductLocationPage extends StatelessWidget {
     );
   }
 
-  Widget _locationItem() {
+ /* Widget _locationItem() {
     return SliverToBoxAdapter(
       child: Obx(() => Container(
           margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
@@ -227,7 +255,7 @@ class ProductLocationPage extends StatelessWidget {
                   Get.dialog(
                       CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 3,)
                   );
-                 // controller.checkButton();
+                  // controller.checkButton();
                 });
               } : null,
               child: SizedBox(
@@ -243,5 +271,5 @@ class ProductLocationPage extends StatelessWidget {
               ));
         })()
     ));
-  }
+  }*/
 }

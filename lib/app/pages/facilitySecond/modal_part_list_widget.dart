@@ -23,7 +23,16 @@ class ModalPartListWidget extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           _title(),
-          _listArea(),
+          controller.partList.isNotEmpty ?
+          _listArea() :
+              SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 100,),
+                      Text('해당 설비의 부품이 없습니다', style: AppTheme.a18700.copyWith(color: AppTheme.black),)
+                    ],
+                  )
+              )
         ],
       ),
     );

@@ -65,7 +65,7 @@ class FacilityController extends GetxController {
   RxList partSelectedList = [].obs;
   RxList<int> partQtyList = [1].obs;
   RxList<int> partSelectedQtyList = [1].obs;
-  RxList<String> machList = [''].obs;
+  RxList<dynamic> machList = [].obs;
   RxString selectedMach = '선택해주세요'.obs;
   RxInt selectedMachIndex = 0.obs;
   RxList<String> machCdList = [''].obs;
@@ -144,10 +144,7 @@ class FacilityController extends GetxController {
     var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
     {
       // Get.log('우웅ㅇ ${value}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        machList.add(value['DATAS'][i]['MACH_NAME']),
-        machCdList.add(value['DATAS'][i]['MACH_CODE'].toString()),
-      }
+      machList.value = value['DATAS']
     });
     Get.log('이거봥 ${engineer2}');
     var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>

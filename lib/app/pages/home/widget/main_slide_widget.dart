@@ -1,11 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/print/pos_printer.dart';
+import 'package:egu_industry/app/print/print_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+
 
 class MainSlideWidget extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class MainSlideWidget extends StatefulWidget {
 }
 
 class _MainSlideWidgetSate extends State<MainSlideWidget> {
+
   int mainSlideIndex = 0;
 
   Widget _sliderContainer(String imgUrl) {
@@ -45,6 +50,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return SliverToBoxAdapter(
       child: Container(
         decoration: BoxDecoration(
@@ -193,9 +199,22 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Image.asset('assets/app/Vector.png', color: AppTheme.white, width: 30, height: 30,),
+                            InkWell(
+                                onTap: () {
+                                  print('클릭');
+                                  Get.to(BlePrinter());
+                                },
+                                child: Image.asset('assets/app/Vector.png', color: AppTheme.white, width: 30, height: 30,)
+                            ),
                             SizedBox(width: 14,),
-                            Image.asset('assets/app/printer.png', color: AppTheme.white, width: 30, height: 30,),
+                            InkWell(
+                              onTap: () async{
+                                print('클릭');
+                                Get.to(PrintPage('프린트'));
+
+                              },
+                                child: Image.asset('assets/app/printer.png', color: AppTheme.white, width: 30, height: 30,)
+                            ),
                           ],
                         ),
                       ],
@@ -255,4 +274,5 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
       ),
     );
   }
+
 }

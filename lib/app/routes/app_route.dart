@@ -11,12 +11,16 @@ import 'package:egu_industry/app/pages/main/main_binding.dart';
 import 'package:egu_industry/app/pages/main/main_page.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_binding.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_page.dart';
+import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_binding.dart';
+import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_page.dart';
 import 'package:egu_industry/app/pages/processCheck/process_check_binding.dart';
 import 'package:egu_industry/app/pages/processCheck/process_check_page.dart';
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_binding.dart';
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_page.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_binding.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_page.dart';
+import 'package:egu_industry/app/pages/scrapLabel/scrap_label_binding.dart';
+import 'package:egu_industry/app/pages/scrapLabel/scrap_label_page.dart';
 
 import 'package:get/get.dart';
 
@@ -35,6 +39,8 @@ abstract class Routes {
   static const INVENTORY_CHECK= _PathName.INVENTORY_CHECK;
   static const PROCESS_CHECK= _PathName.PROCESS_CHECK;
   static const FACILITY_MONITORING= _PathName.FACILITY_MONITORING;
+  static const PACKAGING_INSPEC= _PathName.PACKAGING_INSPEC;
+  static const SCRAP_LABEL= _PathName.SCRAP_LABEL;
 
 }
 
@@ -50,6 +56,8 @@ abstract class _PathName {
   static const String INVENTORY_CHECK = '/inventory_check'; // 제품재고 조회 페이지
   static const String PROCESS_CHECK = '/process_check'; // 공정조회 페이지
   static const String FACILITY_MONITORING = '/facility_monitoring'; // 설비가동 모니터링 페이지
+  static const String PACKAGING_INSPEC = '/packaging_inspec'; // 제품포장 검수 페이지
+  static const String SCRAP_LABEL = '/scrap_label'; // 스크랩 라벨발행 페이지
 }
 
 class AppRoute {
@@ -76,6 +84,10 @@ class AppRoute {
         name: _PathName.PROCESS_CHECK, page: () => ProcessCheckPage(), binding: ProcessCheckBinding()),
     GetPage(
         name: _PathName.FACILITY_MONITORING, page: () => FacilityMonitoringPage(), binding: FacilityMonitoringBinding()),
+    GetPage(
+        name: _PathName.PACKAGING_INSPEC, page: () => PackagingInspecPage(), binding: PackagingInspecBinding()),
+    GetPage(
+        name: _PathName.SCRAP_LABEL, page: () => ScrapLabelPage(), binding: ScrapLabelBinding()),
 
 
   ];

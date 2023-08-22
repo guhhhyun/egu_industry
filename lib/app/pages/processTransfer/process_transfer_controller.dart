@@ -12,8 +12,8 @@ class ProcessTransferController extends GetxController {
   RxString dayValue = '날짜를 선택해주세요'.obs;
   RxString dayStartValue = '시작날짜'.obs;
   RxString dayEndValue = '마지막날짜'.obs;
-  RxList<String> movYnList = ['선택해주세요','처리','미처리'].obs;
-  RxString selectedMovYn = '선택해주세요'.obs;
+  RxList<String> movYnList = ['처리여부 선택','처리','미처리'].obs;
+  RxString selectedMovYn = '처리여부 선택'.obs;
   RxString selectedMovYnCd = ''.obs; // 처리: y, 미처리: n
   RxMap<String, String> selectedFkfNm = {'FKF_NO':'', 'FKF_NM': ''}.obs;
   RxMap<String, String> selectedSaveFkfNm = {'FKF_NO':'', 'FKF_NM': ''}.obs;
@@ -55,12 +55,12 @@ class ProcessTransferController extends GetxController {
     selectedFkfNm.clear();
     selectedSaveFkfNm.clear();
     selectedMachMap.clear();
-    selectedSaveFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '선택해주세요'});
-    selectedFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '선택해주세요'});
-    selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '선택해주세요'});
+    selectedSaveFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '지게차 선택'});
+    selectedFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '지게차 선택'});
+    selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '전체'});
     var fkfList2 = await HomeApi.to.BIZ_DATA('L_BSS032').then((value) =>
     {
-      value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '선택해주세요'}),
+      value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '지게차 선택'}),
 
       fkfList.value = value['DATAS']
     });
@@ -68,7 +68,7 @@ class ProcessTransferController extends GetxController {
     /// 작업위치
     var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
     {
-      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '선택해주세요'}),
+      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '전체'}),
       machList.value = value['DATAS']
     });
     Get.log('$engineer');

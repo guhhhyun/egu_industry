@@ -283,6 +283,12 @@ class AppTheme {
   fontFamily: 'SUIT',
   fontStyle: FontStyle.normal,
   fontSize: 12.0);
+  static const a12700 = TextStyle(
+      letterSpacing: -0.6,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'SUIT',
+      fontStyle: FontStyle.normal,
+      fontSize: 12.0);
   static const a12500 = TextStyle(
       letterSpacing: -0.6,
       fontWeight: FontWeight.w500,
@@ -329,6 +335,7 @@ class AppTheme {
   static const afef1ef = const Color(0xfffef1ef);
   static const af4f4f4 = const Color(0xfff4f4f4);
   static const ac7c7c7 = const Color(0xffc7c7c7);
+  static const affd15b = const Color(0xffffd15b);
 
 
   static const light_ui_background = const Color(0xffffffff);

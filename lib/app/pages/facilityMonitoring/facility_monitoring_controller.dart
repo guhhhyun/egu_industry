@@ -12,7 +12,7 @@ class FacilityMonitoringController extends GetxController {
   RxList<dynamic> monitoringList = [].obs;
 
   Future<void> checkButton() async {
-    var a = await HomeApi.to.PROC('USP_MBR1000_R01', {'@p_WORK_TYPE':'Q', '@p_LINE':'${selectedLineCd.value}'}).then((value) =>
+    var a = await HomeApi.to.PROC('USP_MBR1000_R01', {'@p_WORK_TYPE':'Q', '@p_LINE':selectedLineCd.value}).then((value) =>
     {
       if(value['DATAS'] != null) {
         monitoringList.value = value['DATAS'],
