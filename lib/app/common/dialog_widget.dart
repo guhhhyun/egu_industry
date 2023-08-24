@@ -1,10 +1,13 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CommonDialogWidget extends StatelessWidget {
+  FacilityFirstController controller = Get.find();
   String? contentText;
   Widget? contentWidget;
   int? flag;
@@ -58,7 +61,8 @@ class CommonDialogWidget extends StatelessWidget {
             // 성공
             onPressed: () {
               pageFlag == 1 ?
-              Get.offAllNamed(Routes.FACILITY_FIRST) :  pageFlag == 2 ? Get.offAllNamed(Routes.FACILITY) :  pageFlag == 3 ? Get.offAllNamed(Routes.PRODUCT_LOCATION) :
+              Get.offAllNamed(Routes.FACILITY_FIRST)
+                  :  pageFlag == 2 ? Get.offAllNamed(Routes.FACILITY) :  pageFlag == 3 ? Get.back() :
               pageFlag == 4 ? Get.back() : pageFlag == 5 ? {Get.back(), Get.find<ProcessTransferController>().refresh() }  : Get.offAllNamed(Routes.MAIN);
             //  Get.back();
             //  Get.back();

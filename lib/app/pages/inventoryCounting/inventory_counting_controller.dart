@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 class InventoryCountingController extends GetxController {
   var textController = TextEditingController();
 
+  RxString barcodeScanResult = '바코드를 스캔해주세요'.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue = '날짜를 선택해주세요'.obs;
   RxBool bSelectedDayFlag = false.obs;
@@ -24,7 +25,7 @@ class InventoryCountingController extends GetxController {
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정 /////// 바코드 유효성 검사도 여쭤봐야함
   Future<void> saveButton() async {
-   var a = await HomeApi.to.PROC('USP_MBS0500_S01', {'@p_WORK_TYPE':'N', '@p_BARCODE_NO': textController.text
+   var a = await HomeApi.to.PROC('USP_MBS0500_S01', {'@p_WORK_TYPE':'N', '@p_BARCODE_NO': barcodeScanResult.value
       , '@p_RACK_BARCODE': null, '@p_GUBUN':'${selectedSaveLocationMap['DETAIL_CD']}', '@p_USER':'admin'});
    Get.log('구구ㅜ : $a');
   }

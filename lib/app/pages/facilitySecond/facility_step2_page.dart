@@ -26,6 +26,7 @@ class FacilityStep2Page extends StatelessWidget {
   FacilityController controller = Get.find();
   final formKey = GlobalKey<FormState>();
   final ScrollController myScrollWorks = ScrollController();
+  final ScrollController myScrollWorks2 = ScrollController();
 
 
   @override
@@ -63,7 +64,8 @@ class FacilityStep2Page extends StatelessWidget {
                 height: 12,
                 color: AppTheme.gray_gray_100,
               ),
-              _partChoiceBody(context)
+              _partChoiceBody(context),
+              _otherPartInputBody(context),
             ],
           ),
         ),)
@@ -637,7 +639,7 @@ class FacilityStep2Page extends StatelessWidget {
 
               ],
             ),
-            Container(
+            controller.partSelectedList.length != 0 ? Container(
               height: 200,
               child: PrimaryScrollController(
                 controller: myScrollWorks,
@@ -650,9 +652,182 @@ class FacilityStep2Page extends StatelessWidget {
                   _listArea() : SliverToBoxAdapter( child: Container(),)
                 ],
               ),
-            ),)),
-            SizedBox(height: 40,)
+            ),)) : Container(),
+           //  SizedBox(height: 40,)
           ],
+      ),
+    );
+  }
+
+  Widget _otherPartInputBody(BuildContext context) {
+
+    return Container(
+      padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 24,),
+          Text('부품재고 외 추가 부품',
+                  style: AppTheme.titleHeadline
+                      .copyWith(color: AppTheme.black)),
+          SizedBox(height: 12,),
+          Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 12, right: 12),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: AppTheme.ae2e2e2),
+                            ),
+                    width: double.infinity,
+                            child: TextFormField(
+                              style:  AppTheme.a15500.copyWith(color: AppTheme.a6c6c6c),
+                              // maxLines: 5,
+                              controller: controller.textItemNameController,
+                              textInputAction: TextInputAction.done,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(0),
+                                fillColor: Colors.white,
+                                filled: true,
+                                hintText: '품명 입력',
+                                hintStyle: AppTheme.a15500.copyWith(color: AppTheme.aBCBCBC),
+                                border: InputBorder.none,
+                              ),
+                              showCursor: true,
+
+                              // onChanged: ((value) => controller.submitSearch(value)),
+                            ),
+                  ),
+                  SizedBox(height: 12,),
+                  Container(
+                    padding: EdgeInsets.only(left: 12, right: 12),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: AppTheme.ae2e2e2),
+                    ),
+                    width: double.infinity,
+                    child: TextFormField(
+                      style:  AppTheme.a15500.copyWith(color: AppTheme.a6c6c6c),
+                      // maxLines: 5,
+                      controller: controller.textItemSpecController,
+                      textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(0),
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'SPEC 입력',
+                        hintStyle: AppTheme.a15500.copyWith(color: AppTheme.aBCBCBC),
+                        border: InputBorder.none,
+                      ),
+                      showCursor: true,
+
+                      // onChanged: ((value) => controller.submitSearch(value)),
+                    ),
+                  ),
+
+                ],
+              ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.white,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Row(
+                      children: [
+                        Text('수량', style: AppTheme.a14400.copyWith(color: AppTheme.black),),
+                        InkWell(
+                          onTap: () {
+                            if(controller.otherPartQty.value > 1) {
+                              controller.otherPartQty.value = controller.otherPartQty.value - 1;
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(bottom: 12, top: 12 , left: 10),
+                            child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: AppTheme.red_red_200
+                                ),
+                                child: SvgPicture.asset('assets/app/minus.svg', width: 12, height: 12, color: AppTheme.red_red_900,)),
+                          ),
+                        ),
+                        SizedBox(width: 12,),
+                        //Text('사용 ', style: AppTheme.a14400.copyWith(color: AppTheme.black)),
+                        Text('${controller.otherPartQty.value}', style: AppTheme.a14400.copyWith(color: AppTheme.black)),
+                        SizedBox(width: 12,),
+                        InkWell(
+                          onTap: () {
+                            controller.otherPartQty.value = controller.otherPartQty.value + 1;
+
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(bottom: 12, top: 12 , right: 10),
+                            child: Container(
+                                padding: EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: AppTheme.blue_blue_200
+                                ),
+                                child: SvgPicture.asset('assets/app/plus.svg', width: 12, height: 12, color: AppTheme.blue_blue_900,)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              TextButton(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.only(top: 4, bottom: 4, left: 8, right: 8)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)
+                          )),
+                    ),
+                    onPressed: () async{
+                      Get.log('추가');
+                      controller.otherPartList.add({'ITEM_SPEC': controller.textItemSpecController.text
+                        , 'ITEM_NAME': controller.textItemNameController.text, 'QTY': controller.otherPartQty.value});
+                      controller.textItemSpecController.clear();
+                      controller.textItemNameController.clear();
+                      controller.otherPartQty.value = 1;
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppTheme.gray_gray_300)
+                      ),
+                      child: Center(
+                        child: Text('추가', style: AppTheme.bodyBody1.copyWith(color: AppTheme.light_text_secondary),),
+                      ),
+                    ),
+                  ),
+
+            ],
+          ),
+          Container(
+              height: 200,
+              child: PrimaryScrollController(
+                controller: myScrollWorks2,
+                child: CupertinoScrollbar(
+                  isAlwaysShown: true,
+                  child: CustomScrollView(
+                    physics: BouncingScrollPhysics(),
+                    slivers: [
+                      controller.otherPartList.length != 0 ?
+                      _otherPartListArea() : SliverToBoxAdapter( child: Container(),)
+                    ],
+                  ),
+                ),)),
+          SizedBox(height: 40,)
+        ],
       ),
     );
   }
@@ -666,7 +841,7 @@ class FacilityStep2Page extends StatelessWidget {
   Widget _listItem({required BuildContext context,required int index}) {
 
     return Container(
-      padding: const EdgeInsets.only(top: 20, bottom: 20, right: 24),
+      padding: const EdgeInsets.only(top: 20, bottom: 20, right: 24, left: 8),
       child: Container(
             padding: const EdgeInsets.only(bottom: 20),
             decoration: const BoxDecoration(
@@ -675,38 +850,122 @@ class FacilityStep2Page extends StatelessWidget {
                 )
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-               Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${controller.partSelectedList[index]['ITEM_NAME']}',
-                          style: AppTheme.a16400.copyWith(
-                            color: AppTheme.a1f1f1f,
-                          ),
-                        ),
-                        SizedBox(height: 6,),
-                        Text(
-                          '${controller.partSelectedList[index]['ITEM_SPEC']}',
-                          style: AppTheme.a16400.copyWith(
-                            color: AppTheme.a1f1f1f,
-                          ),
-                        ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                   Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${controller.partSelectedList[index]['ITEM_NAME']}',
+                              style: AppTheme.a16400.copyWith(
+                                color: AppTheme.a1f1f1f,
+                              ),
+                            ),
+                            SizedBox(height: 6,),
+                            Text(
+                              '${controller.partSelectedList[index]['ITEM_SPEC']}',
+                              style: AppTheme.a16400.copyWith(
+                                color: AppTheme.a1f1f1f,
+                              ),
+                            ),
 
+                      ],
+                    ),
+                    Text(
+                      controller.partSelectedQtyList.isEmpty ? '1' :
+                      '${controller.partSelectedQtyList[index]}',
+                      style: AppTheme.a16400.copyWith(
+                        color: AppTheme.a1f1f1f,
+                      ),
+                    )
                   ],
                 ),
-                Text(
-                  controller.partSelectedQtyList.isEmpty ? '1' :
-                  '${controller.partSelectedQtyList[index]}',
-                  style: AppTheme.a16400.copyWith(
-                    color: AppTheme.a1f1f1f,
+
+          ),
+    );
+  }
+
+  Widget _otherPartListArea() {
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _otherPartListItem(index: index, context: context);
+        }, childCount: controller.otherPartList.length));
+  }
+  Widget _otherPartListItem({required BuildContext context,required int index}) {
+
+    return Container(
+      margin: const EdgeInsets.only(top: 20, bottom: 20, right: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 4, bottom: 20, right: 8),
+                child: InkWell(
+                  onTap: () {
+                    controller.otherPartList.remove(controller.otherPartList[index]);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 12, top: 12 , left: 10),
+                    child: Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: AppTheme.red_red_200
+                        ),
+                        child: SvgPicture.asset('assets/app/minus.svg', width: 12, height: 12, color: AppTheme.red_red_900,)),
                   ),
-                )
-              ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(width: 12,),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(bottom: 20),
+              decoration: const BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_300)
+                  )
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${controller.otherPartList[index]['ITEM_NAME']}',
+                        style: AppTheme.a16400.copyWith(
+                          color: AppTheme.a1f1f1f,
+                        ),
+                      ),
+                      SizedBox(height: 6,),
+                      Text(
+                        '${controller.otherPartList[index]['ITEM_SPEC']}',
+                        style: AppTheme.a16400.copyWith(
+                          color: AppTheme.a1f1f1f,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  Text(
+                    '${controller.otherPartList[index]['QTY']}',
+                    style: AppTheme.a16400.copyWith(
+                      color: AppTheme.a1f1f1f,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
+        ],
+      ),
     );
   }
 
@@ -758,10 +1017,11 @@ class FacilityStep2Page extends StatelessWidget {
     ));
   }
   String _test() {
-    for(var i = 0; i < controller.machCdList.length; i++) {
-      if(controller.machCdList[i] == '${controller.selectedContainer[0]['MACH_CODE']}') {
-        return controller.machList[i];
+    for(var i = 0; i < controller.machList.length; i++) {
+      if(controller.machList[i]['MACH_CODE'].toString() ==controller.selectedContainer[0]['MACH_CODE'].toString()) {
+        return controller.machList[i]['MACH_NAME'];
       }
+
     }
     return '';
   }

@@ -6,6 +6,63 @@ import 'package:egu_industry/app/routes/app_route.dart';
 class MainIconWidget extends StatelessWidget {
   const MainIconWidget({Key? key}) : super(key: key);
 
+  Widget _buttonAreaWhite() {
+    return Column(
+      children: [
+        InkWell(
+          onTap: null,
+          child: Container(
+            decoration: BoxDecoration(
+
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: AppTheme.white)
+            ),
+            padding: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 20),
+
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '',
+                          style: AppTheme.newBody.copyWith(
+                            color: AppTheme.white,
+                          ),
+                        ),
+                        Text(
+                          '',
+                          style: AppTheme.newBody.copyWith(
+                            color: AppTheme.white,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                  ],
+                ),
+
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buttonArea(
       {required String title,
         required String subTitle,
@@ -179,7 +236,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '검수',
                     onPressed: () {
                       Get.log('제품포장 검수');
-                      //  Get.toNamed(Routes.PACKAGING_INSPEC);
+                        Get.toNamed(Routes.PACKAGING_INSPEC);
                     }),),
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(
@@ -203,6 +260,10 @@ class MainIconWidget extends StatelessWidget {
                       Get.log('설비가동 모니터링');
                       Get.toNamed(Routes.FACILITY_MONITORING);
                     }),),
+                const SizedBox(width: 12,),
+                Expanded(child: _buttonAreaWhite()),
+                const SizedBox(width: 12,),
+                Expanded(child: _buttonAreaWhite())
               ],
             ),
           ],

@@ -15,8 +15,11 @@ class FacilityController extends GetxController {
 
   var textController = TextEditingController();
   var textContentController = TextEditingController();
+  var textItemNameController = TextEditingController();
+  var textItemSpecController = TextEditingController();
 
 
+  RxInt otherPartQty = 1.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
@@ -65,9 +68,12 @@ class FacilityController extends GetxController {
   RxList partSelectedList = [].obs;
   RxList<int> partQtyList = [1].obs;
   RxList<int> partSelectedQtyList = [1].obs;
+  RxList<dynamic> otherPartList = [].obs;
+ // RxMap<String, String> otherPartMap = {'ITEM_SPEC':'', 'ITEM_NAME': '', 'QTY': ''}.obs;
   RxList<dynamic> machList = [].obs;
   RxString selectedMach = '선택해주세요'.obs;
   RxInt selectedMachIndex = 0.obs;
+  RxMap<String, String> selectedMachMap = {'MACH_CODE':'', 'MACH_NAME': ''}.obs;
   RxList<String> machCdList = [''].obs;
   RxString selectedMachCd = ''.obs;
 
@@ -79,13 +85,28 @@ class FacilityController extends GetxController {
 
   /// 정비자랑 부품쪽 여쭤봐야함
   Future<void> saveButton() async {
-    await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
+    var a = await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
       , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':rpUser.value,
       '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
       '@p_RP_DEPT':'9999', '@p_USER':'admin',});
+    var b = a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '');
 
-    // 부품 저장 프로시저 032
+    Get.log('저장 결과값::::: ${a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '')}');
+
+    // 부품 저장 프로시저
+    if(partSelectedList.length != 0) {
+      for(var i = 0; i < partSelectedList.length; i++) {
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
+          , '@p_ITEM_NAME':'${partSelectedList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${partSelectedList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${partSelectedQtyList[i]}',});
+      }
+    }
+    if(otherPartList.length != 0) {
+      for(var i = 0; i < otherPartList.length; i++) {
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':''
+          , '@p_ITEM_NAME':'${otherPartList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${otherPartList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${otherPartList[i]['QTY']}',});
+      }
+    }
    /* await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':''
       , '@p_ITEM_NAME':'', '@p_ITEM_SPEC':'', '@p_USE_QTY':'',});*/
 

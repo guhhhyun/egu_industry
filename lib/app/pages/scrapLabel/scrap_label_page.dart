@@ -42,7 +42,7 @@ class ScrapLabelPage extends StatelessWidget {
           ],
         ),
       ),
-     // bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
+      bottomNavigationBar: _bottomButton(context), // 라벨 발행
     );
   }
 
@@ -53,11 +53,6 @@ class ScrapLabelPage extends StatelessWidget {
           child: Column(
             children: [
               _inputArea(context),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 12,
-                color: AppTheme.gray_gray_100,
-              ),
             ],
           ),
         ),/*)*/
@@ -74,249 +69,478 @@ class ScrapLabelPage extends StatelessWidget {
     );
   }
 
+  /// 매입과 외주 차이 = 외주스크랩 유무
+  /// 공정회수와 매입 차이 = 공정정보 대신 계량정보 빼기
   Widget _inputArea(BuildContext context) {
-    return Container(
+    return Obx(() => Container(
       padding: EdgeInsets.only(left: 18, right: 18),
       child: Form(
         key: formKey,
         child: Column(
           children: [
             SizedBox(height: 40,),
-            Row(
-              children: [
-                _inputTitle('구분'),
-              ],
-            ),
-            const SizedBox(height: 12,),
-
+            _dropDownItem(context, '구분', 1),
+            const SizedBox(height: 45,),
+            controller.selectedGubun.value == '지금류' ?
+            Container() :
             Column(
               children: [
-                SizedBox(height: 15,),
-                Row(
-                  children: [
-                    _inputTitle('미조치 사유'),
-                  ],
-                ),
-                const SizedBox(height: 12,),
+                _dropDownItem(context, '유형', 2),
+                controller.selectedScrapType.value == '매입' ?
+                    Container() :
+                    Column(
+                      children: [
+                        SizedBox(height: 45,),
+                        _industryItem('공정정보', 1), // 수량이랑 단위중량도 안보이게
+                      ],
+                    ),
+                SizedBox(height: 45,),
+                _dropDownItem(context, '도금', 3),
+                SizedBox(height: 45,),
+                _industryItem('스크랩품명', 2),
+                SizedBox(height: 45,),
               ],
             ),
-            SizedBox(height: 40,),
-            SizedBox(height: 70,),
+            controller.selectedGubun.value == '지금류' ? /// 이건 고정 바꿀 필요 없음
+            Column(
+              children: [
+                _industryItem('지금류품명', 3),
+                SizedBox(height: 45,),
+              ],
+            ) : Container(),
+            _locationArea(),
+            SizedBox(height: 45,),
+            controller.selectedGubun.value == '지금류' ?
+            Container() :
+            Column(
+              children: [
+                _weighing(),
+                SizedBox(height: 12,),
+                _weighingTwo(),
+              ],
+            ),
+            SizedBox(height: 100,),
+            SizedBox(height: 45,),
           ],
         ),
       ),
-    );
+    ));
   }
 
 
-  Widget _codeInputItem() {
+  Widget _dropDownItem(BuildContext context, String text, int flag) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Container(
-            padding: const EdgeInsets.only(left: 16),
-            decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.ae2e2e2),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            width: double.infinity,
-            child: TextFormField(
-              style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-              // maxLines: 5,
-              controller: controller.textController,
-              textAlignVertical: TextAlignVertical.center,
-              textInputAction: TextInputAction.search,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                suffixIcon: InkWell(
-                    onTap: () {
-                      Get.log('조회 돋보기 클릭!');
-                      controller.checkButton();
-                      controller.isCheck.value = true;
-                    },
-                    child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
-                ),
-
-                contentPadding: const EdgeInsets.all(0),
-                fillColor: Colors.white,
-                filled: true,
-                hintText: '계량번호를 입력해주세요',
-                hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
-                border: InputBorder.none,
-              ),
-              showCursor: true,
-
-              // onChanged: ((value) => controller.submitSearch(value)),
-            ),
-          ),
-        ),
-        SizedBox(height: 4,),
-        controller.isCheck.value == true ?
-        Container(
-          margin: const EdgeInsets.only(left: 4, right: 4, bottom: 18),
-          padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.ae2e2e2),
-              color: AppTheme.white,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.gray_c_gray_100.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ]
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  controller.insNumList.isNotEmpty ?
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: AppTheme.aecf9f2
+        Text(text,
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton<String>(
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: flag == 1 ? controller.selectedGubun.value :
+                    flag == 2 ? controller.selectedScrapType.value :
+                      flag == 3 ? controller.selectedGold.value : '',
+                    items: flag == 1 ? controller.scrapGubunList.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
                         ),
-                        child: Text(controller.insNumList[0]['CAR_NO'],
-                            style: AppTheme.a12500
-                                .copyWith(color: AppTheme.a18b858)),
-                      ),
-                    ],
-                  )
-                      : Container(),
-                ],
+                      );
+                    }).toList() : flag == 2 ?
+                    controller.scrapTypeList.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList() : flag == 3 ?
+                    controller.goldList.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: AppTheme.a16400
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList() : null,
+                    onChanged: (value) async {
+                      flag == 1 ?
+                      controller.selectedGubun.value = value! :
+                      flag == 2 ?
+                      controller.selectedScrapType.value = value! :
+                      flag == 3 ?
+                      controller.selectedGold.value = value! : Get.log('$value 선택!!!!');
+
+                      /// 스크랩 선택으로 인한 적재위치 리스트 변경
+                     if(flag == 1 && controller.selectedGubun.value == '스크랩') {
+                        await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W04'}).then((value) => // 적재위치(스크랩)
+                        {
+                          value['DATAS'].insert(0, {'RACK_BARCODE':'', 'NAME': '선택해주세요'}),
+                          controller.scLocList.value = value['DATAS'],
+                        });
+                      }else if(flag == 1 && controller.selectedGubun.value == '지금류') {
+                       await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W02'}).then((value) => // // 적재위치(지금류)
+                       {
+                         value['DATAS'].insert(0, {'RACK_BARCODE':'', 'NAME': '선택해주세요'}),
+                         controller.scLocList.value = value['DATAS'],
+                       });
+                     }
+                     /// //////////////////////////////////////////////////////////////
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
+
               ),
-              SizedBox(height: 8,),
-              controller.insNumList.isNotEmpty ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(controller.insNumList[0]['CUST_NM'],
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.black)),
-                ],
-              )
-                  : Container(),
-              controller.insNumList.isNotEmpty ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(controller.insNumList[0]['CST_ID'],
-                      style: AppTheme.a15700
-                          .copyWith(color: AppTheme.black)),
-                ],
-              )
-                  : Container(),
-            ],
-          ),
-        ) : Container()
+            ),
+          ],
+        ),
       ],
     );
   }
 
- /* Widget _dropDownItem(BuildContext context, int flag) {
-    return Expanded(
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-            border: const Border(
-              bottom:
-              BorderSide(color: AppTheme.light_ui_08),
-            )),
-        padding: const EdgeInsets.only(right: 12),
-        child: DropdownButton<String>(
-            isExpanded: true,
-            underline: Container(
-              height: 1,
-              color: Colors.white,
+  Widget _industryItem(String text, int flag) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(text,
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
+        const SizedBox(height: 10,),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton(
+                    borderRadius: BorderRadius.circular(3),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: flag == 1 ? controller.selectedIndustryMap['NAME']
+                      : flag == 2 ? controller.selectedScrapNmMap['NAME'] :
+                      controller.selectedRmNmMap['NAME'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: flag == 1 ? controller.industryList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['NAME'].toString(),
+                        child: Text(
+                          value['NAME'].toString(),
+                          style: AppTheme.a16400
+                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList() : flag == 2 ? controller.scrapNmList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['NAME'].toString(),
+                        child: Text(
+                          value['NAME'].toString(),
+                          style: AppTheme.a16400
+                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList() :
+                    controller.rmNmList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['NAME'].toString(),
+                        child: Text(
+                          value['NAME'].toString(),
+                          style: AppTheme.a16400
+                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      flag == 1 ?
+                      controller.industryList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedIndustryMap['CODE'] = e['CODE'];
+                          controller.selectedIndustryMap['NAME'] = e['NAME'];
+                        }
+                      }).toList() : flag == 2 ?
+                      controller.scrapNmList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedScrapNmMap['CODE'] = e['CODE'];
+                          controller.selectedScrapNmMap['NAME'] = e['NAME'];
+                        }
+                      }).toList() :
+                      controller.rmNmList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedRmNmMap['CODE'] = e['CODE'];
+                          controller.selectedRmNmMap['NAME'] = e['NAME'];
+                        }
+                      }).toList();
+                      Get.log('${ controller.selectedScrapNmMap} 선택!!!!');
+                      Get.log('${ controller.selectedIndustryMap} 선택!!!!');
+                    }),
+              ),
             ),
-            icon: SvgPicture.asset(
-              'assets/app/arrowBottom.svg',
-              color: AppTheme.light_ui_08,
-            ),
-            dropdownColor: AppTheme.light_ui_01,
-            value: flag == 1 ? controller.selectedIrFq.value :
-            flag == 2 ? controller.selectedResultFg.value : controller.selectedNoReason.value,
-            //  flag == 3 ? controller.selectedNoReason.value :
-            items: flag == 1 ? controller.irfgList.map((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value,
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
-                ),
-              );
-            }).toList() : flag == 2 ?
-            controller.resultFgList.map((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value,
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: value == '전체' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
-                ),
-              );
-            }).toList() : controller.noReasonList.map((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(
-                  value,
-                  style: AppTheme.bodyBody1
-                      .copyWith(color: value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black, fontSize: 17),
-                ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              flag == 1 ?
-              controller.selectedIrFq.value = value! :
-              flag == 2 ?
-              controller.selectedResultFg.value = value! :
-              controller.selectedNoReason.value = value!;
-
-
-              Get.log('$value 선택!!!!');
-              // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-            }),
-
-      ),
+          ],
+        ),
+      ],
     );
-  }*/
+  }
+
+  Widget _locationArea() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Container(
+            decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: AppTheme.gray_gray_200),
+                )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('적재창고',
+                    style: AppTheme.a15700
+                        .copyWith(color: AppTheme.black)),
+                const SizedBox(height: 10,),
+                Container(
+                  padding: const EdgeInsets.only(right: 12, top: 12, bottom: 12),
+                  child: Text(controller.selectedGubun.value == '지금류' ? '원자재창고'
+                      : controller.selectedGubun.value == '스크랩' ? '스크랩창고' : '', style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c),),
+                )
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12,),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('적재위치',
+                  style: AppTheme.a15700
+                      .copyWith(color: AppTheme.black)),
+              const SizedBox(height: 10,),
+              Container(
+                height: 50,
+                decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton(
+                    borderRadius: BorderRadius.circular(3),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedScLocMap['NAME'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.scLocList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['NAME'].toString(),
+                        child: Text(
+                          value['NAME'].toString(),
+                          style: AppTheme.a16400
+                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.selectedGubun.value == '스크랩' ?
+                      controller.scLocList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
+                          controller.selectedScLocMap['NAME'] = e['NAME'];
+                        }
+                      }).toList() :
+                      controller.scLocList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
+                          controller.selectedScLocMap['NAME'] = e['NAME'];
+                        }
+                      }).toList();
+                      Get.log('${ controller.selectedScLocMap} 선택!!!!');
+                    }),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _weighing() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('계근중량 / 설통번호 / 설통중량',
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
+      //  const SizedBox(height: 10,),
+        Container(
+          padding: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+              border: const Border(
+                bottom: BorderSide(color: AppTheme.gray_gray_200),
+              )),
+          width: double.infinity,
+          child: TextFormField(
+            style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+            // maxLines: 5,
+            controller: controller.weighingTextController,
+            textAlignVertical: TextAlignVertical.center,
+            textInputAction: TextInputAction.search,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.all(0),
+              fillColor: Colors.white,
+              filled: true,
+              hintText: '계근중량을 입력해주세요',
+              hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+              border: InputBorder.none,
+            ),
+            showCursor: true,
+
+            // onChanged: ((value) => controller.submitSearch(value)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _weighingTwo() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton(
+                    borderRadius: BorderRadius.circular(3),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedScLocMap['NAME'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.scLocList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['NAME'].toString(),
+                        child: Text(
+                          value['NAME'].toString(),
+                          style: AppTheme.a16400
+                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.selectedGubun.value == '스크랩' ?
+                      controller.scLocList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
+                          controller.selectedScLocMap['NAME'] = e['NAME'];
+                        }
+                      }).toList() :
+                      controller.scLocList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
+                          controller.selectedScLocMap['NAME'] = e['NAME'];
+                        }
+                      }).toList();
+                      Get.log('${ controller.selectedScLocMap} 선택!!!!');
+                    }),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(width: 12,),
+        Expanded(
+          child: Container(
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12, top: 12, bottom: 12, left: 12),
+                child: Text('자동입력될거임', style: AppTheme.a16400
+                    .copyWith(color: AppTheme.a6c6c6c),),
+              )
+        ),
+      ],
+    );
+  }
 
 
-
-
-  /*Widget _bottomButton(BuildContext context) {
+  Widget _bottomButton(BuildContext context) {
     return Obx(() => BottomAppBar(
         color: AppTheme.white,
         surfaceTintColor: AppTheme.white,
         child: (() {
-          if(controller.selectedResultFg.value != '전체'
-              && controller.selectedNoReason.value != '전체'
-              && controller.selectedEnginner.value != '정비자를 선택해주세요' &&  controller.dayStartValue.value != '선택해주세요' &&
-              controller.dayEndValue.value != '선택해주세요' && controller.textContentController.text != '') {
-            controller.isStep2RegistBtn.value = true;
-          }else {
-            controller.isStep2RegistBtn.value = false;
-          }
           return TextButton(
               style: ButtonStyle(
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
-                  backgroundColor: controller.isStep2RegistBtn.value ?
+                  backgroundColor: controller.isLabelBtn.value ?
                   MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
                   MaterialStateProperty.all<Color>(AppTheme.light_cancel),
                   padding: MaterialStateProperty.all<EdgeInsets>(
                       const EdgeInsets.all(0))),
-              onPressed: controller.isStep2RegistBtn.value ? () async {
-                controller.cdConvert();
-                controller.saveButton();
+              onPressed: controller.isLabelBtn.value ? () async {
+
 
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
@@ -329,7 +553,7 @@ class ScrapLabelPage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: Center(
                     child: Text(
-                      '저장',
+                      '라벨발행',
                       style: AppTheme.bodyBody2.copyWith(
                         color: const Color(0xfffbfbfb),
                       ),
@@ -337,7 +561,7 @@ class ScrapLabelPage extends StatelessWidget {
               ));
         })()
     ));
-  }*/
+  }
 
 
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 
 class ProductLocationPage extends StatelessWidget {
@@ -22,8 +23,9 @@ class ProductLocationPage extends StatelessWidget {
           slivers: [
             CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
             _topArea(),
+            _locationItem(),
             _bodyArea(),
-            _locationItem()
+
 
           ],
         ),
@@ -34,49 +36,31 @@ class ProductLocationPage extends StatelessWidget {
 
   Widget _topArea() {
     return SliverToBoxAdapter(
-      child: Container(
+      child: Obx(() =>Container(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
         child: Center(
-          child: Container(
-            padding: const EdgeInsets.only(left: 16),
-            decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.ae2e2e2),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            width: double.infinity,
-            child: TextFormField(
-              style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-              // maxLines: 5,
-              controller: controller.textController,
-              textAlignVertical: TextAlignVertical.center,
-              textInputAction: TextInputAction.search,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                suffixIcon: InkWell(
-                    onTap: () {
-                      Get.log('조회 돋보기 클릭!');
-                      controller.checkButton();
-                    },
-                    child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+          child: InkWell(
+            onTap: () async{
+              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                  '#ff6666', '취소', false, ScanMode.BARCODE);
+              controller.barcodeScanResult.value = barcodeScanRes;
+              controller.checkButton();
+            },
+            child: Container(
+                padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppTheme.ae2e2e2),
+                    borderRadius: BorderRadius.circular(10)
                 ),
-
-                contentPadding: const EdgeInsets.all(0),
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'BC 번호를 입력해주세요',
-                hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
-                border: InputBorder.none,
-              ),
-              showCursor: true,
-
-              // onChanged: ((value) => controller.submitSearch(value)),
+                width: double.infinity,
+                child: Text(controller.barcodeScanResult.value == '-1' ? '바코드를 재스캔해주세요' : controller.barcodeScanResult.value, style: AppTheme.a16400.copyWith(
+                    color: controller.barcodeScanResult.value == '바코드를 스캔해주세요' ? AppTheme.aBCBCBC : AppTheme.black),)
             ),
           ),
         ),
-      ),
+      ),)
     );
   }
-
   Widget _bodyArea() {
     return SliverToBoxAdapter(
       child: Container(
@@ -123,7 +107,7 @@ class ProductLocationPage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 12, bottom: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            color: AppTheme.af7f7f7
+            color: AppTheme.ae2e2e2
           ),
           child: Center(child: Text(title, style: AppTheme.a16600.copyWith(color: AppTheme.black),)),
         ),
@@ -136,7 +120,7 @@ class ProductLocationPage extends StatelessWidget {
   Widget _locationItem() {
     return SliverToBoxAdapter(
       child: Obx(() => Container(
-          margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 50),
+          margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 32),
           // padding: EdgeInsets.only(left: 28, top: 20, bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,8 +211,9 @@ class ProductLocationPage extends StatelessWidget {
                   Get.dialog(
                       CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 3,)
                   );
-                 // controller.checkButton();
+                  controller.checkButton();
                 });
+
               } : null,
               child: SizedBox(
                 height: 56,

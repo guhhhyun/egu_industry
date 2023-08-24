@@ -22,12 +22,15 @@ class ProcessTransferPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.white,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             CommonAppbarWidget(title: '공정이동', isLogo: false, isFirstPage: true,),
             _bodyArea(context),
-            _listArea()
+            Obx(() => controller.processList.length == 0 ? SliverToBoxAdapter(child: Container()) :
+            _topTitle(context)),
+            _listArea2()
          //   _listArea()
           ],
         ),
@@ -42,17 +45,11 @@ class ProcessTransferPage extends StatelessWidget {
           color: AppTheme.white,
           padding: const EdgeInsets.only(left: 18, right: 18, top: 24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _calendarItem(context),
-              const SizedBox(height: 12,),
-              _movAndFkFItem(),
-              const SizedBox(height: 12,),
-              _fromMachItem(),
-              const SizedBox(height: 12,),
-              _checkButton(),
-             // _fromMachItem(),
-              const SizedBox(height: 24,),
-              const SizedBox(height: 12,),
+              const SizedBox(height: 48,),
+
             ],
           ),
         ),)
@@ -64,10 +61,12 @@ class ProcessTransferPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Wrap(
+          runSpacing: 12.0,
+          crossAxisAlignment: WrapCrossAlignment.start,
+          alignment: WrapAlignment.start,
           children: [
-            Expanded(
-              child: Container(
+            Container(
                 child: TextButton(
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
@@ -101,10 +100,10 @@ class ProcessTransferPage extends StatelessWidget {
                   },
                   child: Container(
                     height: 50,
+                    width: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                         border: Border.all( color: AppTheme.ae2e2e2)),
-                    width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.only(right: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -115,17 +114,16 @@ class ProcessTransferPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
               ),
             ),
             const SizedBox(width: 12,),
-            SizedBox(height: 50, child: Center(
+            SizedBox(height: 50, width: 15, child: Center(
               child: Text('~',style: AppTheme.a14500
                   .copyWith(color: AppTheme.black)),
             ),),
             const SizedBox(width: 12,),
-            Expanded(
-              child: Container(
+           Container(
+             width: 150,
                 child: TextButton(
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
@@ -168,7 +166,7 @@ class ProcessTransferPage extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: AppTheme.ae2e2e2)),
-                    width: MediaQuery.of(context).size.width,
+                    width: 150,
                     padding: const EdgeInsets.only( right: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -181,15 +179,152 @@ class ProcessTransferPage extends StatelessWidget {
 
                   ),
                 ),
-              ),
             ),
+            const SizedBox(width: 16,),
+            Container(
+                height: 50,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: AppTheme.ae2e2e2
+                    )),
+                padding: const EdgeInsets.only(left: 12, right: 12),
+                child: DropdownButton<String>(
+                    borderRadius: BorderRadius.circular(10),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedMovYn.value,
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.movYnList.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: AppTheme.a16500
+                              .copyWith(color: value == '처리여부 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.selectedMovYn.value = value!;
+                      value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
+            ),
+            const SizedBox(width: 16,),
+             Container(
+                height: 50,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: AppTheme.ae2e2e2
+                    )),
+                padding: const EdgeInsets.only(left: 12, right: 12),
+                child: DropdownButton(
+                    borderRadius: BorderRadius.circular(10),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedFkfNm['FKF_NM'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.fkfList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['FKF_NM'],
+                        child: Text(
+                          value['FKF_NM'],
+                          style: AppTheme.a16500
+                              .copyWith(color: value['FKF_NM'] == '지게차 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.fkfList.map((e) {
+                        if(e['FKF_NM'] == value) {
+                          controller.selectedFkfNm['FKF_NO'] = e['FKF_NO'];
+                          controller.selectedFkfNm['FKF_NM'] = e['FKF_NM'];
+                        }
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
+
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
+            ),
+            const SizedBox(width: 16,),
+            Container(
+                height: 50,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: AppTheme.ae2e2e2
+                    )),
+                padding: const EdgeInsets.only(left: 12, right: 12),
+                child: DropdownButton(
+                    borderRadius: BorderRadius.circular(10),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedMachMap['MACH_NAME'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.machList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['MACH_NAME'],
+                        child: Text(
+                          value['MACH_NAME'],
+                          style: AppTheme.a16500
+                              .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.machList.map((e) {
+                        if(e['MACH_NAME'] == value) {
+                          controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                          controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                        }
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
+
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
+            ),
+            const SizedBox(width: 16,),
+            _checkButton()
           ],
-        )
+        ),
+
       ],
     );
   }
 
-  Widget _movAndFkFItem() {
+  /*Widget _movAndFkFItem() {
     return Row(
       children: [
         Expanded(
@@ -281,6 +416,7 @@ class ProcessTransferPage extends StatelessWidget {
                 }),
           ),
         ),
+
       ],
     );
   }
@@ -336,9 +472,10 @@ class ProcessTransferPage extends StatelessWidget {
                     }),
               ),
             ),
+
       ],
     );
-  }
+  }*/
 
   Widget _fkfSaveDrop() {
     return Expanded(
@@ -390,8 +527,7 @@ class ProcessTransferPage extends StatelessWidget {
         );
   }
 
-
-  Widget _listArea() {
+  /*Widget _listArea() {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           return _listItem(index: index, context: context);
@@ -470,7 +606,7 @@ class ProcessTransferPage extends StatelessWidget {
                   ],
                 )
                     : Container(),
-               /* /// 등록한 시간과 현재시간 비교
+               *//* /// 등록한 시간과 현재시간 비교
                 Row(
                   children: [
                     Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
@@ -480,7 +616,7 @@ class ProcessTransferPage extends StatelessWidget {
                         style: AppTheme.a14700
                             .copyWith(color: AppTheme.a969696)),
                   ],
-                )*/
+                )*//*
               ],
             ),
             SizedBox(height: 8,),
@@ -557,9 +693,10 @@ class ProcessTransferPage extends StatelessWidget {
       ),
     ));
   }
-
+*/
   Widget _checkButton() {
     return Container(
+
       child: TextButton(
           style: ButtonStyle(
               shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -572,7 +709,8 @@ class ProcessTransferPage extends StatelessWidget {
             controller.checkButton();
           },
           child: SizedBox(
-            height: 56,
+            width: 80,
+            height: 50,
             child: Center(
                 child: Text(
                   '조회',
@@ -599,12 +737,12 @@ class ProcessTransferPage extends StatelessWidget {
                     shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    backgroundColor: controller.registButton.value ? controller.selectedSaveFkfNm['FKF_NM'] != '선택해주세요' ?
+                    backgroundColor: controller.registButton.value ? controller.selectedSaveFkfNm['FKF_NM'] != '지게차 선택' ?
                     MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
                     MaterialStateProperty.all<Color>(AppTheme.light_cancel) : MaterialStateProperty.all<Color>(AppTheme.light_cancel),
                     padding: MaterialStateProperty.all<EdgeInsets>(
                         const EdgeInsets.all(0))),
-                onPressed: controller.registButton.value ?  controller.selectedSaveFkfNm['FKF_NM'] != '선택해주세요' ? () async{
+                onPressed: controller.registButton.value ?  controller.selectedSaveFkfNm['FKF_NM'] != '지게차 선택' ? () async{
                   Get.log('저장 클릭!!');
                   for(var i = 0; i < controller.processSelectedList.length; i++) {
                     await controller.saveButton(i);
@@ -628,5 +766,389 @@ class ProcessTransferPage extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+
+  Widget _listArea2() {
+    return Obx(() => SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _listItem2(index: index, context: context);
+        }, childCount: controller.processList.length)));
+  }
+  Widget _listItem2({required BuildContext context,required int index}) {
+
+    return Obx(() => Container(
+      margin: EdgeInsets.only(left: 4, right: 4),
+      padding: EdgeInsets.only( left: 18, right: 18),
+      child: InkWell(
+        onTap: () {
+          controller.registButton.value = false;
+          controller.isprocessSelectedList[index] == false ? controller.isprocessSelectedList[index] = true
+              : controller.isprocessSelectedList[index] = false;
+          controller.isprocessSelectedList[index] == true
+              ? controller.processSelectedList.add(controller.processList[index])
+              : controller.processSelectedList.remove(controller.processList[index]);
+          controller.isprocessSelectedList[index] == true ?
+          controller.movIds.add(controller.processList[index]['MOV_ID']) : controller.movIds.remove(controller.processList[index]['MOV_ID']);
+          for(var i = 0; i < controller.isprocessSelectedList.length; i++) {
+            if(controller.isprocessSelectedList[i].toString().contains('true')) {
+              controller.registButton.value = true;
+            }
+          }
+          Get.log('movId: ${controller.movIds}');
+
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: AppTheme.white,
+              border: Border(
+                bottom: controller.processList.length == index ? BorderSide(color: AppTheme.light_text_primary) : BorderSide()
+              )),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          left:
+                          BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text('${index + 1}',
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(
+                        controller.processList[index]['URGENCY_FG'] == 'U' ? '긴급' : '보통', /// 긴급 or 보통 으로
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['FROM_DATE'],
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              MediaQuery.of(context).size.width <= 450 ? Container() :
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['CMP_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['FROM_MACH_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              MediaQuery.of(context).size.width <= 450 ? Container() :
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['TO_MACH_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              MediaQuery.of(context).size.width <= 450 ? Container() :
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['FKF_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              MediaQuery.of(context).size.width <= 450 ? Container() :
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: Text(controller.processList[index]['TO_DATE'].toString(),
+                        style: AppTheme.titleSubhead1
+                            .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 50,
+                  child: Center(
+                    child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.black,)
+                        : Container()
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
+
+
+
+  Widget _topTitle(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: EdgeInsets.only(left: 4, right: 4),
+        padding: EdgeInsets.only(left: 18, right: 18),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.light_ui_03,
+                    border: Border(
+                        left:
+                        BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('번호',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.light_ui_03,
+                    border: Border(
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text(
+                    '이동구분',
+                    style: AppTheme.titleSubhead1
+                        .copyWith(color: AppTheme.light_text_primary),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.light_ui_03,
+                    border: Border(
+
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('요청일시',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+            MediaQuery.of(context).size.width <= 450 ? Container() :
+            Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppTheme.light_ui_03,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.light_text_primary),
+                            right: BorderSide(
+                                color: AppTheme.light_text_primary))),
+                    height: 34,
+                    child: Center(
+                      child: Text('제품명',
+                          style: AppTheme.titleSubhead1
+                              .copyWith(color: AppTheme.light_text_primary),
+                          textAlign: TextAlign.left),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppTheme.light_ui_03,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.light_text_primary),
+                            right: BorderSide(
+                                color: AppTheme.light_text_primary))),
+                    height: 34,
+                    child: Center(
+                      child: Text('작업위치',
+                          style: AppTheme.titleSubhead1
+                              .copyWith(color: AppTheme.light_text_primary),
+                          textAlign: TextAlign.left),
+                    ),
+                  ),
+                ),
+            MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppTheme.light_ui_03,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.light_text_primary),
+                            right: BorderSide(
+                                color: AppTheme.light_text_primary))),
+                    height: 34,
+                    child: Center(
+                      child: Text('이동위치',
+                          style: AppTheme.titleSubhead1
+                              .copyWith(color: AppTheme.light_text_primary),
+                          textAlign: TextAlign.left),
+                    ),
+                  ),
+                ),
+            MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppTheme.light_ui_03,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.light_text_primary),
+                            right: BorderSide(
+                                color: AppTheme.light_text_primary))),
+                    height: 34,
+                    child: Center(
+                      child: Text('지게차호기',
+                          style: AppTheme.titleSubhead1
+                              .copyWith(color: AppTheme.light_text_primary),
+                          textAlign: TextAlign.left),
+                    ),
+                  ),
+                ),
+            MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppTheme.light_ui_03,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.light_text_primary),
+                            right: BorderSide(
+                                color: AppTheme.light_text_primary))),
+                    height: 34,
+                    child: Center(
+                      child: Text('처리일시',
+                          style: AppTheme.titleSubhead1
+                              .copyWith(color: AppTheme.light_text_primary),
+                          textAlign: TextAlign.left),
+                    ),
+                  ),
+                ),
+
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.light_ui_03,
+                    border: Border(
+
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('작업선택',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
   }
 }

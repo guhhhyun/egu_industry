@@ -43,13 +43,13 @@ class PrintPage extends StatelessWidget {
 
   Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
     final doc = pw.Document();
-    final image = await imageFromAssetBundle('assets/app/egu.png');
+    final image = await imageFromAssetBundle('assets/app/pngImage.png');
     doc.addPage(pw.Page(
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context context) {
           return pw.Column(
             children: [
-              pw.Text('guhyunnnnnnnnnnnnn 프린트 test'),
+              pw.Text('test'),
               pw.SizedBox(height: 50),
               pw.Image(image)
             ],

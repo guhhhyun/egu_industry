@@ -170,7 +170,7 @@ class _BlePrinterState extends State<BlePrinter> {
                           child: ElevatedButton(
                             onPressed: selectedPrinter == null || !_isConnected
                                 ? null
-                                : () {
+                                : () { // 제일 베스트가 ㄱ자 형태 중앙에 그냥 앉아서 볼 공간
                               if (selectedPrinter != null) {
                                 bluetoothManager.disconnect();
                               }

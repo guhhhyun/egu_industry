@@ -23,6 +23,7 @@ class FacilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.white,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
