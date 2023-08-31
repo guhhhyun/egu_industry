@@ -22,7 +22,8 @@ class ProductLocationPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
-            _topArea(),
+            _topAreaTest(),
+          //  _topArea(),
             _locationItem(),
             _bodyArea(),
 
@@ -31,6 +32,73 @@ class ProductLocationPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: _bottomButton(context), //  등록
+    );
+  }
+
+
+  Widget _topAreaTest() {
+    return SliverToBoxAdapter(
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only(left: 20, right: 12, top: 24),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 16),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: AppTheme.ae2e2e2),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: TextFormField(
+                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                    // maxLines: 5,
+                    controller: controller.textController,
+                    textAlignVertical: TextAlignVertical.center,
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) async{
+                      controller.checkButton();
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      suffixIcon: InkWell(
+                          onTap: () {
+                            Get.log('조회 돋보기 클릭!');
+                            controller.checkButton();
+                          },
+                          child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                      ),
+
+                      contentPadding: const EdgeInsets.all(0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'BC 번호를 입력해주세요',
+                      hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+                      border: InputBorder.none,
+                    ),
+                    showCursor: true,
+
+
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only( right: 20, top: 24),
+            child: InkWell(
+                onTap: () async {
+                  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                      '#ff6666', '취소', false, ScanMode.BARCODE);
+                  controller.textController.text = barcodeScanRes;
+                  controller.textController.text == '-1' ? controller.textController.text = '바코드를 재스캔해주세요' : controller.textController.text;
+                  controller.checkButton();
+                },
+                child: Icon(Icons.camera_alt_outlined, size: 30,)
+            ),
+          )
+        ],
+      ),
     );
   }
 

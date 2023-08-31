@@ -1,3 +1,4 @@
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:get/get.dart';
 
 
@@ -68,6 +69,29 @@ class GlobalService extends GetxService {
   }
 
    */
+
+  void logout() async {
+    await Utils.getStorage.erase();
+    isLogin.value = false;
+
+    HttpUtil.setToken(token: '');
+    Get.offAllNamed(Routes.LOGIN_PAGE);
+
+    Utils.gErrorMessage('로그아웃');
+  }
+
+  /// 로그인 정보 저장
+  void setLoginInfo() async {
+    try {
+
+   //   await Utils.getStorage.write('userModel', userInfo.toJson());
+
+      isLogin.value = true;
+    } catch (err) {
+      Get.log('GlobalService - setLoginInfo Err ', isError: true);
+      Get.log(err.toString(), isError: true);
+    }
+  }
 
   @override
   void onClose() {

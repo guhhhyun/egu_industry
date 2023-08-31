@@ -1,5 +1,4 @@
 
-import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
@@ -14,7 +13,6 @@ class MainBinding implements Bindings {
     Get.lazyPut(() => MainController(), fenix: true);
     Get.lazyPut(() => HomeController(), fenix: true);
     Get.lazyPut(() => SettingController(), fenix: true);
-    Get.lazyPut(() => BlueToothController(), fenix: true);
     Get.lazyPut(() => FacilityController(), fenix: true);
     Get.lazyPut(() => FacilityFirstController(),  fenix: true);
   }

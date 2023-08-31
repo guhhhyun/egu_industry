@@ -243,45 +243,125 @@ class InventoryCountingPage extends StatelessWidget {
     );
   }
 
-  Widget _barcodeScan() {
-    return InkWell(
-      onTap: () async{
-        String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-            '#ff6666', '취소', false, ScanMode.BARCODE);
-        controller.barcodeScanResult.value = barcodeScanRes;
-        if(controller.barcodeScanResult.value != '바코드를 스캔해주세요') {
-          controller.saveButton();
-          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-            , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                : DateFormat('yyyy-MM-dd').format(DateTime.now())
-            , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
-          {
-            if(value['DATAS'] != null) {
-              controller.productList.value = value['DATAS'],
-              for(var i = 0; i < controller.productList.length; i++) {
-                if(controller.productList[i]['CST_NM'].toString() == null) {
-                  controller.productList.remove(controller.productList[i])
-                }
-              }
-            }
-          });
-          SchedulerBinding.instance!.addPostFrameCallback((_) {
-            Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
-          });
-        }
-      },
-      child: Container(
-          padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
-          decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.ae2e2e2),
-              borderRadius: BorderRadius.circular(10)
+  Widget _topAreaTest() {
+    return Container(
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.only( right: 8),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 16),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: AppTheme.ae2e2e2),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: TextFormField(
+                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                    controller: controller.textController,
+                    textAlignVertical: TextAlignVertical.center,
+                    textInputAction: TextInputAction.search,
+                    onFieldSubmitted: (value) async{
+                      controller.saveButton();
+                      var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                        , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                            : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                        , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                      {
+                        if(value['DATAS'] != null) {
+                          controller.productList.value = value['DATAS'],
+                          for(var i = 0; i < controller.productList.length; i++) {
+                            if(controller.productList[i]['CST_NM'].toString() == null) {
+                              controller.productList.remove(controller.productList[i])
+                            }
+                          }
+                        }
+                      });
+                      SchedulerBinding.instance!.addPostFrameCallback((_) {
+                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      suffixIcon: InkWell(
+                          onTap: () async {
+                            controller.saveButton();
+                            var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                              , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                                  : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                              , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                            {
+                              if(value['DATAS'] != null) {
+                                controller.productList.value = value['DATAS'],
+                                for(var i = 0; i < controller.productList.length; i++) {
+                                  if(controller.productList[i]['CST_NM'].toString() == null) {
+                                    controller.productList.remove(controller.productList[i])
+                                  }
+                                }
+                              }
+                            });
+                            SchedulerBinding.instance!.addPostFrameCallback((_) {
+                              Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                            });
+                          },
+                          child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                      ),
+
+                      contentPadding: const EdgeInsets.all(0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'BC 번호를 입력해주세요',
+                      hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+                      border: InputBorder.none,
+                    ),
+                    showCursor: true,
+
+
+                  ),
+                ),
+              ),
+            ),
           ),
-          width: double.infinity,
-          child: Text(controller.barcodeScanResult.value, style: AppTheme.a16400.copyWith(
-              color: controller.barcodeScanResult.value == '바코드를 스캔해주세요' ? AppTheme.aBCBCBC : AppTheme.black),)
+          InkWell(
+              onTap: () async {
+                String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                    '#ff6666', '취소', false, ScanMode.BARCODE);
+                controller.textController.text = barcodeScanRes;
+                if(controller.textController.text != '') {
+                  if(controller.textController.text != '-1') {
+                    controller.textController.text = barcodeScanRes;
+                    controller.saveButton();
+                    var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                      , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                          : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                      , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                    {
+                      if(value['DATAS'] != null) {
+                        controller.productList.value = value['DATAS'],
+                        for(var i = 0; i < controller.productList.length; i++) {
+                          if(controller.productList[i]['CST_NM'].toString() == null) {
+                            controller.productList.remove(controller.productList[i])
+                          }
+                        }
+                      }
+                    });
+                    SchedulerBinding.instance!.addPostFrameCallback((_) {
+                      Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                    });
+                  }
+
+                }else {
+                 controller.textController.text = '바코드를 재스캔해주세요';
+                }
+              },
+              child: Icon(Icons.camera_alt_outlined, size: 30,)
+          )
+        ],
       ),
     );
   }
+
 
   Widget _barcodeField() {
     return Column(
@@ -294,15 +374,89 @@ class InventoryCountingPage extends StatelessWidget {
         _scrapDropdown(false),
         const SizedBox(height: 10,),
         controller.selectedSaveLocationMap['DETAIL_NM'] != '선택해주세요' ?
-       Container(
+        Container(
           child: Center(
-            child: _barcodeScan()
+            child: _topAreaTest()
           ),
         ) : Container(),
         SizedBox(height: 10,),
       ],
     );
   }
+
+  /*Widget _barcodeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('재고실사 등록',
+            style: AppTheme.a15700
+                .copyWith(color: AppTheme.black)),
+        const SizedBox(height: 10,),
+        _scrapDropdown(false),
+        const SizedBox(height: 10,),
+        controller.selectedSaveLocationMap['DETAIL_NM'] != '선택해주세요' ?
+       Container(
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.only(left: 16),
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.ae2e2e2),
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              width: double.infinity,
+              child: TextFormField(
+                style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                // maxLines: 5,
+                controller: controller.textController,
+                textAlignVertical: TextAlignVertical.center,
+                textInputAction: TextInputAction.search,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  suffixIcon: InkWell(
+                      onTap:  () async {
+                        Get.log('조회 돋보기 클릭!');
+                        if(controller.textController.text != '') {
+                          controller.saveButton();
+                          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                            , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                                : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                            , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                          {
+                            if(value['DATAS'] != null) {
+                              controller.productList.value = value['DATAS'],
+                              for(var i = 0; i < controller.productList.length; i++) {
+                                if(controller.productList[i]['CST_NM'].toString() == null) {
+                                  controller.productList.remove(controller.productList[i])
+                                }
+                              }
+                            }
+                          });
+                          SchedulerBinding.instance!.addPostFrameCallback((_) {
+                            Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                          });
+                        }
+                      },
+                      child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                  ),
+
+                  contentPadding: const EdgeInsets.all(0),
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: 'BC 번호를 입력해주세요',
+                  hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+                  border: InputBorder.none,
+                ),
+                showCursor: true,
+
+                // onChanged: ((value) => controller.submitSearch(value)),
+              ),
+            ),
+          ),
+        ) : Container(),
+        SizedBox(height: 10,),
+      ],
+    );
+  }*/
 
 
   Widget _scrapDropdown(bool isCheck) {
@@ -492,48 +646,6 @@ class InventoryCountingPage extends StatelessWidget {
       ),
     ),
 
-    );
-  }
-
-
-  Widget _bottomButton(BuildContext context) {
-    return  BottomAppBar(
-        color: AppTheme.white,
-        surfaceTintColor: AppTheme.white,
-        child: (() {
-         /* if(controller.selectedLocationMap['FKF_NM'] != '선택해주세요') {
-            controller.isButton.value = true;
-          }else {
-            controller.isButton.value = false;
-          }*/
-          return TextButton(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.all(0))),
-              onPressed: () {
-                controller.saveButton();
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
-                  Get.dialog(
-                      CommonDialogWidget(contentText: '등록되었습니다', flag: 2, pageFlag: 4,)
-                  );
-                });
-              },
-              child: SizedBox(
-                height: 56,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                    child: Text(
-                      '실사 등록',
-                      style: AppTheme.bodyBody2.copyWith(
-                        color: const Color(0xfffbfbfb),
-                      ),
-                    )),
-              ));
-        })()
     );
   }
 }

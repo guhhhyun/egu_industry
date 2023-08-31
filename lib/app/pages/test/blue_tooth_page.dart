@@ -1,6 +1,6 @@
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
-import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
-import 'package:egu_industry/app/pages/blueTooth/web_view_page.dart';
+import 'package:egu_industry/app/pages/test/blue_tooth_controller.dart';
+import 'package:egu_industry/app/pages/test/web_view_page.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:flutter/material.dart';
 

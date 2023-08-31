@@ -328,7 +328,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
            // maxLines: 5,
             controller: controller.textFacilityController,
-            textInputAction: TextInputAction.search,
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(0),
@@ -475,7 +475,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             // maxLines: 5,
             maxLength: 30,
             controller: controller.textTitleController,
-            textInputAction: TextInputAction.search,
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(0),
@@ -525,7 +525,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             maxLength: 60,
             maxLines: 5,
             controller: controller.textContentController,
-            textInputAction: TextInputAction.search,
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               counterText:'',

@@ -256,7 +256,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('구분',
                       style: AppTheme.a16700
@@ -274,7 +274,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text(
                     '전일',
@@ -294,7 +294,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('금일',
                       style: AppTheme.a16700
@@ -313,7 +313,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('등록시간',
                       style: AppTheme.a16700
@@ -330,7 +330,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('거래처',
                       style: AppTheme.a16700
@@ -348,7 +348,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('슬라브',
                       style: AppTheme.a16700
@@ -365,7 +365,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('제품명',
                       style: AppTheme.a16700
@@ -384,7 +384,7 @@ class ProcessCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 35,
                 child: Center(
                   child: Text('작업자',
                       style: AppTheme.a16700
@@ -430,7 +430,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CRP_NAME'].toString(),
                       style: AppTheme.a12500
@@ -447,7 +447,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                       child: Text(
                         controller.processList[index]['PRE_DT'].toString(),
@@ -466,7 +466,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CUR_DT'].toString(),
                       style: AppTheme.a12500
@@ -483,7 +483,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['IST_DT'].toString(),
                       style: AppTheme.a12500
@@ -501,7 +501,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CST_NM'].toString(),
                       style: AppTheme.a12500
@@ -518,7 +518,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['SLB_NO'].toString(),
                       style: AppTheme.a12500
@@ -534,7 +534,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CMH_NM'].toString(),
                       style: AppTheme.a12500
@@ -551,7 +551,7 @@ class ProcessCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['WRK_NM1'].toString(),
                       style: AppTheme.a12500

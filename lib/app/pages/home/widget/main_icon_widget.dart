@@ -261,7 +261,14 @@ class MainIconWidget extends StatelessWidget {
                       Get.toNamed(Routes.FACILITY_MONITORING);
                     }),),
                 const SizedBox(width: 12,),
-                Expanded(child: _buttonAreaWhite()),
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/Group-5.png',
+                    title: '로그아웃',
+                    subTitle: '',
+                    onPressed: () {
+                      Get.log('로그아웃');
+                      Get.toNamed(Routes.LOGIN_PAGE);
+                    }),),
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonAreaWhite())
               ],

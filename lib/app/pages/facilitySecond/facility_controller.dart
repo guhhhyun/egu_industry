@@ -127,11 +127,13 @@ class FacilityController extends GetxController {
   Future<void> partConvert(String machCode) async {
     var part = await HomeApi.to.PROC('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q_PART',  '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}',}).then((value) =>
     {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        isPartSelectedList.add(false),
-        partQtyList.add(1)
+      if(value['DATAS'] != null) {
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          isPartSelectedList.add(false),
+          partQtyList.add(1),
+          partList.addAll(value['DATAS']),
+        },
       },
-      partList.addAll(value['DATAS']),
     });
     Get.log('part:  ${part}');
   }

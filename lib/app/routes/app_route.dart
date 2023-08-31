@@ -7,6 +7,8 @@ import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_bi
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_page.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_binding.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_page.dart';
+import 'package:egu_industry/app/pages/loginPage/login_binding.dart';
+import 'package:egu_industry/app/pages/loginPage/login_page.dart';
 import 'package:egu_industry/app/pages/main/main_binding.dart';
 import 'package:egu_industry/app/pages/main/main_page.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_binding.dart';
@@ -41,6 +43,7 @@ abstract class Routes {
   static const FACILITY_MONITORING= _PathName.FACILITY_MONITORING;
   static const PACKAGING_INSPEC= _PathName.PACKAGING_INSPEC;
   static const SCRAP_LABEL= _PathName.SCRAP_LABEL;
+  static const LOGIN_PAGE= _PathName.LOGIN_PAGE;
 
 }
 
@@ -48,6 +51,7 @@ abstract class _PathName {
   static const String PERMISSION = '/permission'; // 권한 요청 페이지
   static const String MAIN = '/main'; // MAIN 페이지
   static const String SPLASH = '/splash'; // SPLASH 페이지
+  static const String LOGIN_PAGE = '/login'; // 로그인 페이지
   static const String FACILITY = '/facility'; // FACILITY 페이지
   static const String FACILITY_FIRST = '/facility_first'; // FACILITY 페이지
   static const String PRODUCT_LOCATION = '/product_location'; // 제품이동 페이지
@@ -88,7 +92,10 @@ class AppRoute {
         name: _PathName.PACKAGING_INSPEC, page: () => PackagingInspecPage(), binding: PackagingInspecBinding()),
     GetPage(
         name: _PathName.SCRAP_LABEL, page: () => ScrapLabelPage(), binding: ScrapLabelBinding()),
+    GetPage(
+        name: _PathName.LOGIN_PAGE, page: () => LoginPage(), binding: LoginBinding()),
 
 
   ];
 }
+

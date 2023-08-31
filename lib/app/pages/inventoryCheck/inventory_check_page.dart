@@ -409,7 +409,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('번호',
                       style: AppTheme.a16700
@@ -427,7 +427,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text(
                     '중량',
@@ -446,7 +446,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('품명',
                       style: AppTheme.a16700
@@ -464,7 +464,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('강종',
                       style: AppTheme.a16700
@@ -481,7 +481,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('두께',
                       style: AppTheme.a16700
@@ -500,7 +500,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('실두께',
                       style: AppTheme.a16700
@@ -518,7 +518,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('폭',
                       style: AppTheme.a16700
@@ -536,7 +536,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('거래처명',
                       style: AppTheme.a16700
@@ -555,7 +555,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('경도',
                       style: AppTheme.a16700
@@ -574,7 +574,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('QC메모',
                       style: AppTheme.a16700
@@ -592,7 +592,7 @@ class InventoryCheckPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
                             color: AppTheme.light_text_primary))),
-                height: 45,
+                height: 34,
                 child: Center(
                   child: Text('입고일',
                       style: AppTheme.a16700
@@ -639,7 +639,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text('${index + 1}',
                       style: AppTheme.a12500
@@ -657,7 +657,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                       child: Text(
                         controller.productSearchList[index]['STOCK_QTY'].toString(),
@@ -675,7 +675,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['CMP_NM'].toString(),
                       style: AppTheme.a12500
@@ -692,7 +692,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['STT_NM'].toString(),
                       style: AppTheme.a12500
@@ -710,7 +710,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['THIC'].toString(),
                       style: AppTheme.a12500
@@ -728,7 +728,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['THICK_ACT'].toString(),
                       style: AppTheme.a12500
@@ -745,7 +745,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['WIDTH'].toString(),
                       style: AppTheme.a12500
@@ -761,7 +761,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['CST_NM'].toString(),
                       style: AppTheme.a12500
@@ -778,7 +778,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['HANDNESS_ACT'].toString(),
                       style: AppTheme.a12500
@@ -795,7 +795,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['PP_REMARK'].toString(),
                       style: AppTheme.a12500
@@ -811,7 +811,7 @@ class InventoryCheckPage extends StatelessWidget {
                           top: BorderSide(color: AppTheme.light_text_primary),
                           right: BorderSide(
                               color: AppTheme.light_text_primary))),
-                  height: 80,
+                  height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['IN_DATE'].toString(),
                       style: AppTheme.a12500

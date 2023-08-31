@@ -1,9 +1,12 @@
 
+import 'package:egu_industry/app/common/global_service.dart';
 import 'package:get/get.dart';
 
 import '../../routes/app_route.dart';
 
 class SplashController extends GetxController {
+
+  GlobalService gs = Get.find();
   @override
   void onInit() {
     super.onInit();
@@ -20,6 +23,7 @@ class SplashController extends GetxController {
   void onReady() async {
     Get.log('SplashController- onReady');
     await Future.delayed(Duration(milliseconds: 1000));
-    Get.offAndToNamed(Routes.MAIN);
+    gs.isLogin.value == true ?  Get.offAndToNamed(Routes.MAIN) :
+    Get.offAndToNamed(Routes.LOGIN_PAGE);
   }
 }

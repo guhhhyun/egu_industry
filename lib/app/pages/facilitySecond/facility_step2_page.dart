@@ -1,12 +1,8 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
-import 'package:egu_industry/app/common/common_confirm_widget.dart';
+
 import 'package:egu_industry/app/common/dialog_widget.dart';
-import 'package:egu_industry/app/net/home_api.dart';
-import 'package:egu_industry/app/pages/blueTooth/blue_tooth_controller.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
-import 'package:egu_industry/app/pages/home/home_controller.dart';
-import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -569,7 +565,7 @@ class FacilityStep2Page extends StatelessWidget {
               maxLength: 100,
               maxLines: 5,
               controller: controller.textContentController,
-              textInputAction: TextInputAction.search,
+              textInputAction: TextInputAction.done,
               keyboardType: TextInputType.text,
               decoration: const InputDecoration(
                 hintStyle: TextStyle(fontSize: 17, color: AppTheme.gray_gray_400),
@@ -644,7 +640,7 @@ class FacilityStep2Page extends StatelessWidget {
               child: PrimaryScrollController(
                 controller: myScrollWorks,
                 child: CupertinoScrollbar(
-                    isAlwaysShown: true,
+                  thumbVisibility: true,
                   child: CustomScrollView(
                 physics: BouncingScrollPhysics(),
                 slivers: [
@@ -817,7 +813,7 @@ class FacilityStep2Page extends StatelessWidget {
               child: PrimaryScrollController(
                 controller: myScrollWorks2,
                 child: CupertinoScrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   child: CustomScrollView(
                     physics: BouncingScrollPhysics(),
                     slivers: [

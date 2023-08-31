@@ -49,7 +49,7 @@ class PrintPage extends StatelessWidget {
         build: (pw.Context context) {
           return pw.Column(
             children: [
-              pw.Text('test'),
+              pw.Text('label test'),
               pw.SizedBox(height: 50),
               pw.Image(image)
             ],

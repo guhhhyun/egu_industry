@@ -9,7 +9,6 @@ import '../../common/app_theme.dart';
 import '../../common/common_bottom_sheet.dart';
 import '../../common/global_service.dart';
 import '../../routes/app_route.dart';
-import '../blueTooth/blue_tooth_page.dart';
 import '../home/home_page.dart';
 import '../setting/setting_page.dart';
 import 'main_controller.dart';
