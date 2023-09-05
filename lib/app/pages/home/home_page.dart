@@ -40,11 +40,11 @@ class HomePage extends StatelessWidget {
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
             // 공지 리스트
-            HomeNewsWidget(),
+           // HomeNewsWidget(),
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
-            MainReadMoreWidget()
+          //  MainReadMoreWidget()
           ],
         ),
       ),

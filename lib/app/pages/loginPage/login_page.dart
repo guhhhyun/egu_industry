@@ -252,7 +252,7 @@ class LoginPage extends StatelessWidget {
                         'assets/app/egu2.png', width: 200, height: 50,)),
                     SizedBox(height: 16,),
                     Text(
-                      '이구산업 Work platform App에 오신걸 환영합니다',
+                      '이구산업 모바일 시스템에 오신걸 환영합니다',
                       style: AppTheme.bodyBody2.copyWith(color: AppTheme.a969696),
                     ),
                     Text(

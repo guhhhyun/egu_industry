@@ -44,9 +44,13 @@ class ProcessCheckPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 18, right: 18, top: 24),
           child: Column(
             children: [
-              Obx(() => _cmpAndSttItem()),
-              const SizedBox(height: 12,),
-              _checkButton(),
+              Row(
+                children: [
+                  Obx(() => _cmpAndSttItem()),
+                  const SizedBox(width: 12,),
+                  _checkButton(),
+                ],
+              ),
               const SizedBox(height: 24,),
             ],
           ),
@@ -57,8 +61,8 @@ class ProcessCheckPage extends StatelessWidget {
   Widget _cmpAndSttItem() {
     return Row(
       children: [
-        Expanded(
-          child: Container(
+        Container(
+          width: 200,
             height: 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -95,7 +99,6 @@ class ProcessCheckPage extends StatelessWidget {
                   controller.convert();
                 }),
           ),
-        ),
       ],
     );
   }
@@ -116,7 +119,8 @@ class ProcessCheckPage extends StatelessWidget {
             controller.checkButton();
           },
           child: SizedBox(
-            height: 56,
+            width: 50,
+            height: 50,
             child: Center(
                 child: Text(
                   '검색',
@@ -249,7 +253,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         left:
                         BorderSide(color: AppTheme.light_text_primary),
@@ -269,7 +273,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
@@ -288,7 +292,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),
@@ -307,7 +311,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),
@@ -325,7 +329,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
@@ -342,7 +346,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),
@@ -360,7 +364,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
@@ -378,7 +382,7 @@ class ProcessCheckPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),

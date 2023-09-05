@@ -25,7 +25,7 @@ class HomeNewsWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('이구산업의 최신 소식을 확인해보세요.', style: AppTheme.bodyBody2.copyWith(color: AppTheme.a969696))
+                    Text('이구산업의 공지사항을 확인해보세요.', style: AppTheme.bodyBody2.copyWith(color: AppTheme.a969696))
                   ],
                 ),
                 const SizedBox(height: 32,),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -23,10 +24,10 @@ class FacilityController extends GetxController {
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
-  RxString dayValue = '날짜를 선택해주세요'.obs;
-  RxString dayStartValue = '선택해주세요'.obs;
-  RxString dayEndValue = '선택해주세요'.obs;
-  RxInt choiceButtonVal = 0.obs;
+  RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
   RxInt datasLength = 0.obs;
@@ -49,9 +50,9 @@ class FacilityController extends GetxController {
   RxString noReasonCd = ''.obs;
   RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
   RxString rpUser = ''.obs;
-  RxList<String> urgencyList = ['선택해주세요', '보통', '긴급'].obs;
-  RxString selectedUrgency = '선택해주세요'.obs;
-  RxString selectedReadUrgency = '선택해주세요'.obs;
+  RxList<String> urgencyList = ['보통', '긴급'].obs;
+  RxString selectedUrgency = '보통'.obs;
+  RxString selectedReadUrgency = '보통'.obs;
   RxString urgencyReadCd = ''.obs;
   RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
   RxString selectedIns = '선택해주세요'.obs;
@@ -59,7 +60,7 @@ class FacilityController extends GetxController {
   RxString insReadCd = ''.obs;
   RxList<String> engineTeamList = [''].obs;
   RxString selectedEngineTeam = '선택해주세요'.obs;
-  RxString selectedReadEngineTeam = '선택해주세요'.obs;
+  RxString selectedReadEngineTeam = '전기팀'.obs;
   RxString engineTeamReadCd = ''.obs;
   RxList<bool> isEngineerSelectedList = [false].obs;
   RxList<String> engineerSelectedList = [''].obs;
@@ -95,13 +96,13 @@ class FacilityController extends GetxController {
     Get.log('저장 결과값::::: ${a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '')}');
 
     // 부품 저장 프로시저
-    if(partSelectedList.length != 0) {
+    if(partSelectedList.isNotEmpty) {
       for(var i = 0; i < partSelectedList.length; i++) {
         await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
           , '@p_ITEM_NAME':'${partSelectedList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${partSelectedList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${partSelectedQtyList[i]}',});
       }
     }
-    if(otherPartList.length != 0) {
+    if(otherPartList.isNotEmpty) {
       for(var i = 0; i < otherPartList.length; i++) {
         await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':''
           , '@p_ITEM_NAME':'${otherPartList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${otherPartList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${otherPartList[i]['QTY']}',});
@@ -120,8 +121,8 @@ class FacilityController extends GetxController {
     partSelectedQtyList.clear();
     isPartSelectedList.clear();
     textContentController.clear();
-    dayStartValue.value = '선택해주세요';
-    dayEndValue.value = '선택해주세요';
+    dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 
   Future<void> partConvert(String machCode) async {
@@ -150,8 +151,6 @@ class FacilityController extends GetxController {
     engineTeamList.clear();
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
-    machList.add('선택해주세요');
-    engineTeamList.add('선택해주세요');
 
 
     /// 정비자 리스트
@@ -311,6 +310,19 @@ class FacilityController extends GetxController {
 
   @override
   void onInit() {
+    readCdConvert();
+    datasList.clear();
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${dayValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    {
+      Get.log('value[DATAS]: ${value['DATAS']}'),
+      if(value['DATAS'] != null) {
+        datasLength.value = value['DATAS'].length,
+        for(var i = 0; i < datasLength.value; i++){
+          datasList.add(value['DATAS'][i]),
+        },
+      },
+      Get.log('datasList: ${datasList}'),
+    });
     irfgConvert();
     clear();
   }

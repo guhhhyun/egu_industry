@@ -193,7 +193,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -234,7 +234,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -376,7 +376,6 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                           'assets/app/arrowBottom.svg',
                           color: AppTheme.light_placeholder,
                         ),
-                        dropdownColor: AppTheme.light_ui_01,
                         value: controller.selectedIrFq.value,
                         //  flag == 3 ? controller.selectedNoReason.value :
                         items: controller.irfgList.map((value) {
@@ -385,7 +384,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             child: Text(
                               value,
                               style: AppTheme.a16400
-                                  .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                                  .copyWith(color:  controller.selectedIrFq.value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                             ),
                           );
                         }).toList(),
@@ -434,7 +433,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             child: Text(
                               value,
                               style: AppTheme.a16400
-                                  .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                                  .copyWith(color: AppTheme.a6c6c6c),
                             ),
                           );
                         }).toList(),

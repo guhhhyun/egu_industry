@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -17,14 +18,14 @@ class FacilityFirstController extends GetxController {
 
 
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
-  RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
-  RxString selectedIns = '선택해주세요'.obs;
+  RxList<String> insList = ['설비점검', '안전점검'].obs;
+  RxString selectedIns = '설비점검'.obs;
   RxString selectedReadIns = '선택해주세요'.obs;
   RxString insCd = ''.obs;
   RxString insReadCd = ''.obs;
-  RxList<String> urgencyList = ['선택해주세요', '보통', '긴급'].obs;
-  RxString selectedUrgency = '선택해주세요'.obs;
-  RxString selectedReadUrgency = '선택해주세요'.obs;
+  RxList<String> urgencyList = ['보통', '긴급'].obs;
+  RxString selectedUrgency = '보통'.obs;
+  RxString selectedReadUrgency = '보통'.obs;
   RxString urgencyCd = ''.obs;
   RxString urgencyReadCd = ''.obs;
   RxList<dynamic> machList = [].obs;
@@ -38,8 +39,8 @@ class FacilityFirstController extends GetxController {
   RxString selectedReadIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
   RxList<String> engineTeamList = [''].obs;
-  RxString selectedEngineTeam = '선택해주세요'.obs;
-  RxString selectedReadEngineTeam = '선택해주세요'.obs;
+  RxString selectedEngineTeam = '전기팀'.obs;
+  RxString selectedReadEngineTeam = '전기팀'.obs;
   RxString engineTeamCd = ''.obs;
   RxString engineTeamReadCd = ''.obs;
   RxString errorTime = ''.obs;
@@ -56,10 +57,10 @@ class FacilityFirstController extends GetxController {
 
 
 
-  RxString dayValue = '날짜를 선택해주세요'.obs;
+  RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
   RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
-  RxInt choiceButtonVal = 0.obs;
+  RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
   RxInt datasLength = 0.obs;
   RxList datasList = [].obs;
@@ -112,19 +113,17 @@ class FacilityFirstController extends GetxController {
     engineTeamList.clear();
     machCdList.clear();
     selectedMachMap.clear();
-    machList.add('선택해주세요');
     irfgList.add('선택해주세요');
-    engineTeamList.add('선택해주세요');
-    selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '전체'});
+    selectedMachMap.addAll({'MACH_CODE':'00', 'MACH_NAME': '전체'});
 
     /// 설비
-    var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+    var muc = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
     {
      // Get.log('우웅ㅇ ${value}'),
-      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '전체'}),
+      value['DATAS'].insert(0, {'MACH_CODE':'00', 'MACH_NAME': '전체'}),
       machList.value = value['DATAS']
     });
-    Get.log('$engineer');
+    Get.log('설비 :  : : $muc');
     /// 정비유형
     var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
     {
@@ -277,6 +276,19 @@ class FacilityFirstController extends GetxController {
 
   @override
   void onInit() {
+    readCdConvert();
+    datasList.clear();
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${dayValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    {
+      Get.log('value[DATAS]: ${value['DATAS']}'),
+      if(value['DATAS'] != null) {
+        datasLength.value = value['DATAS'].length,
+        for(var i = 0; i < datasLength.value; i++){
+          datasList.add(value['DATAS'][i]),
+        },
+      },
+      Get.log('datasList: ${datasList}'),
+    });
     convert();
   }
 

@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:egu_industry/app/common/utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 
@@ -8,6 +11,7 @@ import '../routes/app_route.dart';
 
 class GlobalService extends GetxService {
   static GlobalService get to => Get.find();
+
 
   String authToken = '';
   RxBool isLogin = false.obs;
@@ -87,6 +91,7 @@ class GlobalService extends GetxService {
    //   await Utils.getStorage.write('userModel', userInfo.toJson());
 
       isLogin.value = true;
+      Utils.gErrorMessage('로그인');
     } catch (err) {
       Get.log('GlobalService - setLoginInfo Err ', isError: true);
       Get.log(err.toString(), isError: true);

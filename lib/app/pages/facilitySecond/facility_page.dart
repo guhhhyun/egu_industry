@@ -126,7 +126,7 @@ class FacilityPage extends StatelessWidget {
                     child: Text(
                       value,
                       style: AppTheme.a14500
-                          .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          .copyWith(color: AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
@@ -214,8 +214,7 @@ class FacilityPage extends StatelessWidget {
   }
 
   Widget _choiceButtonItem() {
-    return controller.bSelectedDayFlag.value == true && controller.selectedReadUrgency.value != '선택해주세요'
-        && controller.selectedReadEngineTeam.value != '선택해주세요' ? Row(
+    return Row(
       children: [
         Expanded(child: TextButton(
             style: ButtonStyle(
@@ -460,7 +459,7 @@ class FacilityPage extends StatelessWidget {
         )),
 
       ],
-    ) : Container();
+    );
   }
 
   Widget _calendar() {
@@ -715,30 +714,20 @@ class FacilityPage extends StatelessWidget {
                   )
                       : Container(),
                   /// 등록한 시간과 현재시간 비교
+                  controller.datasList.isNotEmpty ?
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.watch_later_outlined, color: AppTheme.ac7c7c7, size: 17,),
-                      SizedBox(width: 4,),
-                      Text(
-                          '${_dateDifference(index)}h 경과',
-                          style: AppTheme.a14700
-                              .copyWith(color: AppTheme.a969696)),
+                      Text(controller.datasList[index]['INS_FG'] == 'S' ? '' : controller.datasList[index]['MACH_CODE'].toString() == '' ? '설비 외' : _test(index),
+                          style: AppTheme.a16700
+                              .copyWith(color: AppTheme.black)),
                     ],
                   )
+                      : Container(),
                 ],
               ),
               SizedBox(height: 8,),
-              /// 마노압연기 뭐시기뭐시기
-              controller.datasList.isNotEmpty ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(controller.datasList[index]['INS_FG'] == 'S' ? '' : controller.datasList[index]['MACH_CODE'].toString() == '' ? '설비 외' : _test(index),
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.black)),
-                ],
-              )
-                  : Container(),
+
 
               /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
               controller.datasList.isNotEmpty ?
@@ -762,22 +751,37 @@ class FacilityPage extends StatelessWidget {
               controller.datasList.isNotEmpty ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(controller.datasList[index]['IR_USER'].toString(),
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a959595)),
-                  Container(
-                      child: (() {
-                        var firstIndex = controller.datasList[index]['IR_DATE']
-                            .toString().lastIndexOf(':');
-                        var lastIndex = controller.datasList[index]['IR_DATE']
-                            .toString().length;
-                        return Text(
-                            controller.datasList[index]['IR_DATE']
-                                .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
-                            style: AppTheme.a14400
-                                .copyWith(color: AppTheme.a959595));
-                      })()
+                  Row(
+                    children: [
+                      Text(controller.datasList[index]['IR_USER'].toString(),
+                          style: AppTheme.a14400
+                              .copyWith(color: AppTheme.a959595)),
+                      SizedBox(width: 12,),
+                      Container(
+                          child: (() {
+                            var firstIndex = controller.datasList[index]['IR_DATE']
+                                .toString().lastIndexOf(':');
+                            var lastIndex = controller.datasList[index]['IR_DATE']
+                                .toString().length;
+                            return Text(
+                                controller.datasList[index]['IR_DATE']
+                                    .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
+                                style: AppTheme.a14400
+                                    .copyWith(color: AppTheme.a959595));
+                          })()
+                      ),
+                    ],
                   ),
+                  Row(
+                    children: [
+                      Icon(Icons.watch_later_outlined, color: AppTheme.ac7c7c7, size: 17,),
+                      SizedBox(width: 4,),
+                      Text(
+                          '${_dateDifference(index)}h 경과',
+                          style: AppTheme.a14700
+                              .copyWith(color: AppTheme.a969696)),
+                    ],
+                  )
                 ],
               ) : Container(),
             ],

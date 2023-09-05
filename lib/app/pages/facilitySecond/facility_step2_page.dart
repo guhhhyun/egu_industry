@@ -88,43 +88,47 @@ class FacilityStep2Page extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
-                    AppTheme.aecf9f2
-                ),
-                child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
-                    style: AppTheme.bodyBody1
-                        .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                        ? AppTheme.af34f39 : AppTheme.a18b858)),
-              ),
-              const SizedBox(width: 6,),
-              Container(
-                padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color:  AppTheme.af4f4f4
-                ),
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
+                        AppTheme.aecf9f2
+                    ),
+                    child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                        style: AppTheme.bodyBody1
+                            .copyWith(color: controller.selectedReadUrgency.value == '긴급'
+                            ? AppTheme.af34f39 : AppTheme.a18b858)),
+                  ),
+                  const SizedBox(width: 6,),
+                  Container(
+                    padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color:  AppTheme.af4f4f4
+                    ),
 
-                child: Text( controller.selectedContainer[0]['INS_FG'] == 'M' ? '설비점검' : '안전점검',
-                    style: AppTheme.bodyBody1
-                        .copyWith(color: AppTheme.a969696)),
-              )
+                    child: Text( controller.selectedContainer[0]['INS_FG'] == 'M' ? '설비점검' : '안전점검',
+                        style: AppTheme.bodyBody1
+                            .copyWith(color: AppTheme.a969696)),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(_test(),
+                      style: AppTheme.a22700
+                          .copyWith(color: AppTheme.black)),
+                ],
+              ),
             ],
           ),
           SizedBox(height: 16,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(_test(),
-                  style: AppTheme.a22700
-                      .copyWith(color: AppTheme.black)),
-            ],
-          ),
-          const SizedBox(height: 2,),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -460,7 +464,7 @@ class FacilityStep2Page extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('${controller.dayStartValue.value}', style: AppTheme.bodyBody1
-                            .copyWith(color: controller.dayEndValue.value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black
+                            .copyWith(color: AppTheme.black
                             , fontSize: 17),),
                       ],
                     ),
@@ -526,7 +530,7 @@ class FacilityStep2Page extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('${controller.dayEndValue.value}', style: AppTheme.bodyBody1
-                            .copyWith(color: controller.dayEndValue.value == '선택해주세요' ? AppTheme.gray_gray_400 : AppTheme.black
+                            .copyWith(color: AppTheme.black
                             , fontSize: 17),),
                       ],
                     ),

@@ -270,7 +270,15 @@ class MainIconWidget extends StatelessWidget {
                       Get.toNamed(Routes.LOGIN_PAGE);
                     }),),
                 const SizedBox(width: 12,),
-                Expanded(child: _buttonAreaWhite())
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/Group-5.png',
+                    title: '알림',
+                    subTitle: '',
+                    onPressed: () {
+                      Get.log('알림');
+                      Get.toNamed(Routes.ALARM);
+                    }),),
+              //  Expanded(child: _buttonAreaWhite())
               ],
             ),
           ],

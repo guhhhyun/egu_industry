@@ -196,7 +196,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(height: 35,),
-                        Row(
+                        /*Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             InkWell(
@@ -216,7 +216,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                                 child: Image.asset('assets/app/printer.png', color: AppTheme.white, width: 30, height: 30,)
                             ),
                           ],
-                        ),
+                        ),*/
                       ],
                     ),
                   ),

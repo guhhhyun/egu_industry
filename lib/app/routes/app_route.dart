@@ -1,4 +1,6 @@
 
+import 'package:egu_industry/app/pages/alarm/alarm_binding.dart';
+import 'package:egu_industry/app/pages/alarm/alarm_page.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_binding.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_page.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_binding.dart';
@@ -44,6 +46,7 @@ abstract class Routes {
   static const PACKAGING_INSPEC= _PathName.PACKAGING_INSPEC;
   static const SCRAP_LABEL= _PathName.SCRAP_LABEL;
   static const LOGIN_PAGE= _PathName.LOGIN_PAGE;
+  static const ALARM= _PathName.ALARM;
 
 }
 
@@ -62,6 +65,7 @@ abstract class _PathName {
   static const String FACILITY_MONITORING = '/facility_monitoring'; // 설비가동 모니터링 페이지
   static const String PACKAGING_INSPEC = '/packaging_inspec'; // 제품포장 검수 페이지
   static const String SCRAP_LABEL = '/scrap_label'; // 스크랩 라벨발행 페이지
+  static const String ALARM = '/alarm'; // 알림 페이지
 }
 
 class AppRoute {
@@ -94,6 +98,8 @@ class AppRoute {
         name: _PathName.SCRAP_LABEL, page: () => ScrapLabelPage(), binding: ScrapLabelBinding()),
     GetPage(
         name: _PathName.LOGIN_PAGE, page: () => LoginPage(), binding: LoginBinding()),
+    GetPage(
+        name: _PathName.ALARM, page: () => AlarmPage(), binding: AlarmBinding()),
 
 
   ];

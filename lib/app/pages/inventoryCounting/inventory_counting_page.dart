@@ -70,10 +70,6 @@ class InventoryCountingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('재고실사 조회',
-            style: AppTheme.a15700
-                .copyWith(color: AppTheme.black)),
-        const SizedBox(height: 10,),
         _scrapDropdown(true),
         SizedBox(height: 10,),
         TextButton(
@@ -267,7 +263,7 @@ class InventoryCountingPage extends StatelessWidget {
                       var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
                         , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
                             : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                        , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                        , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                       {
                         if(value['DATAS'] != null) {
                           controller.productList.value = value['DATAS'],
@@ -290,7 +286,7 @@ class InventoryCountingPage extends StatelessWidget {
                             var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
                               , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
                                   : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                              , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                              , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                             {
                               if(value['DATAS'] != null) {
                                 controller.productList.value = value['DATAS'],
@@ -335,7 +331,7 @@ class InventoryCountingPage extends StatelessWidget {
                     var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
                       , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
                           : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                      , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
+                      , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                     {
                       if(value['DATAS'] != null) {
                         controller.productList.value = value['DATAS'],
@@ -367,18 +363,11 @@ class InventoryCountingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('재고실사 등록',
-            style: AppTheme.a15700
-                .copyWith(color: AppTheme.black)),
-        const SizedBox(height: 10,),
-        _scrapDropdown(false),
-        const SizedBox(height: 10,),
-        controller.selectedSaveLocationMap['DETAIL_NM'] != '선택해주세요' ?
         Container(
           child: Center(
             child: _topAreaTest()
           ),
-        ) : Container(),
+        ),
         SizedBox(height: 10,),
       ],
     );
@@ -494,7 +483,7 @@ class InventoryCountingPage extends StatelessWidget {
                         child: Text(
                           value['DETAIL_NM'],
                           style: AppTheme.a16400
-                              .copyWith(color: value['DETAIL_NM'] == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),

@@ -25,7 +25,7 @@ class PackagingInspecPage extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
+            CommonAppbarWidget(title: '\제품포장 검수', isLogo: false, isFirstPage: true ),
             _topAreaTest(),
             // _topArea(),
             _bodyArea(),
@@ -45,17 +45,18 @@ class PackagingInspecPage extends StatelessWidget {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  SizedBox(height: 16,),
+                  const SizedBox(height: 16,),
                   Container(
                     height: 8,
                     color: AppTheme.af3f3f3,
                   ),
-                  SizedBox(height: 16,),
+                  const SizedBox(height: 16,),
                 ],
               ),
             ),
-            controller.productDetailList.isNotEmpty ?
-            _packagingSpec() : SliverToBoxAdapter(child: Container())
+            Obx(() => controller.productDetailList.isNotEmpty ?
+            _packagingSpec() : SliverToBoxAdapter(child: Container()))
+
           //  _locationItem()
           ],
         ),

@@ -186,7 +186,7 @@ class ScrapLabelPage extends StatelessWidget {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList() : flag == 2 ?
@@ -196,7 +196,7 @@ class ScrapLabelPage extends StatelessWidget {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList() : flag == 3 ?
@@ -206,7 +206,7 @@ class ScrapLabelPage extends StatelessWidget {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList() : null,
@@ -219,20 +219,14 @@ class ScrapLabelPage extends StatelessWidget {
                       controller.selectedGold.value = value! : Get.log('$value 선택!!!!');
 
                       controller.selectedScLocMap.clear();
-                      controller.selectedScLocMap.addAll({'RACK_BARCODE':'', 'NAME': '선택해주세요'}); // 적재위치
+
                       /// 스크랩 선택으로 인한 적재위치 리스트 변경
-                     if(flag == 1 && controller.selectedGubun.value == '스크랩') {
-                       controller.matlGb.value = '2';
-                        await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W04'}).then((value) => // 적재위치(스크랩)
-                        {
-                          value['DATAS'].insert(0, {'RACK_BARCODE':'', 'NAME': '선택해주세요'}),
-                          controller.scLocList.value = value['DATAS'],
-                        });
-                      }else if(flag == 1 && controller.selectedGubun.value == '지금류') {
+                     if(flag == 1 && controller.selectedGubun.value == '지금류') {
                        controller.matlGb.value = '1';
                        await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W02'}).then((value) => // // 적재위치(지금류)
                        {
-                         value['DATAS'].insert(0, {'RACK_BARCODE':'', 'NAME': '선택해주세요'}),
+                         controller.selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
+                         controller.selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
                          controller.scLocList.value = value['DATAS'],
                        });
                      }
@@ -805,18 +799,11 @@ class ScrapLabelPage extends StatelessWidget {
                         child: Text(
                           value['NAME'].toString(),
                           style: AppTheme.a16400
-                              .copyWith(color: value['NAME'].toString() == '선택해주세요' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.selectedGubun.value == '스크랩' ?
-                      controller.scLocList.map((e) {
-                        if(e['NAME'] == value) {
-                          controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
-                          controller.selectedScLocMap['NAME'] = e['NAME'];
-                        }
-                      }).toList() :
                       controller.scLocList.map((e) {
                         if(e['NAME'] == value) {
                           controller.selectedScLocMap['RACK_BARCODE'] = e['RACK_BARCODE'];
@@ -1209,5 +1196,4 @@ class ScrapLabelPage extends StatelessWidget {
               ]);
         });
   }
-
 }

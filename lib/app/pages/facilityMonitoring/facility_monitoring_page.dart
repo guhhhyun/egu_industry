@@ -24,7 +24,9 @@ class FacilityMonitoringPage extends StatelessWidget {
           slivers: [
             CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
             _bodyArea(context),
-            _listArea()
+             Obx(() => controller.monitoringList.length == 0 ? SliverToBoxAdapter(child: Container()) :
+            _topTitle(context)),
+            _listArea2()
             //   _listArea()
           ],
         ),
@@ -132,9 +134,193 @@ class FacilityMonitoringPage extends StatelessWidget {
         ));
   }
 
+  Widget _topTitle(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: EdgeInsets.only(left: 4, right: 4),
+        padding: EdgeInsets.only(left: 18, right: 18),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.blue_blue_300,
+                    border: Border(
+                        left:
+                        BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('설비',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.blue_blue_300,
+                    border: Border(
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text(
+                    '상태',
+                    style: AppTheme.titleSubhead1
+                        .copyWith(color: AppTheme.light_text_primary),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.blue_blue_300,
+                    border: Border(
+
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('시간',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: AppTheme.blue_blue_300,
+                    border: Border(
+
+                        top: BorderSide(color: AppTheme.light_text_primary),
+                        right: BorderSide(
+                            color: AppTheme.light_text_primary))),
+                height: 34,
+                child: Center(
+                  child: Text('알람코드',
+                      style: AppTheme.titleSubhead1
+                          .copyWith(color: AppTheme.light_text_primary),
+                      textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _listArea2() {
+    return Obx(() => SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _listItem2(index: index, context: context);
+        }, childCount: controller.monitoringList.length)));
+  }
+  Widget _listItem2({required BuildContext context,required int index}) {
+
+    return Obx(() => Container(
+      margin: EdgeInsets.only(left: 4, right: 4),
+      padding: EdgeInsets.only( left: 18, right: 18),
+      child: Container(
+          decoration: BoxDecoration(
+              color: AppTheme.white,
+              border: Border(
+                  bottom: controller.monitoringList.length == index ? BorderSide(color: AppTheme.light_text_primary) : BorderSide()
+              )),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          left:
+                          BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 40,
+                  child: Center(
+                    child:   Text(controller.monitoringList[index]['CMH_NM'],
+                            style: AppTheme.a12500
+                                .copyWith(color: AppTheme.black)),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: controller.monitoringList[index]['STATUS_NM'] == '가동'
+                          ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
+                          ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
+                          ? AppTheme.af34f39 : AppTheme.a18b858,
+                      border: Border(
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 40,
+                  child: Center(
+                      child: Text(
+                          controller.monitoringList[index]['STATUS_NM'],
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 40,
+                  child: Center(
+                    child: Text(controller.monitoringList[index]['LEAD_TIME'].toString(),
+                      style: AppTheme.a12500
+                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+                          top: BorderSide(color: AppTheme.light_text_primary),
+                          right: BorderSide(
+                              color: AppTheme.light_text_primary))),
+                  height: 40,
+                  child: Center(
+                    child: Text(controller.monitoringList[index]['ALARM_VAL'] != '' ? '${controller.monitoringList[index]['ALARM_VAL']}' : '',
+                      style: AppTheme.a12500
+                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
 
-  Widget _listArea() {
+ /* Widget _listArea() {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           return _listItem(index: index, context: context);
@@ -143,7 +329,6 @@ class FacilityMonitoringPage extends StatelessWidget {
 
     );
   }
-
 
   /// obx 추가
   Widget _listItem({required BuildContext context, required int index}) {
@@ -218,7 +403,7 @@ class FacilityMonitoringPage extends StatelessWidget {
                 ],
               ),
 
-              /*Container(
+              *//*Container(
                   child: (() {
                     return Text(
                         controller.monitoringList[index]['IST_DT']
@@ -226,56 +411,15 @@ class FacilityMonitoringPage extends StatelessWidget {
                         style: AppTheme.a14400
                             .copyWith(color: AppTheme.a959595));
                   })()
-              ),*/
+              ),*//*
             ],
           ) : Container(),
         ],
       ),
 
 
-    ); // 290 6
+    );
   }
+*/
 
-
-
-/*Widget _bottomButton(BuildContext context) {
-    return Obx(() => BottomAppBar(
-      color: AppTheme.white,
-      surfaceTintColor: AppTheme.white,
-      child: Row(
-        children: [
-          _fkfSaveDrop(),
-          SizedBox(width: 12,),
-          Expanded(
-            child: TextButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    backgroundColor: controller.registButton.value ? controller.selectedSaveFkfNm['FKF_NM'] != '선택해주세요' ?
-                    MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
-                    MaterialStateProperty.all<Color>(AppTheme.light_cancel) : MaterialStateProperty.all<Color>(AppTheme.light_cancel),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.all(0))),
-                onPressed: controller.registButton.value ?  controller.selectedSaveFkfNm['FKF_NM'] != '선택해주세요' ? () async{
-                  Get.log('저장 클릭!!');
-                  for(var i = 0; i < controller.processSelectedList.length; i++) {
-                    controller.saveButton(i);
-                  }
-                } : null : null,
-                child: Container(
-                  height: 56,
-                  child: Center(
-                      child: Text(
-                        '저장',
-                        style: AppTheme.bodyBody2.copyWith(
-                          color: const Color(0xfffbfbfb),
-                        ),
-                      )),
-                )),
-          ),
-        ],
-      ),
-    ));
-  }*/
 }

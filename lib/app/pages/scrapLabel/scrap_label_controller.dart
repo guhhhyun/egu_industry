@@ -28,12 +28,12 @@ class ScrapLabelController extends GetxController {
   RxList<dynamic> tareList = [].obs;
   RxList<dynamic> measList = [].obs;
   RxList<dynamic> outScrapList = [].obs;
-  RxList<String> scrapGubunList = ['선택해주세요', '스크랩', '지금류'].obs; // 하드코딩 하는건가 흠
-  RxString selectedGubun = '선택해주세요'.obs;
-  RxList<String> scrapTypeList = ['선택해주세요', '매입', '공정회수', '외주'].obs;
-  RxString selectedScrapType = '선택해주세요'.obs;
-  RxList<String> goldList = ['선택해주세요', '무도금', '도금', '박리'].obs;
-  RxString selectedGold = '선택해주세요'.obs;
+  RxList<String> scrapGubunList = ['스크랩', '지금류'].obs; // 하드코딩 하는건가 흠
+  RxString selectedGubun = '스크랩'.obs;
+  RxList<String> scrapTypeList = ['매입', '공정회수', '외주'].obs;
+  RxString selectedScrapType = '매입'.obs;
+  RxList<String> goldList = ['무도금', '도금', '박리'].obs;
+  RxString selectedGold = '도금'.obs;
   RxList meansNumList = [].obs;
   RxBool isCheck = false.obs;
   RxString matlGb = ''.obs;
@@ -41,9 +41,6 @@ class ScrapLabelController extends GetxController {
 
 
   Future<void> convert() async {
-    selectedScLocMap.clear();
-    selectedScLocMap.addAll({'RACK_BARCODE':'', 'NAME': '선택해주세요'}); // 적재위치
-
     selectedIndustryMap.clear();
     selectedIndustryMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
 
@@ -175,25 +172,36 @@ class ScrapLabelController extends GetxController {
       '@P_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@P_WH_NO' : 'WH02',
       '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
     {
-      Get.log('라밸 성공::::::::::: $value')
+      Get.log('지금류 라밸 성공::::::::::: $value')
     });
   }
 
   // 스크랩 라벨발행
   Future<void> scrapSaveButton() async {
-    var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '${matlGb}', '@p_SCRAP_TYPE': '',
-      '@P_SCRAP_FG':'AA', '@p_ITEM_CODE':'', '@p_PROC_CODE': '', '@P_CST_ID':'${measList[0]['CST_ID']}', '@p_CST_NAME' : '${measList[0]['CUST_NM']}'
-      , '@P_MEAS_NO' : weighingInfoTextController.text, '@p_PLATE_FG' : '', '@p_TARE_NO' : '', '@p_TARE_WEIGHT' : '',
-      '@p_WEIGH_WEIGHT' : '', '@p_OUTS_NO' : '', '@P_WH_NO' : 'WH04',
+    var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '${matlGb}', '@p_SCRAP_TYPE': '', // 1: 매입, 2: 공정, 3:외주
+      '@P_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID':'${measList[0]['CST_ID']}', '@p_CST_NAME' : '${measList[0]['CUST_NM']}'
+      , '@P_MEAS_NO' : weighingInfoTextController.text, '@p_PLATE_FG' : '', '@p_TARE_NO' : '${selectedTareMap['CODE']}', '@p_TARE_WEIGHT' : '${selectedTareMap['WEIGHT']}',
+      '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
       '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
     {
-      Get.log('라밸 성공::::::::::: $value')
+      Get.log('스크랩 라밸 성공::::::::::: $value')
     });
   }
 
 
   @override
-  void onInit() {
+  void onInit() async{
+    selectedScLocMap.clear();
+    /// 스크랩 선택으로 인한 적재위치 리스트 변경
+    if(selectedGubun.value == '스크랩') {
+      matlGb.value = '2';
+      await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W04'}).then((value) => // 적재위치(스크랩)
+      {
+        selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
+        selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
+        scLocList.value = value['DATAS'],
+      });
+    }
     convert();
   }
 

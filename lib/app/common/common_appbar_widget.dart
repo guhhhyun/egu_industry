@@ -31,7 +31,7 @@ class CommonAppbarWidget extends StatelessWidget {
       onPressed: () {
         Get.offAllNamed(Routes.MAIN);
       },
-      icon: Icon(Icons.home),
+      icon: const Icon(Icons.home),
     );
   }
 

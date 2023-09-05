@@ -109,7 +109,7 @@ class ProcessTransferPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(controller.dayStartValue.value, style: AppTheme.a12500
-                            .copyWith(color: controller.dayStartValue.value == '시작날짜' ? AppTheme.light_placeholder : AppTheme.a6c6c6c
+                            .copyWith(color: AppTheme.a6c6c6c
                             , fontSize: 17),),
                       ],
                     ),
@@ -172,7 +172,7 @@ class ProcessTransferPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(controller.dayEndValue.value, style: AppTheme.a14500
-                            .copyWith(color: controller.dayEndValue.value == '마지막날짜' ? AppTheme.light_placeholder : AppTheme.a6c6c6c
+                            .copyWith(color: AppTheme.a6c6c6c
                             , fontSize: 17),),
                       ],
                     ),
@@ -957,7 +957,7 @@ class ProcessTransferPage extends StatelessWidget {
                               color: AppTheme.light_text_primary))),
                   height: 50,
                   child: Center(
-                    child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.black,)
+                    child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.red_red_800,)
                         : Container()
                   ),
                 ),
@@ -982,7 +982,7 @@ class ProcessTransferPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         left:
                         BorderSide(color: AppTheme.light_text_primary),
@@ -1001,7 +1001,7 @@ class ProcessTransferPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
                         top: BorderSide(color: AppTheme.light_text_primary),
                         right: BorderSide(
@@ -1019,7 +1019,7 @@ class ProcessTransferPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),
@@ -1038,7 +1038,7 @@ class ProcessTransferPage extends StatelessWidget {
             Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppTheme.light_ui_03,
+                        color: AppTheme.blue_blue_300,
                         border: Border(
 
                             top: BorderSide(color: AppTheme.light_text_primary),
@@ -1056,7 +1056,7 @@ class ProcessTransferPage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppTheme.light_ui_03,
+                        color: AppTheme.blue_blue_300,
                         border: Border(
                             top: BorderSide(color: AppTheme.light_text_primary),
                             right: BorderSide(
@@ -1074,7 +1074,7 @@ class ProcessTransferPage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppTheme.light_ui_03,
+                        color: AppTheme.blue_blue_300,
                         border: Border(
 
                             top: BorderSide(color: AppTheme.light_text_primary),
@@ -1093,7 +1093,7 @@ class ProcessTransferPage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppTheme.light_ui_03,
+                        color: AppTheme.blue_blue_300,
                         border: Border(
                             top: BorderSide(color: AppTheme.light_text_primary),
                             right: BorderSide(
@@ -1111,7 +1111,7 @@ class ProcessTransferPage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppTheme.light_ui_03,
+                        color: AppTheme.blue_blue_300,
                         border: Border(
 
                             top: BorderSide(color: AppTheme.light_text_primary),
@@ -1130,7 +1130,7 @@ class ProcessTransferPage extends StatelessWidget {
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
-                    color: AppTheme.light_ui_03,
+                    color: AppTheme.blue_blue_300,
                     border: Border(
 
                         top: BorderSide(color: AppTheme.light_text_primary),

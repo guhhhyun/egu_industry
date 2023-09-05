@@ -1,6 +1,7 @@
 
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 
 class ProcessTransferController extends GetxController {
@@ -10,8 +11,8 @@ class ProcessTransferController extends GetxController {
   RxList<bool> isprocessSelectedList = [false].obs;
   RxList<dynamic> processSelectedList = [].obs;
   RxString dayValue = '날짜를 선택해주세요'.obs;
-  RxString dayStartValue = '시작날짜'.obs;
-  RxString dayEndValue = '마지막날짜'.obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxList<String> movYnList = ['처리여부 선택','처리','미처리'].obs;
   RxString selectedMovYn = '처리여부 선택'.obs;
   RxString selectedMovYnCd = ''.obs; // 처리: y, 미처리: n
