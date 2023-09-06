@@ -394,58 +394,71 @@ class PackagingInspecPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('기계포장',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['MACH']}',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.black)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('기계포장: ',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text(controller.inspecDetailList[0]['MACH'] == 'Y' ? 'O' : 'X',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('띠밴딩: ',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text(controller.inspecDetailList[0]['BAND'] == 'Y' ? 'O' : 'X',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('고임목: ',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text(controller.inspecDetailList[0]['CHOCK'] == 'Y' ? 'O' : 'X',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('간지: ',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text(controller.inspecDetailList[0]['GANZ'] == 'Y' ? 'O' : 'X',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('감김방향: ',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text(controller.inspecDetailList[0]['DIRECTION'] == 'Y' ? 'O' : 'X',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
               ],
             ),
-            const SizedBox(height: 4,),
+            SizedBox(height: 12,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('띠밴딩',
+                Text('비고사항: ',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['BAND']}',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.black)),
-              ],
-            ),
-            const SizedBox(height: 4,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('고임목',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['CHOCK']}',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.black)),
-              ],
-            ),
-            const SizedBox(height: 4,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('간지',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['GANZ']}',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.black)),
-              ],
-            ),
-            const SizedBox(height: 4,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('감김방향',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['DIRECTION']}',
+                Text('${controller.inspecDetailList[0]['REMARK']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],

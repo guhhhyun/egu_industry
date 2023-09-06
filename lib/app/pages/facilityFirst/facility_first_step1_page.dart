@@ -133,7 +133,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':controller.dayValue.value,'@p_URGENCY_FG':controller.urgencyReadCd.value, '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -768,7 +768,6 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
   String _test(int index) {
       for(var u = 0; u < controller.machList.length; u++) {
-        Get.log('설비:::::::: ${(controller.machList[u]['MACH_CODE'])}');
         if(controller.machList[u]['MACH_CODE'].toString() == controller.datasList[index]['MACH_CODE'].toString()) {
          return controller.machList[u]['MACH_NAME'];
         }

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +79,7 @@ class PackagingInspecController extends GetxController {
   @override
   void onInit() {
     checkButton();
+
   }
 
   @override

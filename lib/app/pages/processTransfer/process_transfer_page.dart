@@ -210,7 +210,7 @@ class ProcessTransferPage extends StatelessWidget {
                         child: Text(
                           value,
                           style: AppTheme.a16500
-                              .copyWith(color: value == '처리여부 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                              .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
@@ -298,7 +298,7 @@ class ProcessTransferPage extends StatelessWidget {
                         child: Text(
                           value['MACH_NAME'],
                           style: AppTheme.a16500
-                              .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                              .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
