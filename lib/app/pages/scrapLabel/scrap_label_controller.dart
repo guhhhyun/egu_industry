@@ -38,6 +38,8 @@ class ScrapLabelController extends GetxController {
   RxBool isCheck = false.obs;
   RxString matlGb = ''.obs;
   RxString scrapFg = ''.obs;
+  int resultRowCount = 0;
+  String returnMessage = '';
 
 
   Future<void> convert() async {
@@ -166,19 +168,22 @@ class ScrapLabelController extends GetxController {
 
   // 지금류 라벨발행
   Future<void> saveButton() async {
-    var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '${matlGb}',
-      '@P_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@P_CST_ID':'${measList[0]['CST_ID']}'
-      , '@p_CST_NAME' : '${measList[0]['CUST_NM']}', '@P_MEAS_NO' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
-      '@P_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@P_WH_NO' : 'WH02',
-      '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
-    {
-      Get.log('지금류 라밸 성공::::::::::: $value')
-    });
+   var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '${matlGb}',
+      '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID':'${measList[0]['CST_ID']}'
+      , '@p_CST_NAME' : '${measList[0]['CUST_NM']}', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
+      '@p_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@p_WH_NO' : 'WH02',
+      '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin', '@p_result_row_count' : null, '@p_return_message' : null }).then((value) =>
+   {
+     Get.log('스크랩 라밸 성공::::::::::: $value'),
+    // value['RESULT']['OUTPUTS']['']
+   });
+
+
   }
 
   // 스크랩 라벨발행
   Future<void> scrapSaveButton() async {
-    var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '${matlGb}', '@p_SCRAP_TYPE': '', // 1: 매입, 2: 공정, 3:외주
+    var a = await HomeApi.to.PROC('USP_SCS0300_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': '', // 1: 매입, 2: 공정, 3:외주
       '@P_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID':'${measList[0]['CST_ID']}', '@p_CST_NAME' : '${measList[0]['CUST_NM']}'
       , '@P_MEAS_NO' : weighingInfoTextController.text, '@p_PLATE_FG' : '', '@p_TARE_NO' : '${selectedTareMap['CODE']}', '@p_TARE_WEIGHT' : '${selectedTareMap['WEIGHT']}',
       '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',

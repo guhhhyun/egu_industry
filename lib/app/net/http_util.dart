@@ -20,9 +20,6 @@ class HttpUtil {
 
   static void setToken({required String token}) {
     _dio.options.headers['Authorization'] = 'Bearer ' + token;
-    // 610 1250 281 476? 2617 (300으로만 잡으면 거의 8-9) 이론상 9월 25일에 끝난다는건데 안되지
-    // 340 109 50
-    // 1200(12회)
   }
 
   static void init() {

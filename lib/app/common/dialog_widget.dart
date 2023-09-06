@@ -63,7 +63,7 @@ class CommonDialogWidget extends StatelessWidget {
               pageFlag == 1 ?
               Get.offAllNamed(Routes.FACILITY_FIRST)
                   :  pageFlag == 2 ? Get.offAllNamed(Routes.FACILITY) :  pageFlag == 3 ? Get.back() :
-              pageFlag == 4 ? Get.back() : pageFlag == 5 ? {Get.back(), Get.find<ProcessTransferController>().refresh() }  : pageFlag == 6 ?  Get.offAllNamed(Routes.PACKAGING_INSPEC)
+              pageFlag == 4 ? Get.back() : pageFlag == 5 ? {Get.back(), Get.find<ProcessTransferController>().refresh() }  : pageFlag == 6 ?  Get.back()
                   : Get.offAllNamed(Routes.MAIN);
             //  Get.back();
             //  Get.back();

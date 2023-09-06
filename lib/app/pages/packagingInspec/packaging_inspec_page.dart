@@ -54,7 +54,7 @@ class PackagingInspecPage extends StatelessWidget {
                 ],
               ),
             ),
-            Obx(() => controller.productDetailList.isNotEmpty ?
+            Obx(() => controller.inspecDetailList.isNotEmpty ?
             _packagingSpec() : SliverToBoxAdapter(child: Container()))
 
           //  _locationItem()
@@ -192,7 +192,7 @@ class PackagingInspecPage extends StatelessWidget {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           return _listItem(index: index, context: context);
-        }, childCount: controller.productDetailList.length)));
+        }, childCount: controller.productDetailRealList.length)));
   }
 
 
@@ -224,8 +224,8 @@ class PackagingInspecPage extends StatelessWidget {
                     controller.isProductSelectedList[index] == false ? controller.isProductSelectedList[index] = true
                         : controller.isProductSelectedList[index] = false;
                     controller.isProductSelectedList[index] == true
-                        ? controller.productSelectedList.add(controller.productDetailList[index])
-                        : controller.productSelectedList.remove(controller.productDetailList[index]);
+                        ? controller.productSelectedList.add(controller.productDetailRealList[index])
+                        : controller.productSelectedList.remove(controller.productDetailRealList[index]);
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: 12, right: 35, bottom: 4, top: 12),
@@ -244,7 +244,7 @@ class PackagingInspecPage extends StatelessWidget {
                             Text('제품번호',
                                 style: AppTheme.a14400
                                     .copyWith(color: AppTheme.a959595)),
-                            Text(controller.productDetailList.isNotEmpty ? '${controller.productDetailList[0]['BARCODE']}' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? '${controller.productDetailRealList[index]['BARCODE']}' : '',
                                 style: AppTheme.a14400
                                     .copyWith(color: AppTheme.black)),
                           ],
@@ -256,7 +256,7 @@ class PackagingInspecPage extends StatelessWidget {
                             Text('LOT NO',
                                 style: AppTheme.a14400
                                     .copyWith(color: AppTheme.a959595)),
-                            Text(controller.productDetailList.isNotEmpty ? '${controller.productDetailList[0]['LOT_NO']}' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? '${controller.productDetailRealList[index]['LOT_NO']}' : '',
                                 style: AppTheme.a14400
                                     .copyWith(color: AppTheme.black)),
                           ],
@@ -269,7 +269,7 @@ class PackagingInspecPage extends StatelessWidget {
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.a959595)),
                             SizedBox(width: 4,),
-                            Text(controller.productDetailList.isNotEmpty ? controller.productDetailList[0]['SPEC'] != null ? '${controller.productDetailList[0]['SPEC']}' : '' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['SPEC'] != null ? '${controller.productDetailRealList[index]['SPEC']}' : '' : '',
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.black)),
                             SizedBox(width: 8,),
@@ -277,7 +277,7 @@ class PackagingInspecPage extends StatelessWidget {
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.a959595)),
                             SizedBox(width: 4,),
-                            Text(controller.productDetailList.isNotEmpty ? controller.productDetailList[0]['REAL_WEIGHT'] != null ? '${controller.productDetailList[0]['REAL_WEIGHT']}' : '' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['REAL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['REAL_WEIGHT']}' : '' : '',
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.black)),
                             const SizedBox(width: 8,),
@@ -285,7 +285,7 @@ class PackagingInspecPage extends StatelessWidget {
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.a959595)),
                             const SizedBox(width: 4,),
-                            Text(controller.productDetailList.isNotEmpty ? controller.productDetailList[0]['JIGWAN'] != null ? '${controller.productDetailList[0]['JIGWAN']}' : '' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['JIGWAN'] != null ? '${controller.productDetailRealList[index]['JIGWAN']}' : '' : '',
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.black)),
                             const SizedBox(width: 8,),
@@ -293,7 +293,7 @@ class PackagingInspecPage extends StatelessWidget {
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.a959595)),
                             const SizedBox(width: 4,),
-                            Text(controller.productDetailList.isNotEmpty ? controller.productDetailList[0]['ALL_WEIGHT'] != null ? '${controller.productDetailList[0]['ALL_WEIGHT']}' : '' : '',
+                            Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['ALL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['ALL_WEIGHT']}' : '' : '',
                                 style: AppTheme.a12700
                                     .copyWith(color: AppTheme.black)),
                           ],
@@ -397,7 +397,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Text('기계포장',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('O', // CST_NM 인데 ''로 되어있음
+                Text('${controller.inspecDetailList[0]['MACH']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],
@@ -409,7 +409,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Text('띠밴딩',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('O',
+                Text('${controller.inspecDetailList[0]['BAND']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],
@@ -421,7 +421,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Text('고임목',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('X', // CST_NM 인데 ''로 되어있음
+                Text('${controller.inspecDetailList[0]['CHOCK']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],
@@ -433,7 +433,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Text('간지',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('X', // CST_NM 인데 ''로 되어있음
+                Text('${controller.inspecDetailList[0]['GANZ']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],
@@ -445,7 +445,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Text('감김방향',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a959595)),
-                Text('O', // CST_NM 인데 ''로 되어있음
+                Text('${controller.inspecDetailList[0]['DIRECTION']}',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.black)),
               ],
@@ -480,7 +480,9 @@ class PackagingInspecPage extends StatelessWidget {
                   Get.dialog(
                       CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 6,)
                   );
-                  // controller.checkButton();
+                  controller.checkButton();
+                  controller.checkButton2();
+                  controller.checkButton3();
                 });
               } : null,
               child: SizedBox(

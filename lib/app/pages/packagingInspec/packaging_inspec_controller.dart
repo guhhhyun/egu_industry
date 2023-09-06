@@ -10,6 +10,7 @@ class PackagingInspecController extends GetxController {
   var textController = TextEditingController();
   RxList<dynamic> productList = [].obs;
   RxList<dynamic> productDetailList = [].obs;
+  RxList<dynamic> productDetailRealList = [].obs;
   RxList<dynamic> inspecDetailList = [].obs;
   RxString barcodeScanResult = ''.obs;
   RxDouble realWeight = 0.0.obs;
@@ -38,6 +39,7 @@ class PackagingInspecController extends GetxController {
   Future<void> checkButton2() async {
     productSelectedList.clear();
     productDetailList.clear();
+    productDetailRealList.clear();
     isProductSelectedList.clear();
     realWeight.value = 0.0;
     totalWeight.value = 0.0;
@@ -48,8 +50,13 @@ class PackagingInspecController extends GetxController {
         productDetailList.value = value['DATAS'],
       },
       for(var i = 0; i < productDetailList.length; i++) {
-        realWeight.value = realWeight.value + productDetailList[i]['REAL_WEIGHT'],
-        totalWeight.value = totalWeight.value + productDetailList[i]['ALL_WEIGHT'],
+        if(productDetailList[i]['SPEC_YN'] == 'N') {
+          productDetailRealList.add(productDetailList[i])
+        },
+      },
+      for(var i = 0; i < productDetailRealList.length; i++) {
+        realWeight.value = realWeight.value + productDetailRealList[i]['REAL_WEIGHT'],
+        totalWeight.value = totalWeight.value + productDetailRealList[i]['ALL_WEIGHT'],
         isProductSelectedList.add(false),
       }
     });
