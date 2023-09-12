@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/print/bluetooth_printer.dart';
 import 'package:egu_industry/app/print/pos_printer.dart';
 import 'package:egu_industry/app/print/print_page.dart';
 import 'package:flutter/material.dart';
@@ -210,7 +211,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                             InkWell(
                               onTap: () async{
                                 print('클릭');
-                                Get.to(PrintPage('프린트'));
+                                Get.to(BluetoothPrinter());
 
                               },
                                 child: Image.asset('assets/app/printer.png', color: AppTheme.white, width: 30, height: 30,)

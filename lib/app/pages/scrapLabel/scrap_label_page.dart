@@ -142,6 +142,7 @@ class ScrapLabelPage extends StatelessWidget {
             _minusWeight(),
             const SizedBox(height: 100,),
             const SizedBox(height: 45,),
+
           ],
         ),
       ),
@@ -218,8 +219,6 @@ class ScrapLabelPage extends StatelessWidget {
                       flag == 3 ?
                       controller.selectedGold.value = value! : Get.log('$value 선택!!!!');
 
-                      controller.selectedScLocMap.clear();
-
                       /// 스크랩 선택으로 인한 적재위치 리스트 변경
                      if(flag == 1 && controller.selectedGubun.value == '지금류') {
                        controller.matlGb.value = '1';
@@ -231,7 +230,6 @@ class ScrapLabelPage extends StatelessWidget {
                        });
                      }
                       Get.log('${controller.scLocList.value} 선택!!!!');
-                     /// //////////////////////////////////////////////////////////////
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
                     }),

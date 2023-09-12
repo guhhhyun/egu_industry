@@ -5,12 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:web_socket_channel/io.dart';
-//import 'package:socket_io_client/socket_io_client.dart' as IO;
-
-import '../../common/global_service.dart';
-import '../../net/home_api.dart';
-import '../../routes/app_route.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainController extends GetxController with GetTickerProviderStateMixin {
   static MainController get to => Get.find();
@@ -21,10 +16,27 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
 
   RxBool readOnly = false.obs;
   RxString resultText = ''.obs;
-
+  RxBool isScaning = false.obs;
 
 
   TextEditingController roomNameController = TextEditingController();
+
+  Future<bool> requestPermission() async {
+    var status = await Permission.location.request();
+
+
+    switch (status) {
+      case PermissionStatus.denied:
+      case PermissionStatus.restricted:
+      case PermissionStatus.limited:
+      case PermissionStatus.permanentlyDenied:
+        return false;
+      case PermissionStatus.granted:
+        return true;
+      case PermissionStatus.provisional:
+        return true;
+    }
+  }
 
   void changeMenu(int param) {
     if (param == 0) {
@@ -40,6 +52,7 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
 
   @override
   void onInit() {
+    requestPermission();
   }
 
   @override
