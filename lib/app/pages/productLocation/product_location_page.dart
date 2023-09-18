@@ -42,7 +42,7 @@ class ProductLocationPage extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              padding: const EdgeInsets.only(left: 20, right: 12, top: 24),
+              padding: const EdgeInsets.only(left: 20, right: 12, top: 4),
               child: Center(
                 child: Container(
                   padding: const EdgeInsets.only(left: 16),

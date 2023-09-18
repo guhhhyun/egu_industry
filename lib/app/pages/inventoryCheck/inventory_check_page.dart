@@ -1,6 +1,7 @@
 
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_controller.dart';
 
 import 'package:flutter/material.dart';
@@ -22,15 +23,20 @@ class InventoryCheckPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '재품재고 조회', isLogo: false, isFirstPage: true,),
-            _bodyArea(context),
-            Obx(() => controller.productSearchList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-            _topTitle(context),),
-            _listArea2(),
-            SliverToBoxAdapter(child: SizedBox(height: 100,))
-            //   _listArea()
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '제품재고 조회', isLogo: false, isFirstPage: true,),
+                _bodyArea(context),
+                Obx(() => controller.productSearchList.isEmpty ? SliverToBoxAdapter(child: Container()) :
+                _topTitle(context),),
+                _listArea2(),
+                SliverToBoxAdapter(child: SizedBox(height: 100,))
+                //   _listArea()
+              ],
+            ),
+            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
           ],
         ),
       ),
@@ -42,7 +48,7 @@ class InventoryCheckPage extends StatelessWidget {
     return SliverToBoxAdapter(
         child: Obx(() => Container(
           color: AppTheme.white,
-          padding: const EdgeInsets.only(left: 18, right: 18, top: 24),
+          padding: const EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
             children: [
               _cstField(),
@@ -220,7 +226,7 @@ class InventoryCheckPage extends StatelessWidget {
                   controller: controller.textController2,
                   //   textAlignVertical: TextAlignVertical.center,
                   textInputAction: TextInputAction.none,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(0),
                     fillColor: Colors.white,
@@ -406,10 +412,10 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
                         left:
-                        BorderSide(color: AppTheme.light_text_primary),
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        BorderSide(color: AppTheme.ae2e2e2),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('번호',
@@ -425,9 +431,9 @@ class InventoryCheckPage extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text(
@@ -443,10 +449,10 @@ class InventoryCheckPage extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.light_text_primary) : BorderSide(),
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.ae2e2e2) : BorderSide(),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('품명',
@@ -462,9 +468,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('강종',
@@ -479,9 +485,9 @@ class InventoryCheckPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('두께',
@@ -498,9 +504,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('실두께',
@@ -516,9 +522,9 @@ class InventoryCheckPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('폭',
@@ -534,9 +540,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('거래처명',
@@ -553,9 +559,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('경도',
@@ -572,9 +578,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('QC메모',
@@ -590,9 +596,9 @@ class InventoryCheckPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('입고일',
@@ -624,9 +630,7 @@ class InventoryCheckPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               color: AppTheme.white,
-              border: Border(
-                  bottom: controller.productSearchList.length == index ? BorderSide(color: AppTheme.light_text_primary) : BorderSide()
-              )),
+          ),
           child: Row(
             children: [
               MediaQuery.of(context).size.width <= 450 ? Container() :
@@ -636,10 +640,10 @@ class InventoryCheckPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
                           left:
-                          BorderSide(color: AppTheme.light_text_primary),
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          BorderSide(color: AppTheme.ae2e2e2),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text('${index + 1}',
@@ -655,9 +659,9 @@ class InventoryCheckPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                       child: Text(
@@ -672,10 +676,10 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.light_text_primary) : BorderSide(),
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.ae2e2e2) : BorderSide(),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['CMP_NM'].toString(),
@@ -690,9 +694,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['STT_NM'].toString(),
@@ -708,9 +712,9 @@ class InventoryCheckPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['THIC'].toString(),
@@ -726,9 +730,9 @@ class InventoryCheckPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['THICK_ACT'].toString(),
@@ -743,9 +747,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['WIDTH'].toString(),
@@ -759,9 +763,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['CST_NM'].toString(),
@@ -776,9 +780,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['HANDNESS_ACT'].toString(),
@@ -793,9 +797,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['PP_REMARK'].toString(),
@@ -809,9 +813,9 @@ class InventoryCheckPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.productSearchList[index]['IN_DATE'].toString(),

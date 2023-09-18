@@ -22,9 +22,13 @@ class PackagingInspecController extends GetxController {
 
   Future<void> saveButton() async {
     for(var i = 0; i < productSelectedList.length; i++) {
-      var a = await HomeApi.to.PROC('USP_MBS1300_S01',
+      await HomeApi.to.PROC('USP_MBS1300_S01',
           {'@p_WORK_TYPE': 'U', '@p_BARCODE_NO': productSelectedList[i]['BARCODE'], '@p_USER': 'admin'});
+      Get.log('검수완료 ::::: $i 번째');
     }
+    checkButton();
+    checkButton2();
+    checkButton3();
   }
 
   Future<void> checkButton() async {
@@ -57,9 +61,10 @@ class PackagingInspecController extends GetxController {
         },
       },
       for(var i = 0; i < productDetailRealList.length; i++) {
+        productSelectedList.add(productDetailRealList[i]),
         realWeight.value = realWeight.value + productDetailRealList[i]['REAL_WEIGHT'],
         totalWeight.value = totalWeight.value + productDetailRealList[i]['ALL_WEIGHT'],
-        isProductSelectedList.add(false),
+        isProductSelectedList.add(true),
       }
     });
     Get.log('포장검수 두번째: $a');

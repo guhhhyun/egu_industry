@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CommonDialogWidget extends StatelessWidget {
-  FacilityFirstController controller = Get.find();
   String? contentText;
   Widget? contentWidget;
   int? flag;

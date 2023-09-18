@@ -1,6 +1,7 @@
 
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
@@ -24,14 +25,19 @@ class ProcessTransferPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '공정이동', isLogo: false, isFirstPage: true,),
-            _bodyArea(context),
-            Obx(() => controller.processList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-            _topTitle(context)),
-            _listArea2()
-         //   _listArea()
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '공정이동', isLogo: false, isFirstPage: true,),
+                _bodyArea(context),
+                Obx(() => controller.processList.length == 0 ? SliverToBoxAdapter(child: Container()) :
+                _topTitle(context)),
+                _listArea2()
+             //   _listArea()
+              ],
+            ),
+            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
           ],
         ),
       ),
@@ -43,12 +49,12 @@ class ProcessTransferPage extends StatelessWidget {
     return SliverToBoxAdapter(
         child: Obx(() => Container(
           color: AppTheme.white,
-          padding: const EdgeInsets.only(left: 18, right: 18, top: 24),
+          padding: const EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _calendarItem(context),
-              const SizedBox(height: 48,),
+              const SizedBox(height: 24,),
 
             ],
           ),
@@ -61,265 +67,228 @@ class ProcessTransferPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          runSpacing: 12.0,
-          crossAxisAlignment: WrapCrossAlignment.start,
-          alignment: WrapAlignment.start,
-          children: [
-            Container(
-                child: TextButton(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                  ),
-                  onPressed: () async{
-                    var datePicked = await DatePicker.showSimpleDatePicker(
-                      titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400,
-                      context,
-                      confirmText: '확인',
-                      cancelText: '취소',
-                      textColor: AppTheme.black,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2060),
-                      dateFormat: "yyyy-MM-dd",
-                      locale: DateTimePickerLocale.ko,
-                      looping: true,
-                    );
+        Container(
+          width: MediaQuery.of(context).size.width - 30,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+                    child: TextButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                      ),
+                      onPressed: () async{
+                        var datePicked = await DatePicker.showSimpleDatePicker(
+                          titleText: '날짜 선택',
+                          itemTextStyle: AppTheme.a16400,
+                          context,
+                          confirmText: '확인',
+                          cancelText: '취소',
+                          textColor: AppTheme.black,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2060),
+                          dateFormat: "yyyy-MM-dd",
+                          locale: DateTimePickerLocale.ko,
+                          looping: true,
+                        );
 
-                    if(datePicked != null) {
-                      int startIndex = datePicked.toString().indexOf(' ');
-                      int lastIndex = datePicked.toString().length;
-                      controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    }else {
-                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
-                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                        border: Border.all( color: AppTheme.ae2e2e2)),
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(controller.dayStartValue.value, style: AppTheme.a12500
-                            .copyWith(color: AppTheme.a6c6c6c
-                            , fontSize: 17),),
-                      ],
-                    ),
-                  ),
-              ),
-            ),
-            const SizedBox(width: 12,),
-            SizedBox(height: 50, width: 15, child: Center(
-              child: Text('~',style: AppTheme.a14500
-                  .copyWith(color: AppTheme.black)),
-            ),),
-            const SizedBox(width: 12,),
-           Container(
-             width: 150,
-                child: TextButton(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )),
-                  ),
-                  onPressed: () async{
-                    var datePicked = await DatePicker.showSimpleDatePicker(
-                      titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400,
-                      context,
-                      confirmText: '확인',
-                      cancelText: '취소',
-                      textColor: AppTheme.black,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2060),
-                      dateFormat: "yyyy-MM-dd",
-                      locale: DateTimePickerLocale.ko,
-                      looping: true,
-                    );
-                    if(datePicked != null) {
-                      int startIndex = datePicked.toString().indexOf(' ');
-                      int lastIndex = datePicked.toString().length;
-                      controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    }else {
-                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
-                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-
-                    Get.log("Date Picked ${datePicked.toString()}");
-                    //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppTheme.ae2e2e2)),
-                    width: 150,
-                    padding: const EdgeInsets.only( right: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(controller.dayEndValue.value, style: AppTheme.a14500
-                            .copyWith(color: AppTheme.a6c6c6c
-                            , fontSize: 17),),
-                      ],
-                    ),
-
+                        if(datePicked != null) {
+                          int startIndex = datePicked.toString().indexOf(' ');
+                          int lastIndex = datePicked.toString().length;
+                          controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                        }else {
+                          controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        }
+                        if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                          controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                            border: Border.all( color: AppTheme.ae2e2e2)),
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(controller.dayStartValue.value, style: AppTheme.a12500
+                                .copyWith(color: AppTheme.a6c6c6c
+                                , fontSize: 17),),
+                          ],
+                        ),
+                      ),
                   ),
                 ),
-            ),
-            const SizedBox(width: 16,),
-            Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppTheme.ae2e2e2
-                    )),
-                padding: const EdgeInsets.only(left: 12, right: 12),
-                child: DropdownButton<String>(
-                    borderRadius: BorderRadius.circular(10),
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/app/arrowBottom.svg',
-                      color: AppTheme.light_placeholder,
-                    ),
-                    dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedMovYn.value,
-                    //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.movYnList.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: AppTheme.a16500
-                              .copyWith(color: AppTheme.a6c6c6c),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.selectedMovYn.value = value!;
-                      value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
-                      Get.log('$value 선택!!!!');
-                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                    }),
-            ),
-            const SizedBox(width: 16,),
-             Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppTheme.ae2e2e2
-                    )),
-                padding: const EdgeInsets.only(left: 12, right: 12),
-                child: DropdownButton(
-                    borderRadius: BorderRadius.circular(10),
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/app/arrowBottom.svg',
-                      color: AppTheme.light_placeholder,
-                    ),
-                    dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedFkfNm['FKF_NM'],
-                    //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.fkfList.map((value) {
-                      return DropdownMenuItem<String>(
-                        value: value['FKF_NM'],
-                        child: Text(
-                          value['FKF_NM'],
-                          style: AppTheme.a16500
-                              .copyWith(color: value['FKF_NM'] == '지게차 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.fkfList.map((e) {
-                        if(e['FKF_NM'] == value) {
-                          controller.selectedFkfNm['FKF_NO'] = e['FKF_NO'];
-                          controller.selectedFkfNm['FKF_NM'] = e['FKF_NM'];
+                const SizedBox(width: 12,),
+                SizedBox(height: 50, width: 15, child: Center(
+                  child: Text('~',style: AppTheme.a14500
+                      .copyWith(color: AppTheme.black)),
+                ),),
+                const SizedBox(width: 12,),
+               Container(
+                 width: 120,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)
+                            )),
+                      ),
+                      onPressed: () async{
+                        var datePicked = await DatePicker.showSimpleDatePicker(
+                          titleText: '날짜 선택',
+                          itemTextStyle: AppTheme.a16400,
+                          context,
+                          confirmText: '확인',
+                          cancelText: '취소',
+                          textColor: AppTheme.black,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2060),
+                          dateFormat: "yyyy-MM-dd",
+                          locale: DateTimePickerLocale.ko,
+                          looping: true,
+                        );
+                        if(datePicked != null) {
+                          int startIndex = datePicked.toString().indexOf(' ');
+                          int lastIndex = datePicked.toString().length;
+                          controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                        }else {
+                          controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
                         }
-                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
-                      }).toList();
-
-                      Get.log('$value 선택!!!!');
-                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                    }),
-            ),
-            const SizedBox(width: 16,),
-            Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppTheme.ae2e2e2
-                    )),
-                padding: const EdgeInsets.only(left: 12, right: 12),
-                child: DropdownButton(
-                    borderRadius: BorderRadius.circular(10),
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/app/arrowBottom.svg',
-                      color: AppTheme.light_placeholder,
-                    ),
-                    dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedMachMap['MACH_NAME'],
-                    //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.machList.map((value) {
-                      return DropdownMenuItem<String>(
-                        value: value['MACH_NAME'],
-                        child: Text(
-                          value['MACH_NAME'],
-                          style: AppTheme.a16500
-                              .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.machList.map((e) {
-                        if(e['MACH_NAME'] == value) {
-                          controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
-                          controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                        if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                          controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
                         }
-                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
-                      }).toList();
 
-                      Get.log('$value 선택!!!!');
-                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                    }),
+                        Get.log("Date Picked ${datePicked.toString()}");
+                        //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppTheme.ae2e2e2)),
+                        width: 150,
+                        padding: const EdgeInsets.only( right: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(controller.dayEndValue.value, style: AppTheme.a14500
+                                .copyWith(color: AppTheme.a6c6c6c
+                                , fontSize: 17),),
+                          ],
+                        ),
+
+                      ),
+                    ),
+                ),
+                const SizedBox(width: 16,),
+                _checkButton(),
+              ],
             ),
-            const SizedBox(width: 16,),
-            _checkButton()
-          ],
+          ),
         ),
+        SizedBox(height: 12,),
+        Container(
+          width: MediaQuery.of(context).size.width - 30,
+          child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            Container(
+              height: 50,
+              width: 150,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: AppTheme.ae2e2e2
+                  )),
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              child: DropdownButton<String>(
+                  borderRadius: BorderRadius.circular(10),
+                  isExpanded: true,
+                  underline: Container(
+                    height: 1,
+                    color: Colors.white,
+                  ),
+                  icon: SvgPicture.asset(
+                    'assets/app/arrowBottom.svg',
+                    color: AppTheme.light_placeholder,
+                  ),
+                  dropdownColor: AppTheme.light_ui_01,
+                  value: controller.selectedMovYn.value,
+                  //  flag == 3 ? controller.selectedNoReason.value :
+                  items: controller.movYnList.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: AppTheme.a16500
+                            .copyWith(color: AppTheme.a6c6c6c),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.selectedMovYn.value = value!;
+                    value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
+                    Get.log('$value 선택!!!!');
+                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                  }),
+            ),
+            const SizedBox(width: 16,),
+            Container(
+              height: 50,
+              width: 150,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                      color: AppTheme.ae2e2e2
+                  )),
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              child: DropdownButton(
+                  borderRadius: BorderRadius.circular(10),
+                  isExpanded: true,
+                  underline: Container(
+                    height: 1,
+                    color: Colors.white,
+                  ),
+                  icon: SvgPicture.asset(
+                    'assets/app/arrowBottom.svg',
+                    color: AppTheme.light_placeholder,
+                  ),
+                  dropdownColor: AppTheme.light_ui_01,
+                  value: controller.selectedMachMap['MACH_NAME'],
+                  //  flag == 3 ? controller.selectedNoReason.value :
+                  items: controller.machList.map((value) {
+                    return DropdownMenuItem<String>(
+                      value: value['MACH_NAME'],
+                      child: Text(
+                        value['MACH_NAME'],
+                        style: AppTheme.a16500
+                            .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    controller.machList.map((e) {
+                      if(e['MACH_NAME'] == value) {
+                        controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                        controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                      }
+                      //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                    }).toList();
 
+                    Get.log('$value 선택!!!!');
+                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                  }),
+            ),
+          ],
+        )))
       ],
     );
   }
@@ -515,11 +484,13 @@ class ProcessTransferPage extends StatelessWidget {
                   controller.fkfList.map((e) {
                     if(e['FKF_NM'] == value) {
                       controller.selectedSaveFkfNm['FKF_NO'] = e['FKF_NO'];
+                      controller.selectedFkfNm['FKF_NO'] = e['FKF_NO'];
                       controller.selectedSaveFkfNm['FKF_NM'] = e['FKF_NM'];
+                      controller.selectedFkfNm['FKF_NM'] = e['FKF_NM'];
                     }
                     //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
                   }).toList();
-
+                  controller.checkButton();
                   Get.log('$value 선택!!!!');
                   // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
                 }),
@@ -772,8 +743,9 @@ class ProcessTransferPage extends StatelessWidget {
   Widget _listArea2() {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
+
           return _listItem2(index: index, context: context);
-        }, childCount: controller.processList.length)));
+        }, childCount: controller.processList.length, )));
   }
   Widget _listItem2({required BuildContext context,required int index}) {
 
@@ -801,9 +773,7 @@ class ProcessTransferPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               color: AppTheme.white,
-              border: Border(
-                bottom: controller.processList.length == index ? BorderSide(color: AppTheme.light_text_primary) : BorderSide()
-              )),
+            ),
           child: Row(
             children: [
               Expanded(
@@ -812,10 +782,10 @@ class ProcessTransferPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
                           left:
-                          BorderSide(color: AppTheme.light_text_primary),
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          BorderSide(color: AppTheme.ae2e2e2),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text('${index + 1}',
@@ -829,9 +799,9 @@ class ProcessTransferPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(
@@ -847,9 +817,9 @@ class ProcessTransferPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FROM_DATE'],
@@ -864,9 +834,9 @@ class ProcessTransferPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CMP_NM'].toString(),
@@ -882,9 +852,9 @@ class ProcessTransferPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FROM_MACH_NM'].toString(),
@@ -900,9 +870,9 @@ class ProcessTransferPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['TO_MACH_NM'].toString(),
@@ -917,9 +887,9 @@ class ProcessTransferPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FKF_NM'].toString(),
@@ -935,9 +905,9 @@ class ProcessTransferPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['TO_DATE'].toString(),
@@ -951,10 +921,9 @@ class ProcessTransferPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 50,
                   child: Center(
                     child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.red_red_800,)
@@ -985,10 +954,10 @@ class ProcessTransferPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
                         left:
-                        BorderSide(color: AppTheme.light_text_primary),
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        BorderSide(color: AppTheme.gray_c_gray_200),
+                        top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.gray_c_gray_200))),
                 height: 34,
                 child: Center(
                   child: Text('번호',
@@ -1003,9 +972,9 @@ class ProcessTransferPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.gray_c_gray_200))),
                 height: 34,
                 child: Center(
                   child: Text(
@@ -1022,9 +991,9 @@ class ProcessTransferPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.gray_c_gray_200))),
                 height: 34,
                 child: Center(
                   child: Text('요청일시',
@@ -1041,9 +1010,9 @@ class ProcessTransferPage extends StatelessWidget {
                         color: AppTheme.blue_blue_300,
                         border: Border(
 
-                            top: BorderSide(color: AppTheme.light_text_primary),
+                            top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
-                                color: AppTheme.light_text_primary))),
+                                color: AppTheme.gray_c_gray_200))),
                     height: 34,
                     child: Center(
                       child: Text('제품명',
@@ -1058,9 +1027,9 @@ class ProcessTransferPage extends StatelessWidget {
                     decoration: const BoxDecoration(
                         color: AppTheme.blue_blue_300,
                         border: Border(
-                            top: BorderSide(color: AppTheme.light_text_primary),
+                            top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
-                                color: AppTheme.light_text_primary))),
+                                color: AppTheme.gray_c_gray_200))),
                     height: 34,
                     child: Center(
                       child: Text('작업위치',
@@ -1077,9 +1046,9 @@ class ProcessTransferPage extends StatelessWidget {
                         color: AppTheme.blue_blue_300,
                         border: Border(
 
-                            top: BorderSide(color: AppTheme.light_text_primary),
+                            top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
-                                color: AppTheme.light_text_primary))),
+                                color: AppTheme.gray_c_gray_200))),
                     height: 34,
                     child: Center(
                       child: Text('이동위치',
@@ -1095,9 +1064,9 @@ class ProcessTransferPage extends StatelessWidget {
                     decoration: const BoxDecoration(
                         color: AppTheme.blue_blue_300,
                         border: Border(
-                            top: BorderSide(color: AppTheme.light_text_primary),
+                            top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
-                                color: AppTheme.light_text_primary))),
+                                color: AppTheme.gray_c_gray_200))),
                     height: 34,
                     child: Center(
                       child: Text('지게차호기',
@@ -1114,9 +1083,9 @@ class ProcessTransferPage extends StatelessWidget {
                         color: AppTheme.blue_blue_300,
                         border: Border(
 
-                            top: BorderSide(color: AppTheme.light_text_primary),
+                            top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
-                                color: AppTheme.light_text_primary))),
+                                color: AppTheme.gray_c_gray_200))),
                     height: 34,
                     child: Center(
                       child: Text('처리일시',
@@ -1133,9 +1102,9 @@ class ProcessTransferPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.gray_c_gray_200))),
                 height: 34,
                 child: Center(
                   child: Text('작업선택',

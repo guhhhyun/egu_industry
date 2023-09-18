@@ -40,7 +40,7 @@ class InventoryCountingPage extends StatelessWidget {
   Widget _topArea() {
     return SliverToBoxAdapter(
       child: Obx(() => Container(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 4),
           child: Column(
             children: [
             //  _scrapDropdown(),
@@ -70,7 +70,13 @@ class InventoryCountingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _scrapDropdown(true),
+        Row(
+          children: [
+            _scrapDropdown(true),
+            SizedBox(width: 16,),
+            _mach()
+          ],
+        ),
         SizedBox(height: 10,),
         TextButton(
           style: ButtonStyle(
@@ -90,6 +96,7 @@ class InventoryCountingPage extends StatelessWidget {
 
           },
           child: Container(
+            height: 50,
             padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
             child: Row(
               children: [
@@ -197,6 +204,60 @@ class InventoryCountingPage extends StatelessWidget {
 
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _mach() {
+    return Expanded(
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: AppTheme.ae2e2e2
+            )),
+        padding: const EdgeInsets.only(left: 12, right: 12),
+        child:  controller.selectedCheckLocationMap['DETAIL_NM'] == '반제품' ? DropdownButton(
+            borderRadius: BorderRadius.circular(10),
+            isExpanded: true,
+            underline: Container(
+              height: 1,
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/app/arrowBottom.svg',
+              color: AppTheme.light_placeholder,
+            ),
+            dropdownColor: AppTheme.light_ui_01,
+            value: controller.selectedMachMap['MACH_NAME'],
+            //  flag == 3 ? controller.selectedNoReason.value :
+            items: controller.machList.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['MACH_NAME'],
+                child: Text(
+                  value['MACH_NAME'],
+                  style: AppTheme.a16500
+                      .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              controller.machList.map((e) {
+                if(e['MACH_NAME'] == value) {
+                  controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                  controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                }
+                //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+              }).toList();
+
+              Get.log('$value 선택!!!!');
+              // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+            }) : Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10)
+          ),
+        )
       ),
     );
   }
@@ -449,12 +510,7 @@ class InventoryCountingPage extends StatelessWidget {
 
 
   Widget _scrapDropdown(bool isCheck) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
+    return Expanded(
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
@@ -504,11 +560,7 @@ class InventoryCountingPage extends StatelessWidget {
                       isCheck ? Get.log('${ controller.selectedCheckLocationMap} 선택!!!!') : Get.log('${ controller.selectedSaveLocationMap} 선택!!!!');
                     }),
               ),
-            ),
-          ],
-        ),
-      ],
-    );
+            );
   }
 
   Widget _listArea() {
@@ -522,8 +574,8 @@ class InventoryCountingPage extends StatelessWidget {
   Widget _listItem({required BuildContext context, required int index}) {
 
     return Obx(() => Container(
-      margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
-      padding: EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
+      margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
+      padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppTheme.aE2E2E2),
@@ -533,7 +585,7 @@ class InventoryCountingPage extends StatelessWidget {
               color: AppTheme.gray_c_gray_100.withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: const Offset(0, 3), // changes position of shadow
             ),
           ]
       ),
@@ -546,7 +598,7 @@ class InventoryCountingPage extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                    padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: AppTheme.ae2e2e2

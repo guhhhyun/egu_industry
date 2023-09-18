@@ -3,6 +3,7 @@ import 'package:egu_industry/app/common/common_appbar_widget.dart';
 
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
+import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -27,19 +28,149 @@ class FacilityStep2Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, isFirstPage: false ),
-            _bodyArea(context),
-           //_streamBuilder()
+    return  WillPopScope(
+      onWillPop: () {
+        return _onBackKey(context);
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              CommonAppbarWidget(title: '설비/안전 점검 - 정비내역 등록', isLogo: false, isFirstPage: false, facilityFlag: false ),
+              _bodyArea(context),
+             //_streamBuilder()
 
-          ],
+            ],
+          ),
         ),
+        bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
+  }
+
+  Future<bool> _onBackKey(BuildContext context) async{
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Column(
+                children: [
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                  Text(
+                    '',
+                    style: AppTheme.a18700
+                        .copyWith(color: AppTheme.black),
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xxxs_2,
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                height: 70,
+                child: Column(
+                  children: [
+                    Text('저장되지 않은 내역이 있을 수 있습니다.', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                    Text('계속하시겠습니까?', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                  ],
+                ),
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: const Color(0x5c3c3c43),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(15),
+                                            bottomRight: Radius.circular(15)))),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(0))),
+                            onPressed: () {
+                              Get.log('취소 클릭!');
+                              Get.back();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      right: BorderSide(color: const Color(0x5c3c3c43),)
+                                  )
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                top: AppTheme.spacing_s_12,
+                                bottom: AppTheme.spacing_s_12,
+                              ),
+                              child: Center(
+                                child: Text('취소',
+                                    style: AppTheme.titleHeadline.copyWith(
+                                        color: AppTheme.black,
+                                        fontSize: 17)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12,),
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(15),
+                                            bottomRight: Radius.circular(15)))),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(0))),
+                            onPressed: () {
+                              Get.log('확인 클릭!');
+                              Get.offAllNamed(Routes.FACILITY);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                top: AppTheme.spacing_s_12,
+                                bottom: AppTheme.spacing_s_12,
+                              ),
+                              child: Center(
+                                child: Text('확인',
+                                    style: AppTheme.titleHeadline.copyWith(
+                                        color: AppTheme.black,
+                                        fontSize: 17)),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ]);
+        });
+    return false;
   }
 
   Widget _bodyArea(BuildContext context) {
@@ -84,7 +215,7 @@ class FacilityStep2Page extends StatelessWidget {
 */
   Widget _topDataItem() {
     return Container(
-      padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+      padding: EdgeInsets.only(left: 18, right: 18, top: 4),
       child: Column(
         children: [
           Row(

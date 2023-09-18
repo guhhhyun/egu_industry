@@ -1,6 +1,7 @@
 
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_controller.dart';
 
 import 'package:flutter/material.dart';
@@ -20,14 +21,19 @@ class FacilityMonitoringPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
-            _bodyArea(context),
-             Obx(() => controller.monitoringList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-            _topTitle(context)),
-            _listArea2()
-            //   _listArea()
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
+                _bodyArea(context),
+                 Obx(() => controller.monitoringList.length == 0 ? SliverToBoxAdapter(child: Container()) :
+                _topTitle(context)),
+                _listArea2()
+                //   _listArea()
+              ],
+            ),
+            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
           ],
         ),
       ),
@@ -39,17 +45,65 @@ class FacilityMonitoringPage extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         color: AppTheme.white,
-        padding: const EdgeInsets.only(left: 18, right: 18, top: 24),
+        padding: const EdgeInsets.only(left: 18, right: 18, top: 4),
         child: Column(
           children: [
-            Obx(() => _cmpAndSttItem()),
-            const SizedBox(height: 12,),
-            _checkButton(),
+            Obx(() => _choiceGb(context)),
             const SizedBox(height: 12,),
           //  _listItem(context: context, index: 1),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _choiceGb(BuildContext context) {
+    return Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  controller.selectedLineCd.value = '400';
+                  controller.checkButton();
+                },
+                child: Container(
+                    width: 120,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color:  controller.selectedLineCd.value == '400' ? AppTheme.black : AppTheme.ae2e2e2,
+                            width: controller.selectedLineCd.value == '400' ? 2 : 1
+                        )),
+                    child: Center(
+                      child: Text('400', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c)),
+                    )
+                ),
+              ),
+            ),
+            SizedBox(width: 12,),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  controller.selectedLineCd.value = '600';
+                  controller.checkButton();
+                },
+                child: Container(
+                  width: 120,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color:  controller.selectedLineCd.value == '600' ? AppTheme.black : AppTheme.ae2e2e2,
+                          width: controller.selectedLineCd.value == '600' ? 2 : 1
+                      )),
+                  child: Center(
+                    child: Text('600', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c)),
+                  ),
+                ),
+              ),
+            ),
+          ],
     );
   }
 
@@ -98,7 +152,6 @@ class FacilityMonitoringPage extends StatelessWidget {
                     onChanged: (value) {
                       controller.selectedLine.value = value!;
                       Get.log('$value 선택!!!!');
-                      controller.convert();
                     }),
               ),
             ),
@@ -147,10 +200,10 @@ class FacilityMonitoringPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
                         left:
-                        BorderSide(color: AppTheme.light_text_primary),
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        BorderSide(color: AppTheme.ae2e2e2),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('설비',
@@ -165,9 +218,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text(
@@ -184,9 +237,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('시간',
@@ -202,9 +255,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                     color: AppTheme.blue_blue_300,
                     border: Border(
 
-                        top: BorderSide(color: AppTheme.light_text_primary),
+                        top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.light_text_primary))),
+                            color: AppTheme.ae2e2e2))),
                 height: 34,
                 child: Center(
                   child: Text('알람코드',
@@ -235,9 +288,7 @@ class FacilityMonitoringPage extends StatelessWidget {
       child: Container(
           decoration: BoxDecoration(
               color: AppTheme.white,
-              border: Border(
-                  bottom: controller.monitoringList.length == index ? BorderSide(color: AppTheme.light_text_primary) : BorderSide()
-              )),
+          ),
           child: Row(
             children: [
               Expanded(
@@ -246,10 +297,10 @@ class FacilityMonitoringPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
                           left:
-                          BorderSide(color: AppTheme.light_text_primary),
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          BorderSide(color: AppTheme.ae2e2e2),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 40,
                   child: Center(
                     child:   Text(controller.monitoringList[index]['CMH_NM'],
@@ -266,9 +317,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                           ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
                           ? AppTheme.af34f39 : AppTheme.a18b858,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 40,
                   child: Center(
                       child: Text(
@@ -284,9 +335,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                       color: AppTheme.white,
                       border: Border(
 
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 40,
                   child: Center(
                     child: Text(controller.monitoringList[index]['LEAD_TIME'].toString(),
@@ -300,9 +351,9 @@ class FacilityMonitoringPage extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
-                          top: BorderSide(color: AppTheme.light_text_primary),
+                          top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.light_text_primary))),
+                              color: AppTheme.ae2e2e2))),
                   height: 40,
                   child: Center(
                     child: Text(controller.monitoringList[index]['ALARM_VAL'] != '' ? '${controller.monitoringList[index]['ALARM_VAL']}' : '',

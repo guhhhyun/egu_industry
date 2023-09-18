@@ -6,6 +6,7 @@ import 'package:egu_industry/app/pages/facilitySecond/facility_step2_page.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
@@ -27,7 +28,7 @@ class FacilityPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             CommonAppbarWidget(title: '설비/안전 점검 조회', isLogo: false, isFirstPage: true,),
-            _bodyArea(),
+            _bodyArea(context),
             _listArea()
           ],
         ),
@@ -36,24 +37,171 @@ class FacilityPage extends StatelessWidget {
     );
   }
 
-  Widget _bodyArea() {
+  Widget _bodyArea(BuildContext context) {
     return SliverToBoxAdapter(
         child: Obx(() => Container(
           color: AppTheme.white,
-          padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+          padding: EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
             children: [
-              _calendarItem(),
+              _calendar2(context),
               SizedBox(height: 12,),
               _urgenTeamItem(),
               SizedBox(height: 12,),
               _choiceButtonItem(),
               SizedBox(height: 24,),
-              controller.isShowCalendar.value == true ? _calendar() : Container(),
               SizedBox(height: 12,),
             ],
           ),
         ),)
+    );
+  }
+
+  Widget _calendar2(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            child: InkWell(
+
+              onTap: () async{
+                var datePicked = await DatePicker.showSimpleDatePicker(
+                  titleText: '날짜 선택',
+                  itemTextStyle: AppTheme.a16400,
+                  context,
+                  confirmText: '확인',
+                  cancelText: '취소',
+                  textColor: AppTheme.black,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2060),
+                  dateFormat: "yyyy-MM-dd",
+                  locale: DateTimePickerLocale.ko,
+                  looping: true,
+                );
+
+                if(datePicked != null) {
+                  int startIndex = datePicked.toString().indexOf(' ');
+                  int lastIndex = datePicked.toString().length;
+                  controller.step1DayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                  if(controller.choiceButtonVal.value != 0) {
+                    controller.datasList.clear();
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    {
+                      Get.log('value[DATAS]: ${value['DATAS']}'),
+                      if(value['DATAS'] != null) {
+                        controller.datasLength.value = value['DATAS'].length,
+                        for(var i = 0; i < controller.datasLength.value; i++){
+                          controller.datasList.add(value['DATAS'][i]),
+                        },
+                      },
+                      Get.log('datasList: ${controller.datasList}'),
+                    });
+                  }
+
+
+
+                }else {
+                  controller.step1DayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                }
+                if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                  controller.step1DayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                }
+              },
+              child: Container(
+                height: 50,
+                width: 150,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all( color: AppTheme.ae2e2e2)),
+                padding: const EdgeInsets.only(right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(controller.step1DayStartValue.value, style: AppTheme.a12500
+                        .copyWith(color: AppTheme.a6c6c6c
+                        , fontSize: 17),),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12,),
+        SizedBox(height: 50, width: 15, child: Center(
+          child: Text('~',style: AppTheme.a14500
+              .copyWith(color: AppTheme.black)),
+        ),),
+        const SizedBox(width: 12,),
+        Expanded(
+          child: Container(
+            child: InkWell(
+              onTap: () async{
+                var datePicked = await DatePicker.showSimpleDatePicker(
+                  titleText: '날짜 선택',
+                  itemTextStyle: AppTheme.a16400,
+                  context,
+                  confirmText: '확인',
+                  cancelText: '취소',
+                  textColor: AppTheme.black,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2060),
+                  dateFormat: "yyyy-MM-dd",
+                  locale: DateTimePickerLocale.ko,
+                  looping: true,
+                );
+                if(datePicked != null) {
+                  int startIndex = datePicked.toString().indexOf(' ');
+                  int lastIndex = datePicked.toString().length;
+                  controller.step1DayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                  if(controller.choiceButtonVal.value != 0) {
+                    controller.datasList.clear();
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    {
+                      Get.log('value[DATAS]: ${value['DATAS']}'),
+                      if(value['DATAS'] != null) {
+                        controller.datasLength.value = value['DATAS'].length,
+                        for(var i = 0; i < controller.datasLength.value; i++){
+                          controller.datasList.add(value['DATAS'][i]),
+                        },
+                      },
+                      Get.log('datasList: ${controller.datasList}'),
+                    });
+                  }
+
+
+                }else {
+                  controller.step1DayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                }
+                if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                  controller.step1DayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                }
+
+                Get.log("Date Picked ${datePicked.toString()}");
+                //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+              child: Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppTheme.ae2e2e2)),
+                width: 150,
+                padding: const EdgeInsets.only( right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(controller.step1DayEndValue.value, style: AppTheme.a14500
+                        .copyWith(color: AppTheme.a6c6c6c
+                        , fontSize: 17),),
+                  ],
+                ),
+
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -135,7 +283,7 @@ class FacilityPage extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -191,7 +339,7 @@ class FacilityPage extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -238,7 +386,7 @@ class FacilityPage extends StatelessWidget {
               controller.registButton.value = false;
               controller.readCdConvert();
               controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 controller.datasList.clear(),
@@ -300,7 +448,7 @@ class FacilityPage extends StatelessWidget {
               controller.registButton.value = false;
               controller.readCdConvert();
               controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 if(value['DATAS'] != null) {
@@ -360,7 +508,7 @@ class FacilityPage extends StatelessWidget {
               controller.registButton.value = false;
               controller.readCdConvert();
               controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 if(value['DATAS'] != null) {
@@ -420,7 +568,7 @@ class FacilityPage extends StatelessWidget {
               controller.registButton.value = false;
               controller.readCdConvert();
               controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 if(value['DATAS'] != null) {
@@ -549,7 +697,7 @@ class FacilityPage extends StatelessWidget {
                 controller.isShowCalendar.value = false;
                 if(controller.choiceButtonVal.value != 0) {
                   controller.datasList.clear();
-                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${controller.dayValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
                   {
                     Get.log('value[DATAS]: ${value['DATAS']}'),
                     if(value['DATAS'] != null) {

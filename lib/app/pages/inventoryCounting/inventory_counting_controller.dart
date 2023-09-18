@@ -20,6 +20,8 @@ class InventoryCountingController extends GetxController {
   RxMap<String, String> selectedCheckLocationMap = {'DETAIL_CD':'', 'DETAIL_NM': ''}.obs;
   RxMap<String, String> selectedSaveLocationMap = {'DETAIL_CD':'', 'DETAIL_NM': ''}.obs;
   RxBool isButton = false.obs;
+  RxList<dynamic> machList = [].obs;
+  RxMap<String, String> selectedMachMap = {'MACH_CODE':'', 'MACH_NAME': ''}.obs;
 
 
 
@@ -32,6 +34,8 @@ class InventoryCountingController extends GetxController {
   }
 
   Future<void> loactionConvert() async {
+    machList.clear();
+    selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '설비 선택'});
     locationList.clear();
     selectedSaveLocationMap.clear();
     selectedCheckLocationMap.clear();
@@ -42,6 +46,11 @@ class InventoryCountingController extends GetxController {
       locationList.value = value['DATAS']
     });
     Get.log('위치 : $locationList');
+    var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+    {
+      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
+      machList.value = value['DATAS']
+    });
   }
 
 

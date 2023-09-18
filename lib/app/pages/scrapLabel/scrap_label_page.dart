@@ -68,20 +68,20 @@ class ScrapLabelPage extends StatelessWidget {
         key: formKey,
         child: Column(
           children: [
-            const SizedBox(height: 40,),
+            const SizedBox(height: 4,),
             _dropDownItem(context, '구분', 1),
             controller.selectedGubun.value == '지금류' ?
             Container() :
                 Column(
                   children: [
-                    const SizedBox(height: 45,),
+                    const SizedBox(height: 20,),
                     _dropDownItem(context, '유형', 2),
                   ],
                 ),
             controller.selectedScrapType.value == '공정회수' ? Container() :
                 Column(
                   children: [
-                    const SizedBox(height: 45,),
+                    const SizedBox(height: 20,),
                     _topAreaTest(), // 계량정보
                   ],
                 ),
@@ -93,40 +93,40 @@ class ScrapLabelPage extends StatelessWidget {
                     Container() :
                     Column(
                       children: [
-                        const SizedBox(height: 45,),
+                        const SizedBox(height: 20,),
                         _industryItem('공정정보', 1), // 수량이랑 단위중량도 안보이게
                       ],
                     ),
                 controller.selectedScrapType.value == '외주' ?
                 Column(
                   children: [
-                    const SizedBox(height: 45,),
+                    const SizedBox(height: 20,),
                     _areaOtherScrap(),
                   ],
                 ) :
                 Container(),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
                 _dropDownItem(context, '도금', 3),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
                 _industryItem('스크랩품명', 2),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
               ],
             ),
             controller.selectedGubun.value == '지금류' ? /// 이건 고정 바꿀 필요 없음
             Column(
               children: [
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
                 _industryItem('지금류품명', 3),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
               ],
             ) : Container(),
             _locationArea(),
-            const SizedBox(height: 45,),
+            const SizedBox(height: 20,),
             controller.selectedGubun.value == '지금류' ? /// 이건 고정 바꿀 필요 없음
             Column(
               children: [
                 _qtyArea(),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
               ],
             ) : Container(),
             controller.selectedGubun.value == '지금류' ?
@@ -136,7 +136,7 @@ class ScrapLabelPage extends StatelessWidget {
                 _weighing(),
                 const SizedBox(height: 12,),
                 _weighingTwo(),
-                const SizedBox(height: 45,),
+                const SizedBox(height: 20,),
               ],
             ),
             _minusWeight(),

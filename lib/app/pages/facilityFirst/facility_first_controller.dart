@@ -58,8 +58,8 @@ class FacilityFirstController extends GetxController {
 
 
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString dayStartValue = '시작 날짜를 선택해주세요'.obs;
-  RxString dayEndValue = '종료 날짜를 선택해주세요'.obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
   RxInt datasLength = 0.obs;
@@ -94,11 +94,11 @@ class FacilityFirstController extends GetxController {
   }
   Future<void> saveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'N', '@p_IR_CODE':''
-      , '@p_INS_FG':'${insCd.value}', '@p_MACH_CODE':selectedMachMap['MACH_CODE'], '@p_MACH_ETC':selectedMachMap['MACH_NAME'],
-      '@p_IR_TITLE':'${textTitleController.text}', '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':'admin',
-      '@p_FAILURE_DT':'${errorTime2.value}', '@p_IR_FG':'${irfqCd.value}', '@p_URGENCY_FG':'${urgencyCd.value}',
-      '@p_INS_DEPT':'${engineTeamCd.value}', '@p_USER':'admin',});
-    Get.log('미웅ㄴㅇㄴㅇㄴㅇㄴㅇㄴㅇㅇㄴ ${a}');
+      , '@p_INS_FG':insCd.value, '@p_MACH_CODE':selectedMachMap['MACH_CODE'], '@p_MACH_ETC':selectedMachMap['MACH_NAME'] == '전체' ? textFacilityController.text : '',
+      '@p_IR_TITLE':textTitleController.text, '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':'admin',
+      '@p_FAILURE_DT':errorTime2.value, '@p_IR_FG':irfqCd.value, '@p_URGENCY_FG':urgencyCd.value,
+      '@p_INS_DEPT':engineTeamCd.value, '@p_USER':'admin',});
+    Get.log('신규등록 :::::::: $a');
     // irFileCode.value = a.toString();
 
 
@@ -199,7 +199,7 @@ class FacilityFirstController extends GetxController {
       default:
         insCd.value = '';
     }
-    switch(selectedUrgency.value) {
+    switch(selectedReadUrgency.value) {
       case "보통":
         urgencyCd.value = 'N';
         break;
@@ -209,7 +209,7 @@ class FacilityFirstController extends GetxController {
       default:
         urgencyCd.value = '';
     }
-    switch(selectedEngineTeam.value) {
+    switch(selectedReadEngineTeam.value) {
       case "생산팀":
         engineTeamCd.value = '1110';
         break;
@@ -271,6 +271,20 @@ class FacilityFirstController extends GetxController {
     }
   }
 
+  void check() {
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    {
+      Get.log('value[DATAS]: ${value['DATAS']}'),
+      if(value['DATAS'] != null) {
+        datasLength.value = value['DATAS'].length,
+        for(var i = 0; i < datasLength.value; i++){
+          datasList.add(value['DATAS'][i]),
+        },
+      },
+      Get.log('datasList: ${datasList}'),
+    });
+  }
+
 
 
 
@@ -278,7 +292,7 @@ class FacilityFirstController extends GetxController {
   void onInit() {
     readCdConvert();
     datasList.clear();
-    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE':'${dayValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {

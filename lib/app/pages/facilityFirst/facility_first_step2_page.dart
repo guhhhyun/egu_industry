@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/common/back_dialog_widget.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
+import 'package:egu_industry/app/routes/app_route.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -35,19 +37,149 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '설비/안전 점검 - 의뢰내역 등록', isLogo: false, isFirstPage: false ),
-            _bodyArea(context),
-            //_streamBuilder()
+    return WillPopScope(
+      onWillPop: () {
+        return _onBackKey();
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              CommonAppbarWidget(title: '설비/안전 점검 - 의뢰내역 등록', isLogo: false, isFirstPage: false, facilityFlag: true ),
+              _bodyArea(context),
+              //_streamBuilder()
 
-          ],
+            ],
+          ),
         ),
+        bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
+  }
+
+  Future<bool> _onBackKey() async{
+     await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Column(
+                children: [
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                  Text(
+                    '',
+                    style: AppTheme.a18700
+                        .copyWith(color: AppTheme.black),
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xxxs_2,
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                height: 70,
+                child: Column(
+                  children: [
+                    Text('저장되지 않은 내역이 있을 수 있습니다.', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                    Text('계속하시겠습니까?', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                  ],
+                ),
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: const Color(0x5c3c3c43),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(15),
+                                            bottomRight: Radius.circular(15)))),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(0))),
+                            onPressed: () {
+                              Get.log('취소 클릭!');
+                              Get.back();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  right: BorderSide(color: const Color(0x5c3c3c43),)
+                                )
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                top: AppTheme.spacing_s_12,
+                                bottom: AppTheme.spacing_s_12,
+                              ),
+                              child: Center(
+                                child: Text('취소',
+                                    style: AppTheme.titleHeadline.copyWith(
+                                        color: AppTheme.black,
+                                        fontSize: 17)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12,),
+                        Expanded(
+                          child: TextButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                    const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(15),
+                                            bottomRight: Radius.circular(15)))),
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(0))),
+                            onPressed: () {
+                              Get.log('확인 클릭!');
+                              Get.offAllNamed(Routes.FACILITY_FIRST);
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.only(
+                                top: AppTheme.spacing_s_12,
+                                bottom: AppTheme.spacing_s_12,
+                              ),
+                              child: Center(
+                                child: Text('확인',
+                                    style: AppTheme.titleHeadline.copyWith(
+                                        color: AppTheme.black,
+                                        fontSize: 17)),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ]);
+        });
+     return false;
   }
 
   Widget _bodyArea(BuildContext context) {
@@ -56,12 +188,11 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
     return SliverToBoxAdapter(
         child: Obx(() => Container(
           color: AppTheme.white,
-          padding: EdgeInsets.only(left: 18, right: 18, top: 24),
+          padding: EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _basicContainerItem(context, '의뢰번호', '자동생성', 1),
-              SizedBox(height: 45,),
+             // _basicContainerItem(context, '의뢰번호', '자동생성', 1),
               _basicContainerItem(context, '장애일시', '${controller.errorTime.value}', 2),
               controller.isErrorDateChoice.value == true ?
               Column(
@@ -70,24 +201,24 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                   _errorDateSelect(),
                 ],
               ) : Container(),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               _inspectionGubunItem(context),
               controller.selectedIns.value == '안전점검' ? Container() :
               Column(
                 children: [
-                  SizedBox(height: 45,),
+                  SizedBox(height: 20,),
                   _facilityChoiceItem(context),
                 ],
               ),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               controller.selectedMachMap['MACH_NAME'] == '전체' ? _anotherFacilityItem() : Container(),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               _engineTeamItem(context),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               _titleTextFieldItem(),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               _contentTextFieldItem(),
-              SizedBox(height: 45,),
+              SizedBox(height: 20,),
               _fileArea()
               // _topDataItem(),
               //_inputArea(context),
@@ -226,7 +357,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       color: AppTheme.light_placeholder,
                     ),
                     dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedUrgency.value,
+                    value: controller.selectedReadUrgency.value,
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.urgencyList.map((value) {
                       return DropdownMenuItem(
@@ -239,7 +370,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.selectedUrgency.value = value!;
+                      controller.selectedReadUrgency.value = value!;
 
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -366,6 +497,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         )),
                     padding: const EdgeInsets.only(right: 12),
                     child: DropdownButton<String>(
+                        dropdownColor: AppTheme.light_ui_01,
                         borderRadius: BorderRadius.circular(3),
                         isExpanded: true,
                         underline: Container(
@@ -425,7 +557,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                           color: AppTheme.light_placeholder,
                         ),
                         dropdownColor: AppTheme.light_ui_01,
-                        value: controller.selectedEngineTeam.value,
+                        value: controller.selectedReadEngineTeam.value,
                         //  flag == 3 ? controller.selectedNoReason.value :
                         items: controller.engineTeamList.map((value) {
                           return DropdownMenuItem(
@@ -438,7 +570,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                           );
                         }).toList(),
                         onChanged: (value) {
-                          controller.selectedEngineTeam.value = value!;
+                          controller.selectedReadEngineTeam.value = value!;
 
                           Get.log('$value 선택!!!!');
                           // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -764,8 +896,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         padding: MaterialStateProperty.all<EdgeInsets>(
                             const EdgeInsets.all(0))),
                     onPressed: () async {
-                      Get.back();
-                     //  Get.toNamed(Routes.FACILITY);
+                      _onBackKey();
                     },
                     child: Container(
                       height: 56,
@@ -807,10 +938,11 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                         controller.filePathList.clear();
                         controller.cdConvert();
                         controller.saveButton();
-                        _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        // _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         SchedulerBinding.instance!.addPostFrameCallback((_) {
-                           Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 1,));
+                           Get.dialog(_dialog());
                         });
+                       // controller.check();
                       } : null,
                       child: Container(
                         height: 56,
@@ -829,6 +961,53 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
           ],
         )
     ));
+  }
+
+  Widget _dialog() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      scrollable: true,
+      content: Container(
+        padding: EdgeInsets.only(top: 12, bottom: 12),
+        child: Center(
+          child: Text(
+            '저장되었습니다',
+            style: AppTheme.bodyBody2,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 10,
+          ),
+        ),
+      ),
+      buttonPadding: const EdgeInsets.all(0),
+      insetPadding: const EdgeInsets.all(0),
+      titlePadding: const EdgeInsets.all(0),
+      contentPadding: const EdgeInsets.only(top: 16, bottom: 12),
+      actions: [
+        Material(
+          child: TextButton(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(5)))),
+                padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
+            // 성공
+            onPressed: () {
+              Get.offAllNamed(Routes.FACILITY_FIRST);
+            },
+            child: Container(
+              padding: const EdgeInsets.only(top: 16, bottom: 16),
+              color: Colors.black,
+              child: Center(
+                  child: Text(
+                      '확인',
+                      style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
+                  )),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
 /// 파일 저장쿼리 넘기기
