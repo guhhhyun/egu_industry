@@ -177,7 +177,7 @@ class FacilityFirstController extends GetxController {
       case "999":
         modifySelectedIrFq.value = '기타';
       default:
-        modifySelectedIrFq.value = '';
+        modifySelectedIrFq.value = '돌발 정비';
     }
 
     switch(modifyEngineTeamCd.value) {

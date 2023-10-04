@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/print/print_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_simple_bluetooth_printer/flutter_simple_bluetooth_printer.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -54,6 +58,52 @@ class ScrapLabelController extends GetxController {
   RxList selectedContainer = [].obs;
   RxString startValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString endValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+
+
+
+  /// 프린트
+  Future<void> PrintAlpha_3RB(String CODE, Map? PARAM ) async{
+    var bluetoothManager = FlutterSimpleBluetoothPrinter.instance;
+    final bondedDevices = await bluetoothManager.getAndroidPairedDevices();
+    bondedDevices.forEach((device) async {
+      Get.log(device.name+"\t"+device.address+"\t"+device.isLE.toString());
+      if(device.name.startsWith("Alpha-3R")){
+        try {
+          await bluetoothManager.disconnect();
+        }finally{}
+        bool isConnected = await bluetoothManager.connect(address: device.address, isBLE: device.isLE);
+        if(isConnected) {
+          try {
+            Map map = await HomeApi.to.REPORT_MONO_BITMAP(CODE, PARAM);
+            String str = "SIZE @WIDTH@mm,@HEIGHT@mm\r\nGAP 0,0\r\nCLS\r\nBITMAP 0,0,@BITMAP_WIDTH@,@BITMAP_HEIGHT@,0,@BitmapData@\r\nPRINT 1,1\r\n";
+            str = str.replaceAll("@WIDTH@", (map["WIDTH"] / 10).floor().toString())
+                .replaceAll(
+                "@HEIGHT@", (map["HEIGHT"] / 10).floor().toString() )
+                .replaceAll("@BITMAP_WIDTH@",
+                ((map["BITMAP_WIDTH"] / 8).floor() + 1).toString())
+                .replaceAll("@BITMAP_HEIGHT@",
+                map["BITMAP_HEIGHT"].floor().toString());
+            List<String> spl = str.split("@BitmapData@");
+            List<List<int>> listBytes = [
+              ascii.encode(spl[0]),
+              map["FILE"],
+              ascii.encode(spl[1]),
+            ];
+            Uint8List bytes = Uint8List.fromList(
+                listBytes.expand((x) => x).toList());
+            await bluetoothManager.writeRawData(bytes);
+          }catch(ex){
+            Get.log(ex.toString());
+          }
+          finally{
+            await bluetoothManager.disconnect();
+          }
+        }
+      }
+    });
+  }
+
+
 
 
   Future<void> popUpData() async {
@@ -136,9 +186,6 @@ class ScrapLabelController extends GetxController {
           }
         } else {
           Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-          Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         }
       }
 
@@ -146,7 +193,7 @@ class ScrapLabelController extends GetxController {
       switch(selectedScrapType.value) {
         case "매입":
           selectedScrapTypeCd.value = '1';
-          if((measList.isNotEmpty || selectedContainer.isNotEmpty) && selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
+          if((measList.isNotEmpty || selectedContainer.isNotEmpty) && selectedScrapNmMap['NAME'] != '선택해주세요'
             && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
             && selectedTareMap['WEIGHT'] != ''){
             isLabelBtn.value = true;
@@ -228,8 +275,10 @@ class ScrapLabelController extends GetxController {
      Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
      realLabelData.value = value['DATAS']
    });
+
+   PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
   // Get.to(PrintPage(''));
-   Get.toNamed(Routes.BLUETOOTH_PRINTER);
+  // Get.toNamed(Routes.BLUETOOTH_PRINTER);
   }
 
   // 스크랩 라벨발행
@@ -250,7 +299,7 @@ class ScrapLabelController extends GetxController {
       Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
       realLabelData.value = value['DATAS']
     });
-    Get.toNamed(Routes.BLUETOOTH_PRINTER);
+    PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
   }
 
 

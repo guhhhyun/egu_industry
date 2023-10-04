@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 import 'dart:convert';
 
@@ -192,10 +193,12 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
                     //      String base64Image = base64Encode(imageBytes);
 
                          List<LineText> list1 = [];
-                        /*  var a = pageImage?.bytes;
+                        */
+/*  var a = pageImage?.bytes;
                           List<int>? imageBytes = a?.sublist(0, kMaxBytes).toList();
 
-                          String base64Image = base64Encode(imageBytes!);*/
+                          String base64Image = base64Encode(imageBytes!);*//*
+
                           list1.add(LineText(type: LineText.TYPE_IMAGE, x:10, y:10, content: base64Image,));
 
                           await bluetoothPrint.printLabel(config, list1);
@@ -222,17 +225,23 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
               );
             } else {
               return  FloatingActionButton(
-                  child:/* controller.isScaning.value ? const Icon(Icons.stop) : */const Icon(Icons.search),
+                  child:*/
+/* controller.isScaning.value ? const Icon(Icons.stop) : *//*
+const Icon(Icons.search),
                   onPressed: () {
-                    /*if(controller.isScaning.value) {
+                    */
+/*if(controller.isScaning.value) {
                       controller.isScaning.value = false;
                     }else {
                       controller.isScaning.value = true;
-                    }*/
+                    }*//*
+
                     bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
-                    /*Future.delayed(const Duration(seconds: 4), () {
+                    */
+/*Future.delayed(const Duration(seconds: 4), () {
                       controller.isScaning.value = false;
-                    });*/
+                    });*//*
+
 
                   }
               );
@@ -243,4 +252,4 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
     );
   }
 
-}
+}*/

@@ -106,8 +106,8 @@ class AppRoute {
         name: _PathName.LOGIN_PAGE, page: () => LoginPage(), binding: LoginBinding()),
     GetPage(
         name: _PathName.ALARM, page: () => AlarmPage(), binding: AlarmBinding()),
-    GetPage(
-        name: _PathName.BLUETOOTH_PRINTER, page: () => BluetoothPrinter(), binding: ScrapLabelBinding()),
+   /* GetPage(
+        name: _PathName.BLUETOOTH_PRINTER, page: () => BluetoothPrinter(), binding: ScrapLabelBinding()),*/
     GetPage(
         name: _PathName.NOTICE, page: () => NoticePage(), binding: NoticeBinding()),
 

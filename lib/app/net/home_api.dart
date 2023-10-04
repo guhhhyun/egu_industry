@@ -165,22 +165,20 @@ class HomeApi extends NetworkManager {
 
 
   Future<String?> EXEC2(
-      String MODE,
-      String CODE,
-      Map? PARAMS, {
+  String MODE,
+  String CODE,
+  Map? PARAMS, {
         String? url = null,
         String? service_name = null,
         String? auth = null,
         int timeoutSec = 10,
         String ContentType = 'application/json',
+        Map<String, dynamic>? OPTION = null,
       }) async {
     Map<String, dynamic> data = {};
     String result = "";
     Object? exception = null;
     try {
-      //if (url == null) url = '121.133.99.66:3000';
-      //if (url == null) url = '10.0.2.2:3000';
-      //if (url == null) url = '10.0.2.2:8090';
       if (url == null) url = 'mes1.leeku.co.kr';
       if (service_name == null) service_name = 'WebAPI/';
 
@@ -194,6 +192,9 @@ class HomeApi extends NetworkManager {
         'PARAM': params,
         'AUTH' : auth,
       };
+      if(OPTION != null){
+        data.addAll(OPTION!);
+      }
       var response = await http.post(
           RequestUri,
           headers: {'Content-Type': ContentType},
@@ -217,13 +218,14 @@ class HomeApi extends NetworkManager {
   }
 
 
-  Future<Map> REPORT_PDF(String PrintType, Map? PARAMS) async {
-    String res = await EXEC2("REPORT_PDF", PrintType, PARAMS) ?? "";
+  Future<Map> REPORT_MONO_BITMAP(String PrintType, Map? PARAMS, {int DPI = 200}) async {
+    String res = await EXEC2("REPORT_MONO_BITMAP", PrintType, PARAMS, OPTION: {"DPI":DPI}) ?? "";
     Map data = json.decode(res);
     Map RESULT = data["RESULT"];
     RESULT["FILE"] = base64Decode(RESULT["FILE"]);
     return RESULT;
   }
+
 
 
 /*
