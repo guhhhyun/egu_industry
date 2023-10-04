@@ -21,12 +21,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () {
-      //  controller.reqMarketList();
-        return Future.value();
-      },
-      child: Material(
+    return Material(
         color: AppTheme.white,
         child: CustomScrollView(
           slivers: [
@@ -40,14 +35,13 @@ class HomePage extends StatelessWidget {
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
             // 공지 리스트
-           // HomeNewsWidget(),
+            HomeNewsWidget(),
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
           //  MainReadMoreWidget()
           ],
         ),
-      ),
     );
   }
 }

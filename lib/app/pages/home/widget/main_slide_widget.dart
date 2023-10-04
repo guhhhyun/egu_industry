@@ -95,7 +95,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/Group_226.png'),
+                    _sliderContainer('assets/app/Group_227.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -113,7 +113,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/Group_227.png'),
+                    _sliderContainer('assets/app/Group_228.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(
@@ -131,7 +131,7 @@ class _MainSlideWidgetSate extends State<MainSlideWidget> {
                 ),
                 Stack(
                   children: [
-                    _sliderContainer('assets/app/Group_228.png'),
+                    _sliderContainer('assets/app/Group_226.png'),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Column(

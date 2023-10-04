@@ -2,73 +2,94 @@ import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_controller.dart';
+import 'package:egu_industry/app/pages/packagingInspec/test23.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:keyboard_service/keyboard_service.dart';
 
 
 class PackagingInspecPage extends StatelessWidget {
   PackagingInspecPage({super.key});
 
   PackagingInspecController controller = Get.find();
+  final focusNode = FocusNode();
+  /*final focusNode2 = FocusNode(onKey: (node, event) {
+
+    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+      return KeyEventResult.handled; // prevent passing the event into the TextField
+    }
+
+    return KeyEventResult.ignored; // pass the event to the TextField
+  });*/
   final ScrollController myScrollWorks = ScrollController();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
-            _topAreaTest(),
-            // _topArea(),
-            _bodyArea(),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  SizedBox(height: 16,),
-                  Container(
-                    height: 8,
-                    color: AppTheme.af3f3f3,
-                  ),
-                ],
+      body: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
+              _topAreaTest(context),
+              // _topArea(),
+              _bodyArea(context),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    SizedBox(height: 16,),
+                    Container(
+                      height: 8,
+                      color: AppTheme.af3f3f3,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _weightData(),
-            _boundary(),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const SizedBox(height: 16,),
-                  Container(
-                    height: 8,
-                    color: AppTheme.af3f3f3,
-                  ),
-                  const SizedBox(height: 16,),
-                ],
+              _weightData(),
+              _listArea(),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16,),
+                    Container(
+                      height: 8,
+                      color: AppTheme.af3f3f3,
+                    ),
+                    const SizedBox(height: 16,),
+                  ],
+                ),
               ),
-            ),
-            Obx(() => controller.inspecDetailList.isNotEmpty ?
-            _packagingSpec() : SliverToBoxAdapter(child: Container()))
 
-          //  _locationItem()
-          ],
+            //  _locationItem()
+            ],
+          ),
         ),
+        bottomNavigationBar: _bottomButton(context), //  등록
       ),
-      bottomNavigationBar: _bottomButton(context), //  등록
     );
   }
 
-  Widget _topAreaTest() {
+  Widget _topAreaTest(BuildContext context) {
     return SliverToBoxAdapter(
       child: Row(
         children: [
+          /*StreamBuilder(
+              stream: Stream.periodic(const Duration(seconds: 1)),
+              builder: (c, snapshot) {
+                return Container(
+                  child: (() {
+                 //   SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  })(),
+                );
+              }),*/
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(left: 20, right: 12, top: 4, bottom: 4),
@@ -79,43 +100,62 @@ class PackagingInspecPage extends StatelessWidget {
                       border: Border.all(color: AppTheme.ae2e2e2),
                       borderRadius: BorderRadius.circular(10)
                   ),
-                  child: TextFormField(
-                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-                    // maxLines: 5,
-                    controller: controller.textController,
-                    textAlignVertical: TextAlignVertical.center,
-                    textInputAction: TextInputAction.search,
-                    onFieldSubmitted: (value) {
-                      controller.checkButton();
-                      controller.checkButton2();
-                      controller.checkButton3();
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          onTap: () {
-                            Get.log('조회 돋보기 클릭!');
-                            controller.checkButton();
-                            controller.checkButton2();
-                            controller.checkButton3();
-                          },
-                          child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                  child: /*NoKeyboardEditableText(controller: controller.textController, selectionColor: Colors.black,)*/
+                 TextFormField(
+                        showCursor: true,
+                        keyboardAppearance: Brightness.dark,
+                        focusNode: focusNode,
+                        style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                        // maxLines: 5,
+                        controller: controller.textController,
+                        textAlignVertical: TextAlignVertical.center,
+                        onTap: () {
+                          if(controller.focusCnt.value++ > 1) controller.focusCnt.value = 0;
+                          else Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                        },
+                        onTapOutside:(event) => { controller.focusCnt.value = 0 },
+                        onFieldSubmitted: (value) {
+                          controller.checkButton();
+                          controller.checkButton2();
+                          controller.checkButton3();
+                          controller.textController.text = '';
+                          focusNode.requestFocus();
+                          Future.delayed(const Duration(), (){
+                            focusNode.requestFocus();
+                          //  FocusScope.of(context).requestFocus(focusNode);
+                            Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                          });
+                        },
+
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          suffixIcon: InkWell(
+                              onTap: () {
+                                Get.log('조회 돋보기 클릭!');
+                                controller.checkButton();
+                                controller.checkButton2();
+                                controller.checkButton3();
+                                controller.textController.text = '';
+                                FocusScope.of(context).autofocus(focusNode);
+                              },
+                              child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                          ),
+
+                        contentPadding: const EdgeInsets.all(0),
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'BC 번호를 입력해주세요',
+                        hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+                        border: InputBorder.none,
                       ),
 
-                      contentPadding: const EdgeInsets.all(0),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'BC 번호를 입력해주세요',
-                      hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
-                      border: InputBorder.none,
+
                     ),
-                    showCursor: true,
 
 
-                  ),
+    ),
                 ),
               ),
-            ),
           ),
           Container(
             padding: const EdgeInsets.only( right: 20, top: 4, bottom: 4),
@@ -128,6 +168,8 @@ class PackagingInspecPage extends StatelessWidget {
                     controller.checkButton();
                     controller.checkButton2();
                     controller.checkButton3();
+                    controller.textController.text = '';
+                    FocusScope.of(context).autofocus(focusNode);
                   }else {
                     controller.textController.text = '바코드를 재스캔해주세요';
                   }
@@ -145,20 +187,33 @@ class PackagingInspecPage extends StatelessWidget {
   Widget _weightData() {
     return Obx(() => SliverToBoxAdapter(
       child: Container(
-        margin: const EdgeInsets.only(left: 24, right: 35, top: 16),
+        margin: const EdgeInsets.only(left: 24, right: 24, top: 16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                Text('실중량: ', style: AppTheme.a16400.copyWith(color: AppTheme.black),),
-                Text('${controller.realWeight.value.toStringAsFixed(2)}', style: AppTheme.a16600.copyWith(color: AppTheme.black))
+                Text('총 개수: ', style: AppTheme.a12400.copyWith(color: AppTheme.black),),
+                Text('${controller.productDetailRealList.length}개', style: AppTheme.a12400.copyWith(color: AppTheme.black))
+              ],
+            ),
+
+            Row(
+              children: [
+                Text('실중량: ', style: AppTheme.a12400.copyWith(color: AppTheme.black),),
+                Text('${controller.realWeight.value.toStringAsFixed(2)}', style: AppTheme.a12400.copyWith(color: AppTheme.black))
               ],
             ),
             Row(
               children: [
-                Text('총중량: ', style: AppTheme.a16400.copyWith(color: AppTheme.black),),
-                Text('${controller.totalWeight.value.toStringAsFixed(2)}', style: AppTheme.a16600.copyWith(color: AppTheme.black))
+                Text('지관: ', style: AppTheme.a12400.copyWith(color: AppTheme.black),),
+                Text('${controller.jigwan.value.toStringAsFixed(2)}', style: AppTheme.a12400.copyWith(color: AppTheme.black))
+              ],
+            ),
+            Row(
+              children: [
+                Text('총중량: ', style: AppTheme.a12400.copyWith(color: AppTheme.black),),
+                Text('${controller.totalWeight.value.toStringAsFixed(2)}', style: AppTheme.a12400.copyWith(color: AppTheme.black))
               ],
             )
           ],
@@ -232,7 +287,7 @@ class PackagingInspecPage extends StatelessWidget {
                     padding: EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: controller.isProductSelectedList[index] == false ? Border.all(color: AppTheme.aE2E2E2) :  Border.all(color: AppTheme.black, width: 2),
+                        border: controller.isProductSelectedList.isNotEmpty ? controller.isProductSelectedList[index] == false ? Border.all(color: AppTheme.aE2E2E2) :  Border.all(color: AppTheme.black, width: 2) : null,
                         color: AppTheme.white,
 
                     ),
@@ -277,7 +332,7 @@ class PackagingInspecPage extends StatelessWidget {
                                     style: AppTheme.a12700
                                         .copyWith(color: AppTheme.a959595)),
                                 const SizedBox(width: 4,),
-                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['JIGWAN'] != null ? '${controller.productDetailRealList[index]['JIGWAN']}' : '' : '',
+                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['JIGWAN'] != null ? '${controller.productDetailRealList[index]['JIGWAN']}' : '0' : '',
                                     style: AppTheme.a12700
                                         .copyWith(color: AppTheme.black)),
                                 const SizedBox(width: 8,),
@@ -303,162 +358,173 @@ class PackagingInspecPage extends StatelessWidget {
   }
 
 
-  Widget _bodyArea() {
+  Widget _bodyArea(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
-          margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-              border: Border.all(color: AppTheme.black),
-              borderRadius: BorderRadius.circular(10),
-              color: AppTheme.white
+      child: Column(
+        children: [
+          Container(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppTheme.black),
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppTheme.white
+              ),
+              child: Obx(() =>Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text('PNO:  ',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.a959595)),
+                          Text(controller.productList.isNotEmpty ? '${controller.productList[0]['PACK_NO']}' : '',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.black)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('SPEC:  ',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.a959595)),
+                          Text(controller.productList.isNotEmpty ?  controller.productList[0]['SPEC'] != '' ? '${controller.productList[0]['SPEC']}' : '' : '',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.black)),
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 12,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text('품명:  ',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.a959595)),
+                          Text(controller.productList.isNotEmpty ?  '${controller.productList[0]['CMP_NM']}' : '',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.black)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text('회사명:  ',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.a959595)),
+                          Text(controller.productList.isNotEmpty ?  '${controller.productList[0]['CST_NM']}' : '', // CST_NM 인데 ''로 되어있음
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.black)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),)
           ),
-          child: Obx(() =>Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text('PNO:  ',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a959595)),
-                      Text(controller.productList.isNotEmpty ? '${controller.productList[0]['PACK_NO']}' : '',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.black)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('SPEC:  ',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a959595)),
-                      Text(controller.productList.isNotEmpty ?  controller.productList[0]['SPEC'] != '' ? '${controller.productList[0]['SPEC']}' : '' : '',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.black)),
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(height: 12,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text('품명:  ',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a959595)),
-                      Text(controller.productList.isNotEmpty ?  '${controller.productList[0]['CMP_NM']}' : '',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.black)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('회사명:  ',
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a959595)),
-                      Text(controller.productList.isNotEmpty ?  '${controller.productList[0]['CST_NM']}' : '', // CST_NM 인데 ''로 되어있음
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.black)),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),)
+          Obx(() => controller.inspecDetailList.isNotEmpty ?
+          _packagingSpec(context) : Container()),
+        ],
       ),
     );
   }
 
-  Widget _packagingSpec() {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.only(left: 20, right: 12, bottom: 80),
+  Widget _packagingSpec(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.only(top: 12, left: 20, right: 12, bottom: 4),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('포장검수', style: AppTheme.a18700.copyWith(color: AppTheme.black),)
-              ],
-            ),
-            const SizedBox(height: 24,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            Container(
+              width: MediaQuery.of(context).size.width - 30,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('기계포장: ',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.a959595)),
-                    Text(controller.inspecDetailList[0]['MACH'] == 'Y' ? 'O' : 'X',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.black)),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('기계포장',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['MACH'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),
+                    SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('띠밴딩',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['BAND'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),
+                    SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('고임목',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['CHOCK'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),
+                    SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('간지',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['GANZ'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),
+                    SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('감김방향',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['DIRECTION'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('띠밴딩: ',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.a959595)),
-                    Text(controller.inspecDetailList[0]['BAND'] == 'Y' ? 'O' : 'X',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.black)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('고임목: ',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.a959595)),
-                    Text(controller.inspecDetailList[0]['CHOCK'] == 'Y' ? 'O' : 'X',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.black)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('간지: ',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.a959595)),
-                    Text(controller.inspecDetailList[0]['GANZ'] == 'Y' ? 'O' : 'X',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.black)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('감김방향: ',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.a959595)),
-                    Text(controller.inspecDetailList[0]['DIRECTION'] == 'Y' ? 'O' : 'X',
-                        style: AppTheme.a16400
-                            .copyWith(color: AppTheme.black)),
-                  ],
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 12,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('비고사항: ',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a959595)),
-                Text('${controller.inspecDetailList[0]['REMARK']}',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.black)),
+            Container(
+                width: MediaQuery.of(context).size.width - 30,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('비고사항: ',
+                          style: AppTheme.a16400
+                              .copyWith(color: AppTheme.a959595)),
+                      Text('${controller.inspecDetailList[0]['REMARK']}',
+                          style: AppTheme.a16400
+                              .copyWith(color: AppTheme.black)),
               ],
-            ),
+            ),))
           ],
-        ),
       ),
     );
   }

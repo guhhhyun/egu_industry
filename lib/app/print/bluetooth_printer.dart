@@ -4,12 +4,14 @@ import 'dart:convert';
 import 'package:bluetooth_print/bluetooth_print.dart';
 import 'package:bluetooth_print/bluetooth_print_model.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
-import 'package:egu_industry/app/pages/main/main_controller.dart';
-import 'package:egu_industry/app/pages/test/blue_tooth_controller.dart';
+import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/scrapLabel/scrap_label_controller.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:pdfx/pdfx.dart';
+import 'package:image/image.dart' as im;
 
 class BluetoothPrinter extends StatefulWidget {
 
@@ -18,8 +20,9 @@ class BluetoothPrinter extends StatefulWidget {
 }
 
 class _BluetoothPrinterState extends State<BluetoothPrinter> {
-  MainController controller = Get.find();
+
   BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
+  ScrapLabelController controller = Get.find();
 
   bool _connected = false;
   BluetoothDevice? _device;
@@ -71,6 +74,7 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
@@ -89,9 +93,7 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
                 style: AppTheme.a18700.copyWith(color: Colors.black),
               ),
           backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
+
         ),
         body: RefreshIndicator(
           onRefresh: () =>
@@ -165,71 +167,42 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
                         ],
                       ),
                       const Divider(),
-
                       OutlinedButton(
-                        onPressed:  _connected?() async {
-                          Map<String, dynamic> config = Map();
-                          List<LineText> list = [];
+                        onPressed: () async {
 
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: '**********************************************', weight: 1, align: LineText.ALIGN_CENTER,linefeed: 1));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'aaaaa', weight: 1, align: LineText.ALIGN_CENTER, fontZoom: 2, linefeed: 1));
-                          list.add(LineText(linefeed: 1));
+                          im.Image? imImage;
+                          const kMaxBytes = 8;
+                          Map map = await HomeApi.to.REPORT_PDF("SCRAP_LBL", {"SCRAP_NO":"2306220002"});
 
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: '----------------------aa---------------------', weight: 1, align: LineText.ALIGN_CENTER, linefeed: 1));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'avadaca', weight: 1, align: LineText.ALIGN_LEFT, x: 0,relativeX: 0, linefeed: 0));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'abab', weight: 1, align: LineText.ALIGN_LEFT, x: 350, relativeX: 0, linefeed: 0));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'abababab', weight: 1, align: LineText.ALIGN_LEFT, x: 500, relativeX: 0, linefeed: 1));
+                          final document = await PdfDocument.openData(map["FILE"]);
 
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'ccC30', align: LineText.ALIGN_LEFT, x: 0,relativeX: 0, linefeed: 0));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: 'ab', align: LineText.ALIGN_LEFT, x: 350, relativeX: 0, linefeed: 0));
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: '12.0', align: LineText.ALIGN_LEFT, x: 500, relativeX: 0, linefeed: 1));
+                          final page = await document.getPage(1);
+                          final pdfPageImage =
+                          await page.render(width: page.width, height: page.height);
+                          imImage = im.decodeImage(pdfPageImage!.bytes); // First issue in this line
+                          await page.close();
+                          var aa = pdfPageImage.bytes;
+                          String base64Image = base64Encode(aa!);
 
-
-
-
-                          list.add(LineText(type: LineText.TYPE_TEXT, content: '**********************************************', weight: 1, align: LineText.ALIGN_CENTER,linefeed: 1));
-                          list.add(LineText(linefeed: 1));
-
-                          ByteData data = await rootBundle.load("assets/app/Vector.png");
-                          List<int> imageBytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-                          String base64Image = base64Encode(imageBytes);
-                          // list.add(LineText(type: LineText.TYPE_IMAGE, content: base64Image, align: LineText.ALIGN_CENTER, linefeed: 1));
-
-                          await bluetoothPrint.printReceipt(config, list);
-                        }:null,
-                        child: const Text('print receipt(esc)'),
-                      ),
-                      OutlinedButton(
-                        onPressed:  _connected?() async {
                           Map<String, dynamic> config = Map();
                           config['width'] = 40;
                           config['height'] = 70;
                           config['gap'] = 2;
 
-                          // x、y坐标位置，单位dpi，1mm=8dpi
-                          List<LineText> list = [];
-                          list.add(LineText(type: LineText.TYPE_TEXT, x:10, y:10, content: 'A Title'));
-                          list.add(LineText(type: LineText.TYPE_TEXT, x:10, y:40, content: 'this is content'));
-                          list.add(LineText(type: LineText.TYPE_QRCODE, x:10, y:70, content: 'qrcode i\n'));
-                          list.add(LineText(type: LineText.TYPE_BARCODE, x:10, y:190, content: 'qrcode i\n'));
+                    //      String base64Image = base64Encode(imageBytes);
 
-                          List<LineText> list1 = [];
-                          ByteData data = await rootBundle.load("assets/app/Vector.png");
-                          List<int> imageBytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-                          String base64Image = base64Encode(imageBytes);
+                         List<LineText> list1 = [];
+                        /*  var a = pageImage?.bytes;
+                          List<int>? imageBytes = a?.sublist(0, kMaxBytes).toList();
+
+                          String base64Image = base64Encode(imageBytes!);*/
                           list1.add(LineText(type: LineText.TYPE_IMAGE, x:10, y:10, content: base64Image,));
 
-                          await bluetoothPrint.printLabel(config, list);
                           await bluetoothPrint.printLabel(config, list1);
-                        }:null,
-                        child: const Text('print label(tsc)'),
+                         // await bluetoothPrint.printLabel(config, list1);
+                        },
+                        child: const Text('프린트 하기'),
                       ),
-                      OutlinedButton(
-                        onPressed:  _connected?() async {
-                          await bluetoothPrint.printTest();
-                        }:null,
-                        child: const Text('print selftest'),
-                      )
                     ],
                   ),
                 )
@@ -248,25 +221,26 @@ class _BluetoothPrinterState extends State<BluetoothPrinter> {
                 child: const Icon(Icons.stop),
               );
             } else {
-              return Obx(() => FloatingActionButton(
-                  child: controller.isScaning.value ? const Icon(Icons.stop) : const Icon(Icons.search),
+              return  FloatingActionButton(
+                  child:/* controller.isScaning.value ? const Icon(Icons.stop) : */const Icon(Icons.search),
                   onPressed: () {
-                    if(controller.isScaning.value) {
+                    /*if(controller.isScaning.value) {
                       controller.isScaning.value = false;
                     }else {
                       controller.isScaning.value = true;
-                    }
+                    }*/
                     bluetoothPrint.startScan(timeout: const Duration(seconds: 4));
-                    Future.delayed(const Duration(seconds: 4), () {
+                    /*Future.delayed(const Duration(seconds: 4), () {
                       controller.isScaning.value = false;
-                    });
+                    });*/
 
                   }
-              ));
+              );
             }
           },
         ),
       ),
     );
   }
+
 }

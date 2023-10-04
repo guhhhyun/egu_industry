@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 class InventoryCountingController extends GetxController {
   var textController = TextEditingController();
 
+  RxInt focusCnt = 0.obs;
   RxString barcodeScanResult = '바코드를 스캔해주세요'.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue =  DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
@@ -39,7 +40,7 @@ class InventoryCountingController extends GetxController {
     locationList.clear();
     selectedSaveLocationMap.clear();
     selectedCheckLocationMap.clear();
-    var location = await HomeApi.to.BIZ_DATA('L_BSS031').then((value) =>
+    var location = await HomeApi.to.BIZ_DATA('L_BSS035').then((value) =>
     {
       selectedCheckLocationMap['DETAIL_CD'] =  value['DATAS'][1]['DETAIL_CD'],
       selectedCheckLocationMap['DETAIL_NM'] =  value['DATAS'][1]['DETAIL_NM'],

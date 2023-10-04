@@ -15,6 +15,8 @@ import 'package:egu_industry/app/pages/main/main_binding.dart';
 import 'package:egu_industry/app/pages/main/main_page.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_binding.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_page.dart';
+import 'package:egu_industry/app/pages/noticePage/notice_binding.dart';
+import 'package:egu_industry/app/pages/noticePage/notice_page.dart';
 import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_binding.dart';
 import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_page.dart';
 import 'package:egu_industry/app/pages/processCheck/process_check_binding.dart';
@@ -25,6 +27,7 @@ import 'package:egu_industry/app/pages/productLocation/product_location_binding.
 import 'package:egu_industry/app/pages/productLocation/product_location_page.dart';
 import 'package:egu_industry/app/pages/scrapLabel/scrap_label_binding.dart';
 import 'package:egu_industry/app/pages/scrapLabel/scrap_label_page.dart';
+import 'package:egu_industry/app/print/bluetooth_printer.dart';
 
 import 'package:get/get.dart';
 
@@ -47,7 +50,8 @@ abstract class Routes {
   static const SCRAP_LABEL= _PathName.SCRAP_LABEL;
   static const LOGIN_PAGE= _PathName.LOGIN_PAGE;
   static const ALARM= _PathName.ALARM;
-
+  static const BLUETOOTH_PRINTER = _PathName.BLUETOOTH_PRINTER;
+  static const NOTICE = _PathName.NOTICE;
 }
 
 abstract class _PathName {
@@ -66,6 +70,8 @@ abstract class _PathName {
   static const String PACKAGING_INSPEC = '/packaging_inspec'; // 제품포장 검수 페이지
   static const String SCRAP_LABEL = '/scrap_label'; // 스크랩 라벨발행 페이지
   static const String ALARM = '/alarm'; // 알림 페이지
+  static const String BLUETOOTH_PRINTER = '/bluetooth_printer'; // 프린트
+  static const String NOTICE = '/notice'; // 프린트
 }
 
 class AppRoute {
@@ -100,6 +106,10 @@ class AppRoute {
         name: _PathName.LOGIN_PAGE, page: () => LoginPage(), binding: LoginBinding()),
     GetPage(
         name: _PathName.ALARM, page: () => AlarmPage(), binding: AlarmBinding()),
+    GetPage(
+        name: _PathName.BLUETOOTH_PRINTER, page: () => BluetoothPrinter(), binding: ScrapLabelBinding()),
+    GetPage(
+        name: _PathName.NOTICE, page: () => NoticePage(), binding: NoticeBinding()),
 
 
   ];

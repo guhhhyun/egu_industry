@@ -6,10 +6,7 @@ import 'package:egu_industry/app/pages/processCheck/process_check_controller.dar
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 
 class ProcessCheckPage extends StatelessWidget {
@@ -25,15 +22,14 @@ class ProcessCheckPage extends StatelessWidget {
         child: Stack(
           children: [
             CustomScrollView(
-              slivers: [
-                CommonAppbarWidget(title: '공정 조회', isLogo: false, isFirstPage: true,),
-                _bodyArea(context),
-                Obx(() => controller.processList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-                _topTitle(context),),
-                _listArea2(),
-                SliverToBoxAdapter(child: SizedBox(height: 100,))
-                //   _listArea()
-              ],
+                slivers: [
+                  CommonAppbarWidget(title: '공정 조회', isLogo: false, isFirstPage: true,),
+                  _bodyArea(context),
+                  _topTitle(context),
+                  _listArea2(),
+                  SliverToBoxAdapter(child: SizedBox(height: 100,))
+                  //   _listArea()
+                ],
             ),
             Obx(() => CommonLoading(bLoading: controller.isLoading.value)),
           ],
@@ -42,6 +38,16 @@ class ProcessCheckPage extends StatelessWidget {
       //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
   }
+ /* Widget _list(BuildContext context) {
+    return  SliverToBoxAdapter(
+      child: Column(
+                    children: [
+                      _topTitle(context),
+                      _listArea3(context),
+                    ],
+                  ),
+    );
+  }*/
 
   Widget _bodyArea(BuildContext context) {
     return SliverToBoxAdapter(
@@ -323,12 +329,175 @@ class ProcessCheckPage extends StatelessWidget {
   Widget _topTitle(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        margin: EdgeInsets.only(left: 4, right: 4),
-        padding: EdgeInsets.only(left: 18, right: 18),
+        width: MediaQuery.of(context).size.width,
+            margin: EdgeInsets.only(left: 4, right: 4),
+            padding: EdgeInsets.only(left: 18, right: 18),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Container(
+                     width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+                              left:
+                              BorderSide(color: AppTheme.ae2e2e2),
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('구분',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      )
+                  ),
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text(
+                          '전일',
+                          style: AppTheme.a16700
+                              .copyWith(color: AppTheme.light_text_primary),
+                        ),
+                      ),
+                  ),
+
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('금일',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+                  ),
+
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('등록시간',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+                  ),
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('거래처',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+
+                  ),
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('슬라브',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+
+                  ),
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('제품명',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+
+                  ),
+
+                  Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.blue_blue_300,
+                          border: Border(
+
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 35,
+                      child: Center(
+                        child: Text('작업자',
+                            style: AppTheme.a16700
+                                .copyWith(color: AppTheme.light_text_primary),
+                            textAlign: TextAlign.left),
+                      ),
+                  ),
+
+                ],
+
+        ),
+            ),
+      ),
+    );
+  }
+
+ /* Widget _topTitle(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(left: 4, right: 4),
+      padding: EdgeInsets.only(left: 18, right: 18),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: Row(
           children: [
             Expanded(
               child: Container(
+
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
@@ -346,7 +515,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
+
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -365,7 +534,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
+
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -384,7 +553,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
+
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -455,7 +624,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
+
             Expanded(
               child: Container(
                 decoration: const BoxDecoration(
@@ -476,10 +645,12 @@ class ProcessCheckPage extends StatelessWidget {
             ),
 
           ],
+
         ),
       ),
     );
-  }
+  }*/
+
 
   Widget _listArea2() {
     return Obx(() => SliverList(
@@ -487,7 +658,166 @@ class ProcessCheckPage extends StatelessWidget {
           return _listItem2(index: index, context: context);
         }, childCount: controller.processList.length)));
   }
+
+
   Widget _listItem2({required BuildContext context,required int index}) {
+
+    return Obx(() => Container(
+      margin: EdgeInsets.only(left: 4, right: 4),
+      padding: EdgeInsets.only(left: 18, right: 18),
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+          decoration: BoxDecoration(
+              color: AppTheme.white,
+            ),
+          child: Row(
+              children: [
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+                            left:
+                            BorderSide(color: AppTheme.ae2e2e2),
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['CRP_NAME'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                        child: Text(
+                          controller.processList[index]['PRE_DT'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
+                    ),
+
+                ),
+
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['CUR_DT'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['IST_DT'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['CST_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['SLB_NO'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['CMH_NM'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+                Container(
+                  width: 60,
+                    decoration: const BoxDecoration(
+                        color: AppTheme.white,
+                        border: Border(
+                            top: BorderSide(color: AppTheme.ae2e2e2),
+                            right: BorderSide(
+                                color: AppTheme.ae2e2e2))),
+                    height: 50,
+                    child: Center(
+                      child: Text(controller.processList[index]['WRK_NM1'].toString(),
+                        style: AppTheme.a12500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ),
+
+                ),
+              ],
+            ),
+
+      ),
+    ));
+  }
+
+/*  Widget _listItem2({required BuildContext context,required int index}) {
 
     return Obx(() => Container(
       margin: EdgeInsets.only(left: 4, right: 4),
@@ -495,8 +825,8 @@ class ProcessCheckPage extends StatelessWidget {
       child: InkWell(
         child: Container(
           decoration: BoxDecoration(
-              color: AppTheme.white,
-            ),
+            color: AppTheme.white,
+          ),
           child: Row(
             children: [
               Expanded(
@@ -517,7 +847,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                 ),
               ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
+
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -535,7 +865,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                 ),
               ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
+
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -553,7 +883,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                 ),
               ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
+
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -643,5 +973,5 @@ class ProcessCheckPage extends StatelessWidget {
         ),
       ),
     ));
-  }
+  }*/
 }

@@ -188,107 +188,100 @@ class ProcessTransferPage extends StatelessWidget {
                     ),
                 ),
                 const SizedBox(width: 16,),
+                Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: AppTheme.ae2e2e2
+                      )),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  child: DropdownButton<String>(
+                      borderRadius: BorderRadius.circular(10),
+                      isExpanded: true,
+                      underline: Container(
+                        height: 1,
+                        color: Colors.white,
+                      ),
+                      icon: SvgPicture.asset(
+                        'assets/app/arrowBottom.svg',
+                        color: AppTheme.light_placeholder,
+                      ),
+                      dropdownColor: AppTheme.light_ui_01,
+                      value: controller.selectedMovYn.value,
+                      //  flag == 3 ? controller.selectedNoReason.value :
+                      items: controller.movYnList.map((value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: AppTheme.a16500
+                                .copyWith(color: AppTheme.a6c6c6c),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        controller.selectedMovYn.value = value!;
+                        value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
+                        Get.log('$value 선택!!!!');
+                        // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                      }),
+                ),
+                const SizedBox(width: 16,),
+                Container(
+                  height: 50,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: AppTheme.ae2e2e2
+                      )),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  child: DropdownButton(
+                      borderRadius: BorderRadius.circular(10),
+                      isExpanded: true,
+                      underline: Container(
+                        height: 1,
+                        color: Colors.white,
+                      ),
+                      icon: SvgPicture.asset(
+                        'assets/app/arrowBottom.svg',
+                        color: AppTheme.light_placeholder,
+                      ),
+                      dropdownColor: AppTheme.light_ui_01,
+                      value: controller.selectedMachMap['MACH_NAME'],
+                      //  flag == 3 ? controller.selectedNoReason.value :
+                      items: controller.machList.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value['MACH_NAME'],
+                          child: Text(
+                            value['MACH_NAME'],
+                            style: AppTheme.a16500
+                                .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        controller.machList.map((e) {
+                          if(e['MACH_NAME'] == value) {
+                            controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                            controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                          }
+                          //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                        }).toList();
+
+                        Get.log('$value 선택!!!!');
+                        // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                      }),
+                ),
+                const SizedBox(width: 16,),
                 _checkButton(),
               ],
             ),
           ),
         ),
-        SizedBox(height: 12,),
-        Container(
-          width: MediaQuery.of(context).size.width - 30,
-          child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            Container(
-              height: 50,
-              width: 150,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: AppTheme.ae2e2e2
-                  )),
-              padding: const EdgeInsets.only(left: 12, right: 12),
-              child: DropdownButton<String>(
-                  borderRadius: BorderRadius.circular(10),
-                  isExpanded: true,
-                  underline: Container(
-                    height: 1,
-                    color: Colors.white,
-                  ),
-                  icon: SvgPicture.asset(
-                    'assets/app/arrowBottom.svg',
-                    color: AppTheme.light_placeholder,
-                  ),
-                  dropdownColor: AppTheme.light_ui_01,
-                  value: controller.selectedMovYn.value,
-                  //  flag == 3 ? controller.selectedNoReason.value :
-                  items: controller.movYnList.map((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: AppTheme.a16500
-                            .copyWith(color: AppTheme.a6c6c6c),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    controller.selectedMovYn.value = value!;
-                    value == '처리' ? controller.selectedMovYnCd.value = 'Y' : value == '미처리' ? controller.selectedMovYnCd.value = 'N' : controller.selectedMovYnCd.value = '';
-                    Get.log('$value 선택!!!!');
-                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                  }),
-            ),
-            const SizedBox(width: 16,),
-            Container(
-              height: 50,
-              width: 150,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: AppTheme.ae2e2e2
-                  )),
-              padding: const EdgeInsets.only(left: 12, right: 12),
-              child: DropdownButton(
-                  borderRadius: BorderRadius.circular(10),
-                  isExpanded: true,
-                  underline: Container(
-                    height: 1,
-                    color: Colors.white,
-                  ),
-                  icon: SvgPicture.asset(
-                    'assets/app/arrowBottom.svg',
-                    color: AppTheme.light_placeholder,
-                  ),
-                  dropdownColor: AppTheme.light_ui_01,
-                  value: controller.selectedMachMap['MACH_NAME'],
-                  //  flag == 3 ? controller.selectedNoReason.value :
-                  items: controller.machList.map((value) {
-                    return DropdownMenuItem<String>(
-                      value: value['MACH_NAME'],
-                      child: Text(
-                        value['MACH_NAME'],
-                        style: AppTheme.a16500
-                            .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    controller.machList.map((e) {
-                      if(e['MACH_NAME'] == value) {
-                        controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
-                        controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
-                      }
-                      //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
-                    }).toList();
 
-                    Get.log('$value 선택!!!!');
-                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                  }),
-            ),
-          ],
-        )))
       ],
     );
   }
@@ -778,52 +771,55 @@ class ProcessTransferPage extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           left:
                           BorderSide(color: AppTheme.ae2e2e2),
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text('${index + 1}',
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(
                         controller.processList[index]['URGENCY_FG'] == 'U' ? '긴급' : '보통', /// 긴급 or 보통 으로
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
                   ),
                 ),
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
 
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FROM_DATE'],
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -831,16 +827,17 @@ class ProcessTransferPage extends StatelessWidget {
               MediaQuery.of(context).size.width <= 450 ? Container() :
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['CMP_NM'].toString(),
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -848,17 +845,18 @@ class ProcessTransferPage extends StatelessWidget {
 
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
 
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FROM_MACH_NM'].toString(),
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -866,17 +864,18 @@ class ProcessTransferPage extends StatelessWidget {
               MediaQuery.of(context).size.width <= 450 ? Container() :
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
 
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['TO_MACH_NM'].toString(),
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -884,16 +883,17 @@ class ProcessTransferPage extends StatelessWidget {
               MediaQuery.of(context).size.width <= 450 ? Container() :
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['FKF_NM'].toString(),
-                        style: AppTheme.a12500
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -901,29 +901,34 @@ class ProcessTransferPage extends StatelessWidget {
               MediaQuery.of(context).size.width <= 450 ? Container() :
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
 
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                        bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent),)),
+
                   height: 50,
                   child: Center(
                     child: Text(controller.processList[index]['TO_DATE'].toString(),
-                        style: AppTheme.titleSubhead1
+                        style: AppTheme.a14500
                             .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
                   ),
                 ),
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent),
+
+                      )),
                   height: 50,
                   child: Center(
                     child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.red_red_800,)
@@ -958,10 +963,10 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 34,
+                height: 50,
                 child: Center(
                   child: Text('번호',
-                      style: AppTheme.titleSubhead1
+                      style: AppTheme.a14700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
@@ -975,11 +980,11 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 34,
+                height: 50,
                 child: Center(
                   child: Text(
                     '이동구분',
-                    style: AppTheme.titleSubhead1
+                    style: AppTheme.a14700
                         .copyWith(color: AppTheme.light_text_primary),
                   ),
                 ),
@@ -994,10 +999,10 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 34,
+                height: 50,
                 child: Center(
                   child: Text('요청일시',
-                      style: AppTheme.titleSubhead1
+                      style: AppTheme.a14700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
@@ -1013,10 +1018,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 34,
+                    height: 50,
                     child: Center(
                       child: Text('제품명',
-                          style: AppTheme.titleSubhead1
+                          style: AppTheme.a14700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1030,10 +1035,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 34,
+                    height: 50,
                     child: Center(
                       child: Text('작업위치',
-                          style: AppTheme.titleSubhead1
+                          style: AppTheme.a14700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1049,10 +1054,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 34,
+                    height: 50,
                     child: Center(
                       child: Text('이동위치',
-                          style: AppTheme.titleSubhead1
+                          style: AppTheme.a14700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1067,10 +1072,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 34,
+                    height: 50,
                     child: Center(
                       child: Text('지게차호기',
-                          style: AppTheme.titleSubhead1
+                          style: AppTheme.a14700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1086,10 +1091,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 34,
+                    height: 50,
                     child: Center(
                       child: Text('처리일시',
-                          style: AppTheme.titleSubhead1
+                          style: AppTheme.a14700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1105,10 +1110,10 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 34,
+                height: 50,
                 child: Center(
                   child: Text('작업선택',
-                      style: AppTheme.titleSubhead1
+                      style: AppTheme.a14700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),

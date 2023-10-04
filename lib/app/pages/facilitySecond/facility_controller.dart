@@ -40,6 +40,7 @@ class FacilityController extends GetxController {
   RxList<String> engineerList = [''].obs;
   RxList<String> engineerIdList = [''].obs;
   RxString selectedEnginner = '정비자를 선택해주세요'.obs;
+  RxString selectedEnginnerCd = ''.obs;
   RxInt selectedEnginnerIndex = 0.obs;
   RxList<String> irfgList = [''].obs;
   RxString selectedIrFq = '선택해주세요'.obs;
@@ -65,7 +66,7 @@ class FacilityController extends GetxController {
   RxString selectedReadEngineTeam = '전기팀'.obs;
   RxString engineTeamReadCd = ''.obs;
   RxList<bool> isEngineerSelectedList = [false].obs;
-  RxList<String> engineerSelectedList = [''].obs;
+  RxList<dynamic> engineerSelectedList = [].obs;
   RxList partList = [].obs; // 부품리스트
   RxList<bool> isPartSelectedList = [false].obs;
   RxList partSelectedList = [].obs;
@@ -79,6 +80,7 @@ class FacilityController extends GetxController {
   RxMap<String, String> selectedMachMap = {'MACH_CODE':'', 'MACH_NAME': ''}.obs;
   RxList<String> machCdList = [''].obs;
   RxString selectedMachCd = ''.obs;
+  RxList<dynamic> engineer2List = [].obs;
 
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
@@ -86,10 +88,10 @@ class FacilityController extends GetxController {
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
 
 
-  /// 정비자랑 부품쪽 여쭤봐야함
+  /// 정비자랑
   Future<void> saveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
-      , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':rpUser.value,
+      , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':selectedEnginnerCd.value,
       '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
       '@p_RP_DEPT':'9999', '@p_USER':'admin',});
@@ -145,6 +147,7 @@ class FacilityController extends GetxController {
   Future<void> irfgConvert() async{
     irfgList.clear();
     noReasonList.clear();
+    engineer2List.clear();
     engineerList.clear();
     machList.clear();
     engineerSelectedList.clear();
@@ -159,10 +162,12 @@ class FacilityController extends GetxController {
     var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
     {
       for(var i = 0; i < value['DATAS'].length; i++) {
+
         engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
         engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
         isEngineerSelectedList.add(false)
-      }
+      },
+      engineer2List.value = value['DATAS'],
     });
     /// 설비
     var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>

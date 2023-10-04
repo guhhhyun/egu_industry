@@ -5,6 +5,7 @@ import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 
 class PackagingInspecController extends GetxController {
@@ -17,8 +18,10 @@ class PackagingInspecController extends GetxController {
   RxString barcodeScanResult = ''.obs;
   RxDouble realWeight = 0.0.obs;
   RxDouble totalWeight = 0.0.obs;
+  RxDouble jigwan = 0.0.obs;
   RxList<bool> isProductSelectedList = [false].obs;
   RxList productSelectedList = [].obs;
+  RxInt focusCnt = 0.obs;
 
   Future<void> saveButton() async {
     for(var i = 0; i < productSelectedList.length; i++) {
@@ -64,6 +67,10 @@ class PackagingInspecController extends GetxController {
         productSelectedList.add(productDetailRealList[i]),
         realWeight.value = realWeight.value + productDetailRealList[i]['REAL_WEIGHT'],
         totalWeight.value = totalWeight.value + productDetailRealList[i]['ALL_WEIGHT'],
+        if(productDetailRealList[i]['JIGWAN'] == null) {
+          productDetailRealList[i]['JIGWAN'] = 0
+        },
+        jigwan.value = jigwan.value + double.parse(productDetailRealList[i]['JIGWAN'].toString()),
         isProductSelectedList.add(true),
       }
     });

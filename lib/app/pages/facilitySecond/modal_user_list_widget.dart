@@ -77,13 +77,23 @@ class ModalUserListWidget extends StatelessWidget {
 
     return Obx(() => TextButton(
       onPressed: () {
+        controller.selectedEnginner.value = '';
+        controller.selectedEnginnerCd.value = '';
         controller.isEngineerSelectedList[index] == false ? controller.isEngineerSelectedList[index] = true
             : controller.isEngineerSelectedList[index] = false;
         controller.isEngineerSelectedList[index] == true
-            ? controller.engineerSelectedList.add(controller.engineerList[index])
-            : controller.engineerSelectedList.remove(controller.engineerList[index]);
+            ? controller.engineerSelectedList.add(controller.engineer2List[index])
+            : controller.engineerSelectedList.remove(controller.engineer2List[index]);
 
-          controller.selectedEnginner.value = controller.engineerSelectedList.toString();
+        for(var i = 0; i < controller.engineerSelectedList.length; i++ ) {
+          controller.selectedEnginner.value == '' ?  controller.selectedEnginner.value = controller.engineerSelectedList[i]['USER_NAME'] :
+          controller.selectedEnginner.value = '${controller.selectedEnginner.value}' + ', ${controller.engineerSelectedList[i]['USER_NAME']}';
+
+          controller.selectedEnginnerCd.value == '' ? controller.selectedEnginnerCd.value = controller.engineerSelectedList[i]['USER_ID'].toString() :
+          controller.selectedEnginnerCd.value = '${controller.selectedEnginnerCd.value}' + ',${controller.engineerSelectedList[i]['USER_ID'].toString()}';
+
+        }
+        Get.log('정비자 코드 ::: ${controller.selectedEnginnerCd.value}');
 
 
       },

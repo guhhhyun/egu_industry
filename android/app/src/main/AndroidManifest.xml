@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
-        android:label="이구산업\nMES모바일"
+        android:label="MES"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

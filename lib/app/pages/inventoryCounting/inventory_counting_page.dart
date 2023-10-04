@@ -6,6 +6,7 @@ import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_cont
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,6 +19,13 @@ class InventoryCountingPage extends StatelessWidget {
   InventoryCountingPage({super.key});
 
   InventoryCountingController controller = Get.find();
+  final focusNode2 = FocusNode();
+  final focusNode = FocusNode(onKey: (node, event) {
+    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+      return KeyEventResult.handled; // prevent passing the event into the TextField
+    }
+    return KeyEventResult.ignored; // pass the event to the TextField
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +35,7 @@ class InventoryCountingPage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             CommonAppbarWidget(title: '재고실사', isLogo: false, isFirstPage: true ),
-            _topArea(),
+            _topArea(context),
             _listArea()
 
           ],
@@ -37,7 +45,7 @@ class InventoryCountingPage extends StatelessWidget {
     );
   }
 
-  Widget _topArea() {
+  Widget _topArea(BuildContext context) {
     return SliverToBoxAdapter(
       child: Obx(() => Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 4),
@@ -52,7 +60,7 @@ class InventoryCountingPage extends StatelessWidget {
                   SizedBox(height: 20,),
                   _checkButton(),
                   SizedBox(height: 20,),
-                  _barcodeField()
+                  _barcodeField(context)
                 ],
               ),
 
@@ -218,7 +226,7 @@ class InventoryCountingPage extends StatelessWidget {
                 color: AppTheme.ae2e2e2
             )),
         padding: const EdgeInsets.only(left: 12, right: 12),
-        child:  controller.selectedCheckLocationMap['DETAIL_NM'] == '반제품' ? DropdownButton(
+        child:  controller.selectedCheckLocationMap['DETAIL_NM'] == '재공' ? DropdownButton(
             borderRadius: BorderRadius.circular(10),
             isExpanded: true,
             underline: Container(
@@ -282,7 +290,8 @@ class InventoryCountingPage extends StatelessWidget {
                   if(controller.productList[i]['CST_NM'] == null) {
                     controller.productList.remove(controller.productList[i])
                   }
-                }
+                },
+                controller.productList.value = controller.productList.reversed.toList()
               }
             }); /// 구분도 여쭤봐야함
             Get.log('조회 결과~~~~~ $a');
@@ -300,7 +309,7 @@ class InventoryCountingPage extends StatelessWidget {
     );
   }
 
-  Widget _topAreaTest() {
+  Widget _topAreaTest(BuildContext context) {
     return Container(
       child: Row(
         children: [
@@ -314,13 +323,21 @@ class InventoryCountingPage extends StatelessWidget {
                       border: Border.all(color: AppTheme.ae2e2e2),
                       borderRadius: BorderRadius.circular(10)
                   ),
-                  child: TextFormField(
-                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-                    controller: controller.textController,
-                    textAlignVertical: TextAlignVertical.center,
-                    textInputAction: TextInputAction.search,
-                    onFieldSubmitted: (value) async{
-                      controller.saveButton();
+                  child: /*RawKeyboardListener(
+                    focusNode: focusNode,
+                    onKey: (event) async{
+                      FocusScope.of(context).autofocus(focusNode);
+                     *//* var an = event.data.toString();
+                      String eventText2 = an;
+                      String eventText = event.character ?? '';*//*
+                     *//* if (eventText2.isNotEmpty  || eventText2 == '-') {
+                        controller.textController.text += eventText2.trim();
+                        *//*if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+                          controller.saveButton();
+                          controller.textController.text = '';
+                          FocusScope.of(context).autofocus(focusNode);
+                        }
+                     // }
                       var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
                         , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
                             : DateFormat('yyyy-MM-dd').format(DateTime.now())
@@ -332,18 +349,56 @@ class InventoryCountingPage extends StatelessWidget {
                             if(controller.productList[i]['CST_NM'].toString() == null) {
                               controller.productList.remove(controller.productList[i])
                             }
-                          }
+                          },
+                          controller.productList.value = controller.productList.reversed.toList()
                         }
                       });
-                      SchedulerBinding.instance!.addPostFrameCallback((_) {
-                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                    },
+                    child: */TextFormField(
+                      focusNode: focusNode2,
+                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                    controller: controller.textController,
+                    textAlignVertical: TextAlignVertical.center,
+                    textInputAction: TextInputAction.go,
+                    onTap: () {
+                      if(controller.focusCnt.value++ > 1) controller.focusCnt.value = 0;
+                      else Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                    },
+                    onTapOutside:(event) => { controller.focusCnt.value = 0 },
+                    onFieldSubmitted: (value) async{
+                      controller.saveButton();
+                      controller.textController.text = '';
+                      var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
+                        , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
+                            : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                        , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
+                      {
+                        if(value['DATAS'] != null) {
+                          controller.productList.value = value['DATAS'],
+                          for(var i = 0; i < controller.productList.length; i++) {
+                            if(controller.productList[i]['CST_NM'].toString() == null) {
+                              controller.productList.remove(controller.productList[i])
+                            }
+                          },
+                          controller.productList.value = controller.productList.reversed.toList()
+                        }
                       });
+                      Future.delayed(const Duration(), (){
+                        focusNode2.requestFocus();
+                        //  FocusScope.of(context).requestFocus(focusNode);
+                        Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                      });
+                    /*  SchedulerBinding.instance!.addPostFrameCallback((_) {
+                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                      });*/
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       suffixIcon: InkWell(
                           onTap: () async {
                             controller.saveButton();
+                            controller.textController.text = '';
+                            FocusScope.of(context).autofocus(focusNode);
                             var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
                               , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
                                   : DateFormat('yyyy-MM-dd').format(DateTime.now())
@@ -355,12 +410,18 @@ class InventoryCountingPage extends StatelessWidget {
                                   if(controller.productList[i]['CST_NM'].toString() == null) {
                                     controller.productList.remove(controller.productList[i])
                                   }
-                                }
+                                },
+                                controller.productList.value = controller.productList.reversed.toList()
                               }
                             });
-                            SchedulerBinding.instance!.addPostFrameCallback((_) {
-                              Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                            Future.delayed(const Duration(), (){
+                              focusNode2.requestFocus();
+                              //  FocusScope.of(context).requestFocus(focusNode);
+                              Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
                             });
+                           /* SchedulerBinding.instance!.addPostFrameCallback((_) {
+                              Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                            });*/
                           },
                           child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
                       ),
@@ -400,13 +461,16 @@ class InventoryCountingPage extends StatelessWidget {
                           if(controller.productList[i]['CST_NM'].toString() == null) {
                             controller.productList.remove(controller.productList[i])
                           }
-                        }
+                        },
+                        controller.productList.value = controller.productList.reversed.toList()
                       }
                     });
-                    SchedulerBinding.instance!.addPostFrameCallback((_) {
-                      Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
-                    });
                   }
+                  Future.delayed(const Duration(), (){
+                    focusNode2.requestFocus();
+                    //  FocusScope.of(context).requestFocus(focusNode);
+                    Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                  });
 
                 }else {
                  controller.textController.text = '바코드를 재스캔해주세요';
@@ -420,13 +484,13 @@ class InventoryCountingPage extends StatelessWidget {
   }
 
 
-  Widget _barcodeField() {
+  Widget _barcodeField(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           child: Center(
-            child: _topAreaTest()
+            child: _topAreaTest(context)
           ),
         ),
         SizedBox(height: 10,),

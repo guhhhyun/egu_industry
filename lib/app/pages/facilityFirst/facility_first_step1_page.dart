@@ -2,6 +2,7 @@ import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
+import 'package:egu_industry/app/pages/facilityFirst/facility_first_modify_page.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step2_page.dart';
 
 import 'package:flutter/material.dart';
@@ -729,146 +730,182 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
 
   Widget _listItem({required BuildContext context, required int index}) {
-    return Obx(() => Container(
-              margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
-              padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppTheme.aE2E2E2),
-                  color: controller.test[index] ? AppTheme.blue_blue_50 : AppTheme.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.gray_c_gray_100.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3), // changes position of shadow
-                  ),
-                ]
+    return  TextButton(
+      style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(5)))),
+          /*backgroundColor: MaterialStateProperty.all<Color>(
+                AppTheme.light_primary,
+              ),*/
+          padding:
+          MaterialStateProperty.all(const EdgeInsets.all(0))),
+      onPressed: () {
+        if(controller.test[index] == true) {
+          controller.test[index] = false;
+          controller.registButton.value = false;
+          controller.selectedContainer.clear();
+        }else {
+          for(var i = 0; i < controller.test.length; i++) {
+            controller.test[i] = false;
+          }
+          controller.selectedContainer.clear();
+          controller.test[index] = true;
+          if(controller.test[index] == true) {
+            controller.registButton.value = true;
+            controller.selectedContainer.add(controller.datasList[index]);
+          }
+          controller.modifyCheck();
+         // controller.modifyIrfqCdCv();
+
+          showDialog(
+              context: context,
+              builder: (BuildContext context)
+              {
+                return _modifyAlert();
+              }
+          );
+        }
+      },
+      child: Obx(() => Container(
+        margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
+        padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: controller.test[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
+            color: AppTheme.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.gray_c_gray_100.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      controller.datasList.isNotEmpty ?
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
-                                  AppTheme.aecf9f2
-                              ),
-                              child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
-                                  style: AppTheme.a12500
-                                      .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                                      ? AppTheme.af34f39 : AppTheme.a18b858)),
-                            ),
-                            const SizedBox(width: 4,),
-                            Container(
-                              padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color:  AppTheme.af4f4f4
-                              ),
-
-                              child: Text( controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비점검' : '안전점검',
-                                  style: AppTheme.a12500
-                                      .copyWith(color: AppTheme.a969696)),
-                            ),
-                            const SizedBox(width: 4,),
-                            controller.datasList[index]['RESULT_FG'].toString() == '' ? Container() :
-                            Container(
-                              padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color:  AppTheme.af4f4f4
-                              ),
-
-                              child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
-                                  : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
-                                   controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
-                                  style: AppTheme.a12500
-                                      .copyWith(color: AppTheme.a969696)),
-                            )
-                          ],
-                        )
-                       : Container(),
-                      controller.datasList.isNotEmpty ?
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(controller.datasList[index]['INS_FG'].toString() == 'S' ? '' : controller.datasList[index]['MACH_CODE'].toString() == '' ? '설비 외' : _test(index),
-                              style: AppTheme.a16700
-                                  .copyWith(color: AppTheme.black)),
-                        ],
-                      )
-                          : Container(),
-                        ],
-                      ),
-                  const SizedBox(height: 8,),
-
-                  /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
-                  controller.datasList.isNotEmpty ?
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-
-                      Text(controller.datasList[index]['IR_TITLE'].toString(),
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a6c6c6c)),
-                      const SizedBox(width: 4,),
-                      Text('|', style: AppTheme.a16400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                      const SizedBox(width: 4,),
-                      Text(controller.selectedReadEngineTeam.value,
-                          style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a6c6c6c)),
-                    ],
-                  ) : Container(),
-                  const SizedBox(height: 12,),
-                  controller.datasList.isNotEmpty ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(controller.datasList[index]['IR_USER'].toString(),
-                              style: AppTheme.a14400
-                                  .copyWith(color: AppTheme.a959595)),
-                          const SizedBox(width: 12,),
-                          Container(
-                              child: (() {
-                                var firstIndex = controller.datasList[index]['IR_DATE']
-                                    .toString().lastIndexOf(':');
-                                var lastIndex = controller.datasList[index]['IR_DATE']
-                                    .toString().length;
-                                return Text(
-                                    controller.datasList[index]['IR_DATE']
-                                        .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
-                                    style: AppTheme.a14400
-                                        .copyWith(color: AppTheme.a959595));
-                              })()
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
-                          const SizedBox(width: 4,),
-                          Text(
-                              '${_dateDifference(index)}h 경과',
-                              style: AppTheme.a14700
-                                  .copyWith(color: AppTheme.a969696)),
-                        ],
-                      )
-                    ],
-                  ) : Container(),
-                ],
-              ),
+            ]
         ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                controller.datasList.isNotEmpty ?
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
+                          AppTheme.aecf9f2
+                      ),
+                      child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                          style: AppTheme.a12500
+                              .copyWith(color: controller.selectedReadUrgency.value == '긴급'
+                              ? AppTheme.af34f39 : AppTheme.a18b858)),
+                    ),
+                    const SizedBox(width: 4,),
+                    Container(
+                      padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color:  AppTheme.af4f4f4
+                      ),
 
-     ); // 290 6
+                      child: Text( controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비점검' : '안전점검',
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.a969696)),
+                    ),
+                    const SizedBox(width: 4,),
+                    controller.datasList[index]['RESULT_FG'].toString() == '' ? Container() :
+                    Container(
+                      padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color:  AppTheme.af4f4f4
+                      ),
+
+                      child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
+                          : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
+                      controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.a969696)),
+                    )
+                  ],
+                )
+                    : Container(),
+                controller.datasList.isNotEmpty ?
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(controller.datasList[index]['INS_FG'].toString() == 'S' ? '' : controller.datasList[index]['MACH_CODE'].toString() == '' ? '설비 외' : _test(index),
+                        style: AppTheme.a16700
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                )
+                    : Container(),
+              ],
+            ),
+            const SizedBox(height: 8,),
+
+            /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
+            controller.datasList.isNotEmpty ?
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+
+                Text(controller.datasList[index]['IR_TITLE'].toString(),
+                    style: AppTheme.a16400
+                        .copyWith(color: AppTheme.a6c6c6c)),
+                const SizedBox(width: 4,),
+                Text('|', style: AppTheme.a16400
+                    .copyWith(color: AppTheme.a6c6c6c)),
+                const SizedBox(width: 4,),
+                Text(controller.selectedReadEngineTeam.value,
+                    style: AppTheme.a16400
+                        .copyWith(color: AppTheme.a6c6c6c)),
+              ],
+            ) : Container(),
+            const SizedBox(height: 12,),
+            controller.datasList.isNotEmpty ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(controller.datasList[index]['IR_USER'].toString(),
+                        style: AppTheme.a14400
+                            .copyWith(color: AppTheme.a959595)),
+                    const SizedBox(width: 12,),
+                    Container(
+                        child: (() {
+                          var firstIndex = controller.datasList[index]['IR_DATE']
+                              .toString().lastIndexOf(':');
+                          var lastIndex = controller.datasList[index]['IR_DATE']
+                              .toString().length;
+                          return Text(
+                              controller.datasList[index]['IR_DATE']
+                                  .toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, ''),
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a959595));
+                        })()
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
+                    const SizedBox(width: 4,),
+                    Text(
+                        '${_dateDifference(index)}h 경과',
+                        style: AppTheme.a14700
+                            .copyWith(color: AppTheme.a969696)),
+                  ],
+                )
+              ],
+            ) : Container(),
+          ],
+        ),
+      ),)
+     );
   }
   Widget _bottomButton(BuildContext context) {
     return BottomAppBar(
@@ -902,6 +939,95 @@ class FacilityFirstStep1Page extends StatelessWidget {
     );
   }
 
+  Widget _modifyAlert() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      scrollable: true,
+      content: Container(
+        padding: EdgeInsets.only(top: 12, bottom: 12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              '수정하시겠습니까?',
+              style: AppTheme.bodyBody2,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 10,
+            ),
+          ],
+        ),
+      ),
+      buttonPadding: const EdgeInsets.all(0),
+      insetPadding: const EdgeInsets.all(0),
+      titlePadding: const EdgeInsets.all(0),
+      contentPadding: const EdgeInsets.only(top: 16, bottom: 12),
+      actions: [
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(5)))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
+                // 성공
+                onPressed: () {
+                  Get.back();
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  color: AppTheme.light_cancel,
+                  child: Center(
+                      child: Text(
+                          '취소',
+                          style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
+                      )),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12,),
+            Expanded(
+              child: TextButton(
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(5)))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
+                // 성공
+                onPressed: () {
+                  modifyEngineTeam();
+                  controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
+                  var index = controller.modifyErrorTime.value.lastIndexOf(':');
+                  controller.modifyErrorTime.value = controller.modifyErrorTime.value.replaceFirst('T', ' ').replaceRange(index, controller.modifyErrorTime.value.length, '');
+                  controller.selectedContainer[0]['INS_FG'] == 'M' ? controller.modifySelectedIns.value = '설비점검' : controller.modifySelectedIns.value = '안전점검';
+                  controller.selectedContainer[0]['URGENCY_FG'] == 'N' ? controller.modifySelectedReadUrgency.value = '보통' : controller.modifySelectedReadUrgency.value = '긴급';
+                  controller.modifySelectedMachMap['MACH_CODE'] = controller.selectedContainer[0]['MACH_CODE'];
+                  controller.selectedContainer[0]['MACH_CODE'] == '' ? controller.modifySelectedMachMap['MACH_NAME'] = '전체' : controller.modifySelectedMachMap['MACH_NAME'] = modifyMach();
+                  controller.modifyTextTitleController.text = controller.selectedContainer[0]['IR_TITLE'];
+
+                  Get.to(const FacilityFirstModifyPage());
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(top: 16, bottom: 16),
+                  color: Colors.black,
+                  child: Center(
+                      child: Text(
+                          '확인',
+                          style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
+                      )),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   String _dateDifference(int index) {
     var start = controller.datasList[index]['IR_DATE'].toString().indexOf('.');
     var end = controller.datasList[index]['IR_DATE'].toString().length;
@@ -923,4 +1049,35 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
     return '';
   }
+
+  String modifyMach() {
+    for(var u = 0; u < controller.modifyMachList.length; u++) {
+      if(controller.modifyMachList[u]['MACH_CODE'].toString() == controller.selectedContainer[0]['MACH_CODE'].toString()) {
+        return controller.modifyMachList[u]['MACH_NAME'];
+      }
+    }
+
+    return '전체';
+  }
+
+  void modifyEngineTeam() {
+    switch(controller.selectedContainer[0]['INS_DEPT']) {
+      case "1110":
+        controller.modifySelectedReadEngineTeam.value = '생산팀';
+        break;
+      case "1160":
+        controller.modifySelectedReadEngineTeam.value = '공무팀';
+        break;
+      case "1170":
+        controller.modifySelectedReadEngineTeam.value = '전기팀';
+        break;
+      case "9999":
+        controller.modifySelectedReadEngineTeam.value = '기타';
+      default:
+        controller.modifySelectedReadEngineTeam.value = '';
+    }
+  }
+
+
+
 }

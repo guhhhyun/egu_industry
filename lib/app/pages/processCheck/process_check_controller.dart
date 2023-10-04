@@ -21,6 +21,7 @@ class ProcessCheckController extends GetxController {
           processList.value = value['DATAS'],
         }
       });
+      Get.log('${a}');
     }catch (err) {
       Get.log('USP_MBR0800_R01 err = ${err.toString()} ', isError: true);
     }finally {

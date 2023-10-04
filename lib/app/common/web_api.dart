@@ -79,3 +79,10 @@ Future<String> IP_GET() async {
     return "Failed to get IP";
   }
 }
+Future<Map> REPORT_PDF(String PrintType, Map? PARAMS) async {
+  String res = await EXEC("REPORT_PDF", PrintType, PARAMS) ?? "";
+  Map data = json.decode(res);
+  Map RESULT = data["RESULT"];
+  RESULT["FILE"] = base64Decode(RESULT["FILE"]);
+  return RESULT;
+}

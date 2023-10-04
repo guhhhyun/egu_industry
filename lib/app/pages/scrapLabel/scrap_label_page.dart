@@ -1,10 +1,12 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/scrapLabel/bottomSheet.dart';
 import 'package:egu_industry/app/pages/scrapLabel/scrap_label_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,7 +19,18 @@ class ScrapLabelPage extends StatelessWidget {
   ScrapLabelController controller = Get.find();
   final formKey = GlobalKey<FormState>();
   final ScrollController myScrollWorks = ScrollController();
-
+  final focusNode = FocusNode(onKey: (node, event) {
+    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+      return KeyEventResult.handled; // prevent passing the event into the TextField
+    }
+    return KeyEventResult.ignored; // pass the event to the TextField
+  });
+  final focusNode2 = FocusNode(onKey: (node, event) {
+    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+      return KeyEventResult.handled; // prevent passing the event into the TextField
+    }
+    return KeyEventResult.ignored; // pass the event to the TextField
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -263,14 +276,35 @@ class ScrapLabelPage extends StatelessWidget {
                         bottom: BorderSide(color: AppTheme.gray_gray_200),
                       ),
                     ),
-                    child: TextFormField(
+                    child: /*RawKeyboardListener(
+                      focusNode: focusNode,
+                      onKey: (event) async{
+                        if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+                          controller.selectedContainer.clear();
+                          var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE', '@p_SCALE_ID': controller.weighingInfoTextController.text}).then((value) =>
+                          {
+                            if(value['DATAS'] != null) {
+                              controller.measList.value = value['DATAS'],
+                              Get.log('계량정보 스캔결과:::::: ${controller.measList.value}')
+                            }
+                          });
+                          controller.textController.text = '';
+                        }
+                      },
+                      child: */TextFormField(
                       style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
                       // maxLines: 5,
                       controller: controller.weighingInfoTextController,
                       textAlignVertical: TextAlignVertical.center,
                       textInputAction: TextInputAction.search,
+                      onTap: () {
+                        if(controller.focusCnt.value++ > 1) controller.focusCnt.value = 0;
+                        else Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                      },
+                      onTapOutside:(event) => { controller.focusCnt.value = 0 },
                       onFieldSubmitted: (value) async {
                         Get.log('조회 돋보기 클릭!');
+                        controller.selectedContainer.clear();
                         var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE', '@p_SCALE_ID': controller.weighingInfoTextController.text}).then((value) =>
                         {
                           if(value['DATAS'] != null) {
@@ -307,39 +341,26 @@ class ScrapLabelPage extends StatelessWidget {
                       showCursor: true,
 
 
-                    ),
+                    ),)
                   ),
-                ),
               ),
             ),
             InkWell(
                 onTap: () async {
-                  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                      '#ff6666', '취소', false, ScanMode.BARCODE);
-                  controller.weighingInfoTextController.text = barcodeScanRes;
-                  if(controller.weighingInfoTextController.text != '-1') {
-                    var a = await HomeApi.to.PROC('USP_SCS0300_R01', {
-                      '@p_WORK_TYPE': 'Q_SCALE',
-                      '@p_SCALE_ID': controller.weighingInfoTextController
-                          .text
-                    }).then((value) =>
-                    {
-                      if(value['DATAS'] != null) {
-                        controller.measList.value = value['DATAS'],
-                        Get.log(
-                            '계량정보 스캔결과:::::: ${controller.measList.value}')
-                      }
-                    });
-                    Get.log('계량정보 스캔결과:::::: $a');
-                  }else {
-                    controller.weighingInfoTextController.text = '바코드를 재스캔해주세요';
-                  }
+                  Get.bottomSheet(
+                      backgroundColor: AppTheme.white,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(25.0), topLeft: Radius.circular(25.0))),
+                      BottomSheetModal()
+                  );
                 },
-                child: const Icon(Icons.camera_alt_outlined, size: 30,)
+                child: const Icon(Icons.list_alt_outlined,size: 35, color: AppTheme.a6c6c6c,)
             )
           ],
         ),
-        controller.measList.isNotEmpty ?
+        controller.measList.isNotEmpty || controller.selectedContainer.isNotEmpty ?
         Column(
           children: [
             const SizedBox(height: 12,),
@@ -360,7 +381,7 @@ class ScrapLabelPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('차량번호', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text('${controller.measList[0]['CAR_NO']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                              Text(controller.selectedContainer.isNotEmpty ? '${controller.selectedContainer[0]['CAR_NO']}' : '${controller.measList[0]['CAR_NO']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
                             ],
                           ),
                           const SizedBox(height: 4,),
@@ -368,7 +389,7 @@ class ScrapLabelPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('거래처명', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text(' ${controller.measList[0]['CUST_NM']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                              Text(controller.selectedContainer.isNotEmpty ? '${controller.selectedContainer[0]['NAME']}' :'${controller.measList[0]['CUST_NM']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
                             ],
                           ),
                           const SizedBox(height: 4,),
@@ -376,7 +397,7 @@ class ScrapLabelPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('거래처 ID', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text('${controller.measList[0]['CST_ID']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                              Text(controller.selectedContainer.isNotEmpty ? '${controller.selectedContainer[0]['CST_ID']}' :'${controller.measList[0]['CST_ID']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
                             ],
                           ),
 
@@ -608,12 +629,30 @@ class ScrapLabelPage extends StatelessWidget {
                         bottom: BorderSide(color: AppTheme.gray_gray_200),
                       ),
                     ),
-                    child: TextFormField(
+                    child:/* RawKeyboardListener(
+                      focusNode: focusNode2,
+                      onKey: (event) async{
+                        if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+                          var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_OUTS_NO', '@p_SCRAP_NO':  controller.otherScrapTextController.text}).then((value) =>
+                          {
+                            if(value['DATAS'] != null) {
+                              controller.outScrapList.value = value['DATAS']
+                            }
+                          });
+                          controller.textController.text = '';
+                        }
+                      },
+                      child: */TextFormField(
                       style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
                       // maxLines: 5,
                       controller: controller.otherScrapTextController,
                       textAlignVertical: TextAlignVertical.center,
                       textInputAction: TextInputAction.search,
+                      onTap: () {
+                        if(controller.focusCnt.value++ > 1) controller.focusCnt.value = 0;
+                        else Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                      },
+                      onTapOutside:(event) => { controller.focusCnt.value = 0 },
                       onFieldSubmitted: (value) async{
                         Get.log('조회 돋보기 클릭!');
                         var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_OUTS_NO', '@p_SCRAP_NO':  controller.otherScrapTextController.text}).then((value) =>
@@ -1077,7 +1116,7 @@ class ScrapLabelPage extends StatelessWidget {
                       const EdgeInsets.all(0))),
               onPressed: () async {
                 controller.checkLogic();
-                controller.isLabelBtn.value ? controller.saveButton() : _showDialog(context, '라벨발행');
+                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? controller.saveButton() :  controller.scrapSaveButton() : _showDialog(context, '라벨발행');
 
                /* SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
