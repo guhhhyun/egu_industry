@@ -438,14 +438,66 @@ class PackagingInspecPage extends StatelessWidget {
         padding: const EdgeInsets.only(top: 12, left: 20, right: 12, bottom: 4),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('파렛트상태',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text('',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                SizedBox(width: 12,),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('철밴딩상태',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text('',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                SizedBox(width: 12,),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('시편부착',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a959595)),
+                    Text('',
+                        style: AppTheme.a16400
+                            .copyWith(color: AppTheme.black)),
+                  ],
+                ),
+                /* SizedBox(width: 12,),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('감김방향',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a959595)),
+                        Text(controller.inspecDetailList[0]['DIRECTION'] == 'Y' ? 'O' : 'X',
+                            style: AppTheme.a16400
+                                .copyWith(color: AppTheme.black)),
+                      ],
+                    ),*/
+              ],
+            ),
             Container(
               width: MediaQuery.of(context).size.width - 30,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
+                   /* Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('기계포장',
@@ -455,8 +507,7 @@ class PackagingInspecPage extends StatelessWidget {
                             style: AppTheme.a16400
                                 .copyWith(color: AppTheme.black)),
                       ],
-                    ),
-                    SizedBox(width: 12,),
+                    ),*/
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -492,7 +543,7 @@ class PackagingInspecPage extends StatelessWidget {
                                 .copyWith(color: AppTheme.black)),
                       ],
                     ),
-                    SizedBox(width: 12,),
+                   /* SizedBox(width: 12,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -503,7 +554,7 @@ class PackagingInspecPage extends StatelessWidget {
                             style: AppTheme.a16400
                                 .copyWith(color: AppTheme.black)),
                       ],
-                    ),
+                    ),*/
                   ],
                 ),
               ),

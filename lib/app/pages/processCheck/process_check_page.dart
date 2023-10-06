@@ -332,156 +332,170 @@ class ProcessCheckPage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(left: 4, right: 4),
             padding: EdgeInsets.only(left: 18, right: 18),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+            child: Row(
                 children: [
-                  Container(
-                     width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-                              left:
-                              BorderSide(color: AppTheme.ae2e2e2),
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('구분',
+                  Expanded(
+                    child: Container(
+                       width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
+                                left:
+                                BorderSide(color: AppTheme.ae2e2e2),
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('구분',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        )
+                    ),
+                  ),
+                  MediaQuery.of(context).size.width <= 450 ? Container() :
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text(
+                            '전일',
                             style: AppTheme.a16700
                                 .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      )
-                  ),
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text(
-                          '전일',
-                          style: AppTheme.a16700
-                              .copyWith(color: AppTheme.light_text_primary),
+                          ),
                         ),
-                      ),
+                    ),
                   ),
+                  MediaQuery.of(context).size.width <= 450 ? Container() :
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
 
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('금일',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('금일',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
+                    ),
                   ),
+                  MediaQuery.of(context).size.width <= 450 ? Container() :
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
 
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('등록시간',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('등록시간',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
+                    ),
                   ),
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('거래처',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('거래처',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
 
+                    ),
                   ),
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
 
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('슬라브',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('슬라브',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
 
+                    ),
                   ),
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('제품명',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('제품명',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
 
+                    ),
                   ),
+                  MediaQuery.of(context).size.width <= 450 ? Container() :
+                  Expanded(
+                    child: Container(
+                      width: 60,
+                        decoration: const BoxDecoration(
+                            color: AppTheme.blue_blue_300,
+                            border: Border(
 
-                  Container(
-                    width: 60,
-                      decoration: const BoxDecoration(
-                          color: AppTheme.blue_blue_300,
-                          border: Border(
-
-                              top: BorderSide(color: AppTheme.ae2e2e2),
-                              right: BorderSide(
-                                  color: AppTheme.ae2e2e2))),
-                      height: 35,
-                      child: Center(
-                        child: Text('작업자',
-                            style: AppTheme.a16700
-                                .copyWith(color: AppTheme.light_text_primary),
-                            textAlign: TextAlign.left),
-                      ),
+                                top: BorderSide(color: AppTheme.ae2e2e2),
+                                right: BorderSide(
+                                    color: AppTheme.ae2e2e2))),
+                        height: 35,
+                        child: Center(
+                          child: Text('작업자',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.light_text_primary),
+                              textAlign: TextAlign.left),
+                        ),
+                    ),
                   ),
 
                 ],
 
         ),
-            ),
       ),
     );
   }
@@ -672,143 +686,160 @@ class ProcessCheckPage extends StatelessWidget {
             ),
           child: Row(
               children: [
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-                            left:
-                            BorderSide(color: AppTheme.ae2e2e2),
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['CRP_NAME'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
-
-                ),
-
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                        child: Text(
-                          controller.processList[index]['PRE_DT'].toString(),
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+                              left:
+                              BorderSide(color: AppTheme.ae2e2e2),
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['CRP_NAME'].toString(),
                           style: AppTheme.a12500
-                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
-                    ),
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
 
+                  ),
+                ),
+                MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                          child: Text(
+                            controller.processList[index]['PRE_DT'].toString(),
+                            style: AppTheme.a12500
+                                .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
+                      ),
+
+                  ),
+                ),
+                MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['CUR_DT'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
+
+                  ),
+                ),
+                MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['IST_DT'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
+
+                  ),
                 ),
 
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
 
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['CUR_DT'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['CST_NM'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
 
+                  ),
                 ),
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
 
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['IST_DT'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['SLB_NO'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
 
+                  ),
                 ),
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['CMH_NM'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
 
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['CST_NM'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
-
+                  ),
                 ),
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
+                MediaQuery.of(context).size.width <= 450 ? Container() :
+                Expanded(
+                  child: Container(
+                    width: 60,
+                      decoration: const BoxDecoration(
+                          color: AppTheme.white,
+                          border: Border(
+                              top: BorderSide(color: AppTheme.ae2e2e2),
+                              right: BorderSide(
+                                  color: AppTheme.ae2e2e2))),
+                      height: 50,
+                      child: Center(
+                        child: Text(controller.processList[index]['WRK_NM1'].toString(),
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ),
 
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['SLB_NO'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
-
-                ),
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['CMH_NM'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
-
-                ),
-                Container(
-                  width: 60,
-                    decoration: const BoxDecoration(
-                        color: AppTheme.white,
-                        border: Border(
-                            top: BorderSide(color: AppTheme.ae2e2e2),
-                            right: BorderSide(
-                                color: AppTheme.ae2e2e2))),
-                    height: 50,
-                    child: Center(
-                      child: Text(controller.processList[index]['WRK_NM1'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ),
-
+                  ),
                 ),
               ],
             ),
