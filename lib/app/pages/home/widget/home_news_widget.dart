@@ -19,10 +19,10 @@ class HomeNewsWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('LATEST NEWS', style: AppTheme.newTitle)
+                    Text('LATEST NEWS', style: AppTheme.newTitle.copyWith(color: AppTheme.black))
                   ],
                 ),
                 Row(

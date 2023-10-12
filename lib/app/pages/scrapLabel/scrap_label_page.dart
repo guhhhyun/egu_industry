@@ -3,6 +3,7 @@ import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/scrapLabel/bottomSheet.dart';
 import 'package:egu_industry/app/pages/scrapLabel/scrap_label_controller.dart';
+import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

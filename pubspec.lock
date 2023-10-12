@@ -330,10 +330,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_holo_date_picker
-      sha256: "94cf29471ffac123043745b65c690dcf6d481e98c11bda71f78a34dd6f726247"
+      sha256: "47f8e2e0af4f678cca4ad7df014c9622865b7a65d105bfaa1ddf6a94123d1884"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.2+1"
   flutter_inappwebview:
     dependency: "direct main"
     description:

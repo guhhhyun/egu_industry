@@ -24,7 +24,7 @@ class BottomSheetModal extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           _title(),
-          _calendar2(context),
+          Obx(() =>  _calendar2(context)),
           Obx(() =>   controller.popUpDataList.isNotEmpty ?
           _listArea() : SliverToBoxAdapter(child: Container()))
           // _bottom(context)
@@ -62,7 +62,7 @@ class BottomSheetModal extends StatelessWidget {
                   onTap: () async{
                     var datePicked = await DatePicker.showSimpleDatePicker(
                       titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400,
+                      itemTextStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
                       context,
                       confirmText: '확인',
                       cancelText: '취소',
@@ -134,7 +134,7 @@ class BottomSheetModal extends StatelessWidget {
                   onTap: () async{
                     var datePicked = await DatePicker.showSimpleDatePicker(
                       titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400,
+                      itemTextStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
                       context,
                       confirmText: '확인',
                       cancelText: '취소',
@@ -246,6 +246,7 @@ class BottomSheetModal extends StatelessWidget {
               controller.weighingInfoTextController.text = controller.selectedContainer[0]['CODE'];
             }
           }
+          Get.back();
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

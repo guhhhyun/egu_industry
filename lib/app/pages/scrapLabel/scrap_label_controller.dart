@@ -41,8 +41,8 @@ class ScrapLabelController extends GetxController {
   RxList<String> scrapTypeList = ['매입', '공정회수', '외주'].obs;
   RxString selectedScrapType = '매입'.obs;
   RxString selectedScrapTypeCd = ''.obs;
-  RxList<String> goldList = ['무도금', '도금', '박리'].obs;
-  RxString selectedGold = '도금'.obs;
+  RxList<String> goldList = ['베어제', '도금', '박리'].obs;
+  RxString selectedGold = '베어제'.obs;
   RxString selectedGoldCd = ''.obs;
   RxList meansNumList = [].obs;
   RxBool isCheck = false.obs;
@@ -95,7 +95,7 @@ class ScrapLabelController extends GetxController {
           }catch(ex){
             Get.log(ex.toString());
           }
-          finally{
+          finally {
             await bluetoothManager.disconnect();
           }
         }
@@ -159,7 +159,7 @@ class ScrapLabelController extends GetxController {
 
   void checkLogic() {
     if(selectedGubun.value == '지금류') {
-      if((measList.isNotEmpty || selectedContainer.isNotEmpty) && selectedRmNmMap['NAME'] != '선택해주세요' && selectedScLocMap['NAME'] != '선택해주세요'
+      if( selectedRmNmMap['NAME'] != '선택해주세요' && selectedScLocMap['NAME'] != '선택해주세요'
         && qtyTextController.text != '' && partWeiTextController.text != ''){
         isLabelBtn.value = true;
       }else {
@@ -193,7 +193,7 @@ class ScrapLabelController extends GetxController {
       switch(selectedScrapType.value) {
         case "매입":
           selectedScrapTypeCd.value = '1';
-          if((measList.isNotEmpty || selectedContainer.isNotEmpty) && selectedScrapNmMap['NAME'] != '선택해주세요'
+          if(selectedScrapNmMap['NAME'] != '선택해주세요'
             && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
             && selectedTareMap['WEIGHT'] != ''){
             isLabelBtn.value = true;
@@ -213,7 +213,7 @@ class ScrapLabelController extends GetxController {
           break;
         case "외주":
           selectedScrapTypeCd.value = '3';
-          if((measList.isNotEmpty || selectedContainer.isNotEmpty) && selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
+          if( selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
               && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
               && selectedTareMap['WEIGHT'] != '' && outScrapList.isNotEmpty){
             isLabelBtn.value = true;
@@ -262,8 +262,8 @@ class ScrapLabelController extends GetxController {
   // 지금류 라벨발행
   Future<void> saveButton() async {
    var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb',
-      '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID':selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}'
-      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : '${measList[0]['CUST_NM']}', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
+      '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
+      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : '', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
       '@p_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@p_WH_NO' : 'WH02',
       '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
    {
@@ -276,7 +276,10 @@ class ScrapLabelController extends GetxController {
      realLabelData.value = value['DATAS']
    });
 
-   PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
+   await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
+
+   Get.offAllNamed(Routes.SCRAP_LABEL);
+
   // Get.to(PrintPage(''));
   // Get.toNamed(Routes.BLUETOOTH_PRINTER);
   }
@@ -284,8 +287,8 @@ class ScrapLabelController extends GetxController {
   // 스크랩 라벨발행
   Future<void> scrapSaveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
-      '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID':selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' :'${measList[0]['CST_ID']}'
-      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : '${measList[0]['CUST_NM']}'
+      '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
+      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : ''
       , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : '${selectedTareMap['WEIGHT']}',
       '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
       '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
@@ -299,7 +302,9 @@ class ScrapLabelController extends GetxController {
       Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
       realLabelData.value = value['DATAS']
     });
-    PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
+    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
+
+    Get.offAllNamed(Routes.SCRAP_LABEL);
   }
 
 

@@ -28,7 +28,7 @@ dependencies:
   http: ^1.0.0
   flutter_inappwebview: ^5.7.2+3
   table_calendar: ^3.0.9
-  flutter_holo_date_picker: ^1.1.0
+  flutter_holo_date_picker: ^1.1.2+1
   file_picker: ^5.2.0+1
   flutter_datetime_picker_plus: ^2.0.1
   printing: ^5.11.0

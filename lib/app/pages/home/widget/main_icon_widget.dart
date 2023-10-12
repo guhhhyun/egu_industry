@@ -139,7 +139,7 @@ class MainIconWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('WORK MENU', style: AppTheme.newTitle)
+                Text('WORK MENU', style: AppTheme.newTitle.copyWith(color: AppTheme.black))
               ],
             ),
 

@@ -68,7 +68,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               onTap: () async{
                 var datePicked = await DatePicker.showSimpleDatePicker(
                   titleText: '날짜 선택',
-                  itemTextStyle: AppTheme.a16400,
+                  itemTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black),
                   context,
                   confirmText: '확인',
                   cancelText: '취소',
@@ -140,7 +140,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               onTap: () async{
                 var datePicked = await DatePicker.showSimpleDatePicker(
                   titleText: '날짜 선택',
-                  itemTextStyle: AppTheme.a16400,
+                  itemTextStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
                   context,
                   confirmText: '확인',
                   cancelText: '취소',

@@ -95,7 +95,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 12,),
+            const SizedBox(width: 12,),
             InkWell(
               onTap: () {
                 controller.selectedGubunCd.value = '600';
@@ -115,7 +115,7 @@ class ProcessCheckPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 12,),
+            const SizedBox(width: 12,),
             InkWell(
               onTap: () {
                 controller.selectedGubunCd.value = 'N';
