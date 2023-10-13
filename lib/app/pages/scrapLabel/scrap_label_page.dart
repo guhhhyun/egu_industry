@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
@@ -999,17 +1000,102 @@ class ScrapLabelPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
+          child: Container(
                 height: 50,
-                decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: AppTheme.gray_gray_200),
-                    )),
+                  width: 200,
+                margin: const EdgeInsets.only(top: 12),
                 padding: const EdgeInsets.only(right: 12),
-                child: DropdownButton(
+                child: DropdownButton2(
+                  dropdownStyleData: DropdownStyleData(
+
+                      maxHeight: 300,
+                      width: 200,
+                      offset: Offset(25, 25),
+                      decoration: BoxDecoration(
+                          color: AppTheme.light_ui_01,
+                          border: Border(
+                            bottom: BorderSide(color: AppTheme.gray_gray_200),
+                          )
+                      ),
+                    ),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color:  AppTheme.gray_gray_200,
+                    ),
+                    iconStyleData: IconStyleData(
+                      icon: Container(
+                        padding: EdgeInsets.only(bottom: 12),
+                        child: SvgPicture.asset(
+                          'assets/app/arrowBottom.svg',
+                          color: AppTheme.light_placeholder,
+                        ),
+                      ),
+                    ),
+                 //   dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedTareMap['NAME'].toString(),
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.tareList.map((value) => DropdownMenuItem(
+                        value: value['NAME'].toString(),
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            value['NAME'].toString(),
+                            style: AppTheme.a16400
+                                .copyWith(color: value['NAME'].toString() == '설통번호 선택' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                          ),
+                        )
+                      )
+                    ).toList(),
+                    onChanged: (value) {
+                      controller.tareList.map((e) {
+                        if(e['NAME'] == value) {
+                          controller.selectedTareMap['CODE'] = e['CODE'];
+                          controller.selectedTareMap['NAME'] = e['NAME'];
+                          controller.selectedTareMap['WEIGHT'] = e['WEIGHT'].toString();
+                        }
+                      }).toList();
+                      Get.log('${ controller.selectedTareMap} 선택!!!!');
+                    },
+                  dropdownSearchData: DropdownSearchData(
+                    searchController: controller.searchDropTextController,
+                    searchInnerWidgetHeight: 50,
+                    searchInnerWidget: Container(
+                      height: 50,
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 4,
+                        right: 8,
+                        left: 8,
+                      ),
+                      child: TextFormField(
+                        style: AppTheme.a14500.copyWith(color: AppTheme.black),
+                        textInputAction: TextInputAction.search,
+                        keyboardType: TextInputType.visiblePassword,
+                        expands: true,
+                        maxLines: null,
+                        controller: controller.searchDropTextController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          hintText: '검색해주세요',
+                          hintStyle: const TextStyle(fontSize: 12, color: AppTheme.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ),
+                    searchMatchFn: (item, searchValue) {
+                      return item.value.toString().contains(searchValue);
+                    },
+                  ),
+                    )
+
+                /*DropdownButton(
                     borderRadius: BorderRadius.circular(3),
                     isExpanded: true,
                     underline: Container(
@@ -1042,12 +1128,21 @@ class ScrapLabelPage extends StatelessWidget {
                         }
                       }).toList();
                       Get.log('${ controller.selectedTareMap} 선택!!!!');
-                    }),
+                    }),*/
               ),
-            ],
-          ),
         ),
         const SizedBox(width: 12,),
+    /*    Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: AppTheme.gray_gray_200),
+                  )),
+              padding: const EdgeInsets.only(right: 12, top: 12, bottom: 12, left: 12),
+              child: Text(controller.selectedTareMap['WEIGHT'] != '' ? '${controller.selectedTareMap['WEIGHT']}' : '자동선택', style: AppTheme.a16400
+                  .copyWith(color: AppTheme.a6c6c6c),),
+            )
+        ),*/
         Expanded(
           child: Container(
                 decoration: const BoxDecoration(
@@ -1088,7 +1183,8 @@ class ScrapLabelPage extends StatelessWidget {
                 ) :
                 Container(
                   padding: const EdgeInsets.only(right: 12, top: 12, bottom: 12),
-                  child: Text(controller.weighingTextController.text != '' && controller.selectedTareMap['WEIGHT'] != ''
+                  child: controller.selectedTareMap['NAME'] == '설통번호 선택' ? Text(controller.weighingTextController.text, style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c)) : Text(controller.weighingTextController.text != '' && controller.selectedTareMap['WEIGHT'] != ''
                     ? int.parse(controller.weighingTextController.text) >= int.parse('${controller.selectedTareMap['WEIGHT']}') ?
                   '${int.parse(controller.weighingTextController.text) - int.parse('${controller.selectedTareMap['WEIGHT']}')}': '다시 입력해주세요' : '', style: AppTheme.a16400
                       .copyWith(color: AppTheme.a6c6c6c),),
@@ -1117,7 +1213,7 @@ class ScrapLabelPage extends StatelessWidget {
                       const EdgeInsets.all(0))),
               onPressed: () async {
                 controller.checkLogic();
-                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? controller.saveButton() :  controller.scrapSaveButton() : _showDialog(context, '라벨발행');
+                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? controller.saveButton(context) :  controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
 
                /* SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(

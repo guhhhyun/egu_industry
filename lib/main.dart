@@ -57,12 +57,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: lightColorScheme,
           fontFamily: 'NotoSansKR'
-
       ),
-      darkTheme: ThemeData(
-          useMaterial3: true,
-          colorScheme: darkColorScheme,
-          fontFamily: 'NotoSansKR'),
       //locale: ui.window.locale,
     );
   }

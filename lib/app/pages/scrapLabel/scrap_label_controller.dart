@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/net/home_api.dart';
-import 'package:egu_industry/app/print/print_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_simple_bluetooth_printer/flutter_simple_bluetooth_printer.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 
 
@@ -18,9 +19,11 @@ class ScrapLabelController extends GetxController {
   var partWeiTextController = TextEditingController(); // 단위중량
   var weighingInfoTextController = TextEditingController(); // 계량정보
   var otherScrapTextController = TextEditingController(); // 외주스크랩
+  var searchDropTextController = TextEditingController(); // 설통검색
   RxBool isLabelBtn = false.obs; // 라벨 발행
 
 
+  RxBool isPrinting = false.obs;
   RxInt focusCnt = 0.obs;
   RxString barcodeScanResult = '바코드를 스캔해주세요'.obs; /// 외주 스크랩
   RxString barcodeScanResult2 = '바코드를 스캔해주세요'.obs; /// 계량정보
@@ -60,48 +63,6 @@ class ScrapLabelController extends GetxController {
   RxString endValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
 
 
-
-  /// 프린트
-  Future<void> PrintAlpha_3RB(String CODE, Map? PARAM ) async{
-    var bluetoothManager = FlutterSimpleBluetoothPrinter.instance;
-    final bondedDevices = await bluetoothManager.getAndroidPairedDevices();
-    bondedDevices.forEach((device) async {
-      Get.log(device.name+"\t"+device.address+"\t"+device.isLE.toString());
-      if(device.name.startsWith("Alpha-3R")){
-        try {
-          await bluetoothManager.disconnect();
-        }finally{}
-        bool isConnected = await bluetoothManager.connect(address: device.address, isBLE: device.isLE);
-        if(isConnected) {
-          try {
-            Map map = await HomeApi.to.REPORT_MONO_BITMAP(CODE, PARAM);
-            String str = "SIZE @WIDTH@mm,@HEIGHT@mm\r\nGAP 0,0\r\nCLS\r\nBITMAP 0,0,@BITMAP_WIDTH@,@BITMAP_HEIGHT@,0,@BitmapData@\r\nPRINT 1,1\r\n";
-            str = str.replaceAll("@WIDTH@", (map["WIDTH"] / 10).floor().toString())
-                .replaceAll(
-                "@HEIGHT@", (map["HEIGHT"] / 10).floor().toString() )
-                .replaceAll("@BITMAP_WIDTH@",
-                ((map["BITMAP_WIDTH"] / 8).floor() + 1).toString())
-                .replaceAll("@BITMAP_HEIGHT@",
-                map["BITMAP_HEIGHT"].floor().toString());
-            List<String> spl = str.split("@BitmapData@");
-            List<List<int>> listBytes = [
-              ascii.encode(spl[0]),
-              map["FILE"],
-              ascii.encode(spl[1]),
-            ];
-            Uint8List bytes = Uint8List.fromList(
-                listBytes.expand((x) => x).toList());
-            await bluetoothManager.writeRawData(bytes);
-          }catch(ex){
-            Get.log(ex.toString());
-          }
-          finally {
-            await bluetoothManager.disconnect();
-          }
-        }
-      }
-    });
-  }
 
 
 
@@ -170,7 +131,7 @@ class ScrapLabelController extends GetxController {
         selectedGoldCd.value = '1';
         scrapFg.value = 'F1';
       }else if(selectedGold.value == '박리'){
-        selectedGoldCd.value = '3';
+        selectedGoldCd.value = '2';
         scrapFg.value = 'FF';
       }else {
         selectedGoldCd.value = '0';
@@ -195,7 +156,7 @@ class ScrapLabelController extends GetxController {
           selectedScrapTypeCd.value = '1';
           if(selectedScrapNmMap['NAME'] != '선택해주세요'
             && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-            && selectedTareMap['WEIGHT'] != ''){
+          ){
             isLabelBtn.value = true;
           }else {
             isLabelBtn.value = false;
@@ -205,7 +166,7 @@ class ScrapLabelController extends GetxController {
           selectedScrapTypeCd.value = '2';
           if(selectedIndustryMap['NAME'] != '선택해주세요' && selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
               && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-              && selectedTareMap['WEIGHT'] != ''){
+             ){
             isLabelBtn.value = true;
           }else {
             isLabelBtn.value = false;
@@ -215,7 +176,7 @@ class ScrapLabelController extends GetxController {
           selectedScrapTypeCd.value = '3';
           if( selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
               && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-              && selectedTareMap['WEIGHT'] != '' && outScrapList.isNotEmpty){
+            && outScrapList.isNotEmpty){
             isLabelBtn.value = true;
           }else {
             isLabelBtn.value = false;
@@ -260,7 +221,7 @@ class ScrapLabelController extends GetxController {
 
 
   // 지금류 라벨발행
-  Future<void> saveButton() async {
+  Future<void> saveButton(BuildContext context) async {
    var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb',
       '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
       , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : '', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
@@ -273,24 +234,23 @@ class ScrapLabelController extends GetxController {
    var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
    {
      Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-     realLabelData.value = value['DATAS']
+     realLabelData.value = value['DATAS'],
+     isPrinting.value = true
    });
+   await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
 
-   await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
-
-   Get.offAllNamed(Routes.SCRAP_LABEL);
 
   // Get.to(PrintPage(''));
   // Get.toNamed(Routes.BLUETOOTH_PRINTER);
   }
 
   // 스크랩 라벨발행
-  Future<void> scrapSaveButton() async {
+  Future<void> scrapSaveButton(BuildContext context) async {
     var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
       '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
       , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : ''
-      , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : '${selectedTareMap['WEIGHT']}',
-      '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
+      , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : selectedTareMap['NAME'] == '설통번호 선택' ? '' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? '0' : '${selectedTareMap['WEIGHT']}',
+      '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? weighingTextController.text : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
       '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
     {
       Get.log('스크랩 라밸 성공::::::::::: $value'),
@@ -300,13 +260,137 @@ class ScrapLabelController extends GetxController {
     var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
     {
       Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-      realLabelData.value = value['DATAS']
+      realLabelData.value = value['DATAS'],
+      isPrinting.value = true
     });
-    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}); // ex
+    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
 
-    Get.offAllNamed(Routes.SCRAP_LABEL);
+
+
+
   }
 
+
+  /// 프린트
+  Future<void> PrintAlpha_3RB(String CODE, Map? PARAM,BuildContext context ) async{
+    var bluetoothManager = FlutterSimpleBluetoothPrinter.instance;
+    final bondedDevices = await bluetoothManager.getAndroidPairedDevices();
+    _showDialog(
+        context,
+        '라벨발행 중입니다',
+        '잠시만 기다려주세요'
+    );
+    bondedDevices.forEach((device) async {
+      Get.log(device.name+"\t"+device.address+"\t"+device.isLE.toString());
+      if(device.name.startsWith("Alpha-3R")){
+        try {
+          await bluetoothManager.disconnect();
+        }finally{}
+        bool isConnected = await bluetoothManager.connect(address: device.address, isBLE: device.isLE);
+        if(isConnected) {
+          try {
+            Map map = await HomeApi.to.REPORT_MONO_BITMAP(CODE, PARAM);
+            String str = "SIZE @WIDTH@mm,@HEIGHT@mm\r\nGAP 0,0\r\nCLS\r\nBITMAP 0,0,@BITMAP_WIDTH@,@BITMAP_HEIGHT@,0,@BitmapData@\r\nPRINT 1,1\r\n";
+            str = str.replaceAll("@WIDTH@", (map["WIDTH"] / 10).floor().toString())
+                .replaceAll(
+                "@HEIGHT@", (map["HEIGHT"] / 10).floor().toString() )
+                .replaceAll("@BITMAP_WIDTH@",
+                ((map["BITMAP_WIDTH"] / 8).floor() + 1).toString())
+                .replaceAll("@BITMAP_HEIGHT@",
+                map["BITMAP_HEIGHT"].floor().toString());
+            List<String> spl = str.split("@BitmapData@");
+            List<List<int>> listBytes = [
+              ascii.encode(spl[0]),
+              map["FILE"],
+              ascii.encode(spl[1]),
+            ];
+            Uint8List bytes = Uint8List.fromList(
+                listBytes.expand((x) => x).toList());
+            await bluetoothManager.writeRawData(bytes);
+          }catch(ex){
+            Get.log(ex.toString());
+          }
+          finally {
+            await bluetoothManager.disconnect();
+            isPrinting.value = false;
+          }
+        }
+      }
+    });
+  }
+
+
+
+  void _showDialog(BuildContext context, String title, String subTitle) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.dongkuk_white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Column(
+                children: [
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                  LoadingAnimationWidget.inkDrop(
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xs_8,
+                  ),
+                  Text(
+                    title,
+                    style: AppTheme.notosans600
+                        .copyWith(color: Colors.black, fontSize: 17),
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xxxs_2,
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    subTitle,
+                    style: AppTheme.notosans400.copyWith(
+                        color: Colors.black, fontSize: 13, height: 1.5),
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                ],
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                StreamBuilder(
+                    stream: Stream.periodic(const Duration(seconds: 1)),
+                    builder: (c, snapshot) {
+                      return Container(
+                        child: (() {
+                          if (isPrinting.value == false) {
+                            Future.delayed(const Duration(seconds: 3), () {
+                              Get.back();
+                              Get.offAllNamed(Routes.SCRAP_LABEL);
+                            });
+
+                          }
+                        })(),
+                      );
+                    })
+              ]);
+        });
+  }
 
 
 
