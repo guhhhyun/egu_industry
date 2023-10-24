@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_detail_page.dart';
+import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_simple_bluetooth_printer/flutter_simple_bluetooth_printer.dart';
 import 'package:get/get.dart';
@@ -21,6 +24,7 @@ class ScrapLabelController extends GetxController {
   var otherScrapTextController = TextEditingController(); // 외주스크랩
   var searchDropTextController = TextEditingController(); // 설통검색
   RxBool isLabelBtn = false.obs; // 라벨 발행
+  RxBool test1 = false.obs;
 
 
   RxBool isPrinting = false.obs;
@@ -61,7 +65,7 @@ class ScrapLabelController extends GetxController {
   RxList selectedContainer = [].obs;
   RxString startValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString endValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-
+  RxBool isEndLabel = false.obs; // 재발행 여부 판단
 
 
 
@@ -244,6 +248,11 @@ class ScrapLabelController extends GetxController {
   // Get.toNamed(Routes.BLUETOOTH_PRINTER);
   }
 
+  // 재발행
+  Future<void> reButton(BuildContext context) async {
+    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context);
+  }
+
   // 스크랩 라벨발행
   Future<void> scrapSaveButton(BuildContext context) async {
     var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
@@ -309,20 +318,25 @@ class ScrapLabelController extends GetxController {
             await bluetoothManager.writeRawData(bytes);
           }catch(ex){
             Get.log(ex.toString());
+            isPrinting.value = false;
           }
           finally {
             await bluetoothManager.disconnect();
             isPrinting.value = false;
+            isEndLabel.value = true;
           }
         }
       }
     });
+    isPrinting.value = false;
+    isEndLabel.value = true;
   }
 
 
 
   void _showDialog(BuildContext context, String title, String subTitle) {
     showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -373,21 +387,13 @@ class ScrapLabelController extends GetxController {
               titlePadding: const EdgeInsets.all(0),
               //
               actions: [
-                StreamBuilder(
-                    stream: Stream.periodic(const Duration(seconds: 1)),
-                    builder: (c, snapshot) {
-                      return Container(
-                        child: (() {
-                          if (isPrinting.value == false) {
-                            Future.delayed(const Duration(seconds: 3), () {
-                              Get.back();
-                              Get.offAllNamed(Routes.SCRAP_LABEL);
-                            });
-
-                          }
-                        })(),
-                      );
-                    })
+                Container(
+                  child: (() {
+                    Future.delayed(const Duration(seconds: 3), () {
+                      Get.back();
+                    });
+                  })(),
+                ),
               ]);
         });
   }

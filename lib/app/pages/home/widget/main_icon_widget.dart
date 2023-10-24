@@ -210,10 +210,10 @@ class MainIconWidget extends StatelessWidget {
                 const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/Group-2.png',
-                    title: '공정조회',
+                    title: '작업조회',
                     subTitle: '',
                     onPressed: () {
-                      Get.log('공정조회');
+                      Get.log('작업조회');
                       Get.toNamed(Routes.PROCESS_CHECK);
                     }),),
               ],
@@ -221,6 +221,15 @@ class MainIconWidget extends StatelessWidget {
             const SizedBox(height: 12,),
             Row(
               children: [
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/Group-5.png',
+                    title: '공정조회',
+                    subTitle: '',
+                    onPressed: () {
+                      Get.log('공정조회');
+                      Get.toNamed(Routes.GONGJUNG_CHHECK);
+                    }),),
+                const SizedBox(width: 16,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/Group-5.png',
                     title: '제품재고',
@@ -238,7 +247,12 @@ class MainIconWidget extends StatelessWidget {
                       Get.log('제품포장 검수');
                         Get.toNamed(Routes.PACKAGING_INSPEC);
                     }),),
-                const SizedBox(width: 12,),
+
+              ],
+            ),
+            const SizedBox(height: 12,),
+            Row(
+              children: [
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/product-development-2.png',
                     title: '스크랩',
@@ -247,11 +261,7 @@ class MainIconWidget extends StatelessWidget {
                       Get.log('스크랩 라벨발행');
                       Get.toNamed(Routes.SCRAP_LABEL);
                     }),),
-              ],
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
+                const SizedBox(width: 12,),
                 Expanded(child: _buttonArea(
                     imgUrl: 'assets/app/Group-5.png',
                     title: '설비가동',
@@ -269,16 +279,6 @@ class MainIconWidget extends StatelessWidget {
                       Get.log('로그아웃');
                       Get.toNamed(Routes.LOGIN_PAGE);
                     }),),
-                const SizedBox(width: 12,),
-               /* Expanded(child: _buttonArea(
-                    imgUrl: 'assets/app/Group-5.png',
-                    title: '알림',
-                    subTitle: '',
-                    onPressed: () {
-                      Get.log('알림');
-                      Get.toNamed(Routes.ALARM);
-                    }),),*/
-                Expanded(child: _buttonAreaWhite())
               ],
             ),
           ],

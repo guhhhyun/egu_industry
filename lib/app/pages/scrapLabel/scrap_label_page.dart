@@ -1199,29 +1199,21 @@ class ScrapLabelPage extends StatelessWidget {
 
 
   Widget _bottomButton(BuildContext context) {
-    return BottomAppBar(
+    return Obx(() => BottomAppBar(
         color: AppTheme.white,
         surfaceTintColor: AppTheme.white,
         child: (() {
-          return TextButton(
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.all(0))),
-              onPressed: () async {
+          return controller.isEndLabel.value == false ? InkWell(
+              onTap: () async {
+                Get.log('중복클릭 test');
                 controller.checkLogic();
-                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? controller.saveButton(context) :  controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
-
-               /* SchedulerBinding.instance!.addPostFrameCallback((_) {
-                  Get.dialog(
-                      CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 2,)
-                  );
-                });*/
+                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? await controller.saveButton(context) :  await controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
               },
-              child: SizedBox(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppTheme.a1f1f1f
+                ),
                 height: 56,
                 width: MediaQuery.of(context).size.width,
                 child: Center(
@@ -1231,9 +1223,54 @@ class ScrapLabelPage extends StatelessWidget {
                         color: const Color(0xfffbfbfb),
                       ),
                     )),
-              ));
+              ))
+              : Row(
+            children: [
+              InkWell(
+                  onTap: () async {
+                    controller.isEndLabel.value = false;
+                    Get.offAllNamed(Routes.SCRAP_LABEL);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppTheme.light_cancel_press
+                    ),
+                    height: 56,
+                    width: MediaQuery.of(context).size.width/2 - 24,
+                    child: Center(
+                        child: Text(
+                          '초기화',
+                          style: AppTheme.bodyBody2.copyWith(
+                            color: const Color(0xfffbfbfb),
+                          ),
+                        )),
+                  )),
+              SizedBox(width: 16,),
+              InkWell(
+                  onTap: () async {
+                    controller.isPrinting.value = true;
+                    controller.reButton(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppTheme.a1f1f1f
+                    ),
+                    height: 56,
+                    width: MediaQuery.of(context).size.width/2 - 24,
+                    child: Center(
+                        child: Text(
+                          '재발행',
+                          style: AppTheme.bodyBody2.copyWith(
+                            color: const Color(0xfffbfbfb),
+                          ),
+                        )),
+                  ))
+            ],
+          );
         })()
-    );
+    ));
   }
   void _showDialog(BuildContext context, String title) {
     showDialog(

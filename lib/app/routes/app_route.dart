@@ -7,6 +7,8 @@ import 'package:egu_industry/app/pages/facilityFirst/facility_first_binding.dart
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_binding.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_page.dart';
+import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_binding.dart';
+import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_page.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_binding.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_page.dart';
 import 'package:egu_industry/app/pages/loginPage/login_binding.dart';
@@ -52,6 +54,7 @@ abstract class Routes {
   static const ALARM= _PathName.ALARM;
   static const BLUETOOTH_PRINTER = _PathName.BLUETOOTH_PRINTER;
   static const NOTICE = _PathName.NOTICE;
+  static const GONGJUNG_CHHECK = _PathName.GONGJUNG_CHHECK;
 }
 
 abstract class _PathName {
@@ -65,13 +68,14 @@ abstract class _PathName {
   static const String INVENTORY_COUNTING = '/inventoty_counting'; // 재고실사 페이지
   static const String PROCESS_TRANSFER = '/process_transfer'; // 공정이동 페이지
   static const String INVENTORY_CHECK = '/inventory_check'; // 제품재고 조회 페이지
-  static const String PROCESS_CHECK = '/process_check'; // 공정조회 페이지
+  static const String PROCESS_CHECK = '/process_check'; // 작업조회 페이지
   static const String FACILITY_MONITORING = '/facility_monitoring'; // 설비가동 모니터링 페이지
   static const String PACKAGING_INSPEC = '/packaging_inspec'; // 제품포장 검수 페이지
   static const String SCRAP_LABEL = '/scrap_label'; // 스크랩 라벨발행 페이지
   static const String ALARM = '/alarm'; // 알림 페이지
   static const String BLUETOOTH_PRINTER = '/bluetooth_printer'; // 프린트
   static const String NOTICE = '/notice'; // 프린트
+  static const String GONGJUNG_CHHECK = '/gongjung_check'; // 공정조회 페이지
 }
 
 class AppRoute {
@@ -110,7 +114,8 @@ class AppRoute {
         name: _PathName.BLUETOOTH_PRINTER, page: () => BluetoothPrinter(), binding: ScrapLabelBinding()),*/
     GetPage(
         name: _PathName.NOTICE, page: () => NoticePage(), binding: NoticeBinding()),
-
+    GetPage(
+        name: _PathName.GONGJUNG_CHHECK, page: () => GongjungCheckPage(), binding:  GongjungCheckBinding()),
 
   ];
 }

@@ -47,6 +47,9 @@ class FacilityController extends GetxController {
   RxString irfqCd = ''.obs;
   RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
   RxString selectedResultFg = '전체'.obs;
+  RxString selectedCheckResultFg = '전체'.obs;
+  RxList<String> resultIrFqList = ['전체','돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString selectedCheckIrFg = '전체'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString resultFgCd = ''.obs;
   RxList<String> noReasonList = [''].obs;
   RxString selectedNoReason = '선택해주세요'.obs;

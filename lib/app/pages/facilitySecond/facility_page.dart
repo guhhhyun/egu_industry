@@ -48,7 +48,14 @@ class FacilityPage extends StatelessWidget {
               SizedBox(height: 12,),
               _urgenTeamItem(),
               SizedBox(height: 12,),
-              _choiceButtonItem(),
+              Row(
+                children: [
+                  _dropDownItem(),
+                  SizedBox(width: 16,),
+                  _irFqDropDownItem()
+                ],
+              ),
+             // _choiceButtonItem(),
               SizedBox(height: 24,),
               SizedBox(height: 12,),
             ],
@@ -358,6 +365,173 @@ class FacilityPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _dropDownItem() {
+    return Expanded(
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: AppTheme.ae2e2e2
+            )),
+        padding: const EdgeInsets.only(left: 16, right: 12),
+        child: DropdownButton<String>(
+            isExpanded: true,
+            underline: Container(
+              height: 1,
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/app/arrowBottom.svg',
+              color: AppTheme.light_ui_08,
+            ),
+            dropdownColor: AppTheme.light_ui_01,
+            value: controller.selectedCheckResultFg.value,
+            //  flag == 3 ? controller.selectedNoReason.value :
+            items: controller.resultFgList.map((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value,
+                  style: AppTheme.a14500
+                      .copyWith(color:  AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              controller.selectedCheckResultFg.value = value!;
+              if(value == '전체') {
+                controller.choiceButtonVal.value = 1;
+                controller.pResultFg.value = 'A';
+                for(var i = 0; i < controller.test.length; i++) {
+                  controller.test[i] = false;
+                }
+                controller.registButton.value = false;
+                controller.readCdConvert();
+                controller.datasList.clear();
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                {
+                  Get.log('value[DATAS]: ${value['DATAS']}'),
+                  controller.datasList.clear(),
+                  if(value['DATAS'] != null) {
+                    controller.datasLength.value = value['DATAS'].length,
+                    for(var i = 0; i < controller.datasLength.value; i++){
+                      controller.datasList.add(value['DATAS'][i]),
+                    },
+                  },
+                  Get.log('datasList: ${controller.datasList}'),
+                });
+              }else if(value == '미조치') {
+                Get.log('미조치 클릭');
+                controller.choiceButtonVal.value = 2;
+                controller.pResultFg.value = 'N';
+                for(var i = 0; i < controller.test.length; i++) {
+                  controller.test[i] = false;
+                }
+                controller.registButton.value = false;
+                controller.readCdConvert();
+                controller.datasList.clear();
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                {
+                  Get.log('value[DATAS]: ${value['DATAS']}'),
+                  if(value['DATAS'] != null) {
+                    controller.datasLength.value = value['DATAS'].length,
+                    for(var i = 0; i < controller.datasLength.value; i++){
+                      controller.datasList.add(value['DATAS'][i]),
+                    },
+                  },
+                  Get.log('datasList: ${controller.datasList}'),
+                });
+              }else if(value == '조치완료') {
+                Get.log('조치완료 클릭');
+                controller.choiceButtonVal.value = 3;
+                controller.pResultFg.value = 'Y';
+                for(var i = 0; i < controller.test.length; i++) {
+                  controller.test[i] = false;
+                }
+                controller.registButton.value = false;
+                controller.readCdConvert();
+                controller.datasList.clear();
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                {
+                  Get.log('value[DATAS]: ${value['DATAS']}'),
+                  if(value['DATAS'] != null) {
+                    controller.datasLength.value = value['DATAS'].length,
+                    for(var i = 0; i < controller.datasLength.value; i++){
+                      controller.datasList.add(value['DATAS'][i]),
+                    },
+                  },
+                  Get.log('datasList: ${controller.datasList}'),
+                });
+              }else if(value == '진행중') {
+                Get.log('조치 진행중 클릭');
+                controller.choiceButtonVal.value = 4;
+                controller.pResultFg.value = 'I';
+                for(var i = 0; i < controller.test.length; i++) {
+                  controller.test[i] = false;
+                }
+                controller.registButton.value = false;
+                controller.readCdConvert();
+                controller.datasList.clear();
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                {
+                  Get.log('value[DATAS]: ${value['DATAS']}'),
+                  if(value['DATAS'] != null) {
+                    controller.datasLength.value = value['DATAS'].length,
+                    for(var i = 0; i < controller.datasLength.value; i++){
+                      controller.datasList.add(value['DATAS'][i]),
+                    },
+                  },
+                  Get.log('datasList: ${controller.datasList}'),
+                });
+              }
+            }),
+
+      ),
+    );
+  }
+
+  Widget _irFqDropDownItem() {
+    return Expanded(
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: AppTheme.ae2e2e2
+            )),
+        padding: const EdgeInsets.only(left: 16, right: 12),
+        child: DropdownButton<String>(
+            isExpanded: true,
+            underline: Container(
+              height: 1,
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/app/arrowBottom.svg',
+              color: AppTheme.light_ui_08,
+            ),
+            dropdownColor: AppTheme.light_ui_01,
+            value: controller.selectedCheckIrFg.value,
+            //  flag == 3 ? controller.selectedNoReason.value :
+            items: controller.resultIrFqList.map((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(
+                  value,
+                  style: AppTheme.a14500
+                      .copyWith(color:  AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              controller.selectedCheckIrFg.value = value!;
+            }),
+
+      ),
     );
   }
 

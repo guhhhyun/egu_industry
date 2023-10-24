@@ -112,6 +112,9 @@ class FacilityFirstController extends GetxController {
   RxInt modifySelectedEnginnerIndex = 0.obs;
   RxList<String> modifyResultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
   RxString modifySelectedResultFg = '전체'.obs;
+  RxString selectedCheckResultFg = '전체'.obs;
+  RxList<String> resultIrFqList = ['전체','돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString selectedCheckIrFg = '전체'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString modifyResultFgCd = ''.obs;
   RxBool isModifyErrorDateChoice = false.obs;
   RxList<String> modifyEngineTeamList = [''].obs;
