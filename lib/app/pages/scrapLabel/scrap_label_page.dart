@@ -1205,9 +1205,14 @@ class ScrapLabelPage extends StatelessWidget {
         child: (() {
           return controller.isEndLabel.value == false ? InkWell(
               onTap: () async {
+                if (controller.isFirstDuplication.value == false){
+                  controller.isFirstDuplication.value = true;
+                  controller.checkLogic();
+                  controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? await controller.saveButton(context) :  await controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
+                }
                 Get.log('중복클릭 test');
-                controller.checkLogic();
-                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? await controller.saveButton(context) :  await controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
+              /*  controller.checkLogic();
+                controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? await controller.saveButton(context) :  await controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');*/
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -1228,8 +1233,12 @@ class ScrapLabelPage extends StatelessWidget {
             children: [
               InkWell(
                   onTap: () async {
-                    controller.isEndLabel.value = false;
-                    Get.offAllNamed(Routes.SCRAP_LABEL);
+                    if (controller.isClearDuplication.value == false){
+                      controller.isClearDuplication.value = true;
+                      controller.isEndLabel.value = false;
+                      Get.offAllNamed(Routes.SCRAP_LABEL);
+
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -1249,8 +1258,15 @@ class ScrapLabelPage extends StatelessWidget {
               SizedBox(width: 16,),
               InkWell(
                   onTap: () async {
-                    controller.isPrinting.value = true;
-                    controller.reButton(context);
+                    if (controller.isSecondDuplication.value == false){
+                      controller.isSecondDuplication.value = true;
+                      controller.isPrinting.value = true;
+                      controller.reButton(context);
+                      Future.delayed(Duration(seconds: 1), (){
+                        controller.isSecondDuplication.value = false;
+                      });
+                    }
+
                   },
                   child: Container(
                     decoration: BoxDecoration(

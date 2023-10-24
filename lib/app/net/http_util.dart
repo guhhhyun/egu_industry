@@ -26,7 +26,7 @@ class HttpUtil {
     Get.log('############    NetworkManager');
 
     _dio = Dio();
-    _dio.options.headers['User-Agent'] = 'MOBILE';
+  //  _dio.options.headers['User-Agent'] = 'MOBILE';
     //_dio.options.headers['Content-Type'] = 'multipart/form-data';
 
     // 인증기관 처리 무시 하고 처리

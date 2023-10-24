@@ -25,6 +25,9 @@ class ScrapLabelController extends GetxController {
   var searchDropTextController = TextEditingController(); // 설통검색
   RxBool isLabelBtn = false.obs; // 라벨 발행
   RxBool test1 = false.obs;
+  RxBool isFirstDuplication = false.obs;
+  RxBool isClearDuplication = false.obs;
+  RxBool isSecondDuplication = false.obs;
 
 
   RxBool isPrinting = false.obs;
@@ -239,7 +242,6 @@ class ScrapLabelController extends GetxController {
    {
      Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
      realLabelData.value = value['DATAS'],
-     isPrinting.value = true
    });
    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
 
@@ -248,7 +250,7 @@ class ScrapLabelController extends GetxController {
   // Get.toNamed(Routes.BLUETOOTH_PRINTER);
   }
 
-  // 재발행
+  /// 재발행
   Future<void> reButton(BuildContext context) async {
     await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context);
   }
@@ -270,7 +272,7 @@ class ScrapLabelController extends GetxController {
     {
       Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
       realLabelData.value = value['DATAS'],
-      isPrinting.value = true
+
     });
     await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
 
@@ -282,6 +284,7 @@ class ScrapLabelController extends GetxController {
 
   /// 프린트
   Future<void> PrintAlpha_3RB(String CODE, Map? PARAM,BuildContext context ) async{
+    isPrinting.value = true;
     var bluetoothManager = FlutterSimpleBluetoothPrinter.instance;
     final bondedDevices = await bluetoothManager.getAndroidPairedDevices();
     _showDialog(
@@ -328,8 +331,7 @@ class ScrapLabelController extends GetxController {
         }
       }
     });
-    isPrinting.value = false;
-    isEndLabel.value = true;
+
   }
 
 

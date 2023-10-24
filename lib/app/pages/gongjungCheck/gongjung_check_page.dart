@@ -914,17 +914,19 @@ class GongjungCheckPage extends StatelessWidget {
                               color: AppTheme.ae2e2e2) : BorderSide(
                               color: Colors.transparent))),
                   height: 60,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(top: 6, bottom: 6),
-                          child: Text(controller.processList[index]['CST_NM'].toString(),
-                            style: AppTheme.a12500
-                                .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                        ),
-                      ],
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top: 6, bottom: 6),
+                            child: Text(controller.processList[index]['CST_NM'].toString(),
+                              style: AppTheme.a12500
+                                  .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

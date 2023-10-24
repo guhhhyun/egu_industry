@@ -78,7 +78,7 @@ class MainIconWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: AppTheme.gray_c_gray_200)
                 ),
-                padding: EdgeInsets.only(top: 16, bottom: 16, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 16, bottom: 16, left: 14, right: 14),
 
                 child: Column(
                   children: [

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'network_manager.dart';
 import 'package:http/http.dart' as http;
 
-class HomeApi extends NetworkManager {
+class HomeApi {
   static HomeApi get to => Get.find();
 
   Future<String?> EXEC(
@@ -155,13 +155,13 @@ class HomeApi extends NetworkManager {
     return data;
   }
 
+
   Future<Map> BIZ_DATA(String BizComponentID) async {
     String res = await EXEC("PROC", 'P_BizComponentQuery_R', {'BizComponentID':BizComponentID}) ?? "";
 
     Map data = json.decode(res);
     return data;
   }
-
 
 
   Future<String?> EXEC2(
