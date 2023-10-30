@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -20,6 +21,9 @@ class InventoryCheckController extends GetxController {
   RxList<dynamic> sttList = [].obs;
   RxList<dynamic> productSearchList = [].obs;
   RxBool isLoading = false.obs;
+  List<PlutoRow> rowDatas = [];
+  late final PlutoGridStateManager gridStateMgr;
+
 
 
   Future<void> checkButton() async {
@@ -37,7 +41,20 @@ class InventoryCheckController extends GetxController {
       Get.log('USP_MBR0900_R01 err = ${err.toString()} ', isError: true);
     }finally {
       isLoading.value = false;
+      plutoRow();
     }
+  }
+
+  Future<void> plutoRow() async {
+    rowDatas = List<PlutoRow>.generate(productSearchList.length, (index) =>
+        PlutoRow(cells:
+        Map.from((productSearchList[index]).map((key, value) =>
+            MapEntry(key, PlutoCell(value:  value)),
+        )))
+    );
+    gridStateMgr.removeAllRows();
+    gridStateMgr.appendRows(rowDatas);
+    gridStateMgr.scroll.vertical?.animateTo(25, curve: Curves.bounceIn, duration: Duration(milliseconds: 100));
   }
 
 

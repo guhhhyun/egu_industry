@@ -337,7 +337,7 @@ class FacilityPage extends StatelessWidget {
                     child: Text(
                       value,
                       style: AppTheme.a14500
-                          .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                          .copyWith(color: AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
@@ -965,6 +965,7 @@ class FacilityPage extends StatelessWidget {
             controller.selectedContainer.add(controller.datasList[index]);
           }
         }
+        Get.log('rrr${controller.selectedContainer}');
       },
       child: Container(
 
@@ -1162,7 +1163,7 @@ class FacilityPage extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             child: Center(
                 child: Text(
-                  '점검의뢰 등록',
+                  '정비내역 등록',
                   style: AppTheme.bodyBody2.copyWith(
                     color: const Color(0xfffbfbfb),
                   ),

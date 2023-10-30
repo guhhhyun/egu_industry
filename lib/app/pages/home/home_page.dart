@@ -31,9 +31,9 @@ class HomePage extends StatelessWidget {
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
             ),
-            const SliverToBoxAdapter(
+          /*  const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing_xxxl_40),
-            ),
+            ),*/
             // 공지 리스트
             HomeNewsWidget(),
             const SliverToBoxAdapter(

@@ -15,34 +15,29 @@ class GlobalService extends GetxService {
 
   String authToken = '';
   RxBool isLogin = false.obs;
+  var loginId = ''.obs;
+  var loginPassword = ''.obs;
 
   // var userInfo = UserModel();
 
-  // /// 로그인 정보 불러오기
-  // void _loadLoginInfo() async {
-  //   try {
-  //     if (Utils.getStorage.hasData('userId') &&
-  //         Utils.getStorage.hasData('userPw')) {
-  //       var params = {
-  //         'userId': Utils.getStorage.read('userId'),
-  //         'userPw': Utils.getStorage.read('userPw'),
-  //         "linkYn": "N"
-  //       };
-  //
-  //       final retVal = await HomeApi.to.reqLogin(params);
-  //
-  //       isLogin.value = true;
-  //
-  //       if (retVal == true) {
-  //         Get.log('로그인 성공');
-  //         Get.offAllNamed(Routes.MAIN);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     Get.log('GlobalService - onInit Err ', isError: true);
-  //     Get.log(err.toString(), isError: true);
-  //   }
-  // }
+   /// 로그인 정보 불러오기
+   void _loadLoginInfo() async {
+    try {
+      if (Utils.getStorage.hasData('userId') &&
+           Utils.getStorage.hasData('userPw')) {
+
+         String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
+
+         Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
+
+         isLogin.value = true;
+         Get.offAllNamed(Routes.MAIN);
+       }
+     } catch (err) {
+       Get.log('GlobalService - onInit Err ', isError: true);
+       Get.log(err.toString(), isError: true);
+     }
+   }
 
   /*
 
@@ -73,19 +68,32 @@ class GlobalService extends GetxService {
   }
 
    */
+  void setLoginInfo({required String id, required String password}) async {
+    try {
+      loginId.value = id;
+      loginPassword.value = password;
+
+      await Utils.getStorage.write('userId', loginId.value);
+      await Utils.getStorage.write('userPw', loginPassword.value);
+    } catch (err) {
+      Get.log('GlobalService - setLoginInfo Err ', isError: true);
+      Get.log(err.toString(), isError: true);
+    }
+  }
+
 
   void logout() async {
     await Utils.getStorage.erase();
     isLogin.value = false;
-
-    HttpUtil.setToken(token: '');
+    loginId.value = '';
+    loginPassword.value = '';
     Get.offAllNamed(Routes.LOGIN_PAGE);
 
     Utils.gErrorMessage('로그아웃');
   }
 
   /// 로그인 정보 저장
-  void setLoginInfo() async {
+  void setLoginInfo2() async {
     try {
 
    //   await Utils.getStorage.write('userModel', userInfo.toJson());
@@ -108,9 +116,7 @@ class GlobalService extends GetxService {
   @override
   void onInit() async {
     Get.log('GlobalService - onInit !!');
-    // await Utils.storage.erase();
-    //_loadLoginInfo();
-
+    _loadLoginInfo();
     super.onInit();
   }
 

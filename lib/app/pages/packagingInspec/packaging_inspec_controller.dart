@@ -70,8 +70,10 @@ class PackagingInspecController extends GetxController {
         if(productDetailRealList[i]['JIGWAN'] == null) {
           productDetailRealList[i]['JIGWAN'] = 0
         },
-        jigwan.value = jigwan.value + double.parse(productDetailRealList[i]['JIGWAN'].toString()),
         isProductSelectedList.add(true),
+        if(productDetailRealList[i]['JIGWAN'] != '') {
+          jigwan.value = jigwan.value + double.parse(productDetailRealList[i]['JIGWAN'].toString()),
+        }
       }
     });
     Get.log('포장검수 두번째: $a');

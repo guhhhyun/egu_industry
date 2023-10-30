@@ -515,7 +515,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                             child: Text(
                               value,
                               style: AppTheme.a16400
-                                  .copyWith(color:  controller.selectedIrFq.value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                                  .copyWith(color:  value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                             ),
                           );
                         }).toList(),

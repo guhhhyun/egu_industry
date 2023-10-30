@@ -7,6 +7,8 @@ import 'package:egu_industry/app/pages/facilityFirst/facility_first_binding.dart
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step1_page.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_binding.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_page.dart';
+import 'package:egu_industry/app/pages/gagongFacility/gagong_facility_binding.dart';
+import 'package:egu_industry/app/pages/gagongFacility/gagong_facility_page.dart';
 import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_binding.dart';
 import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_page.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_binding.dart';
@@ -55,6 +57,7 @@ abstract class Routes {
   static const BLUETOOTH_PRINTER = _PathName.BLUETOOTH_PRINTER;
   static const NOTICE = _PathName.NOTICE;
   static const GONGJUNG_CHHECK = _PathName.GONGJUNG_CHHECK;
+  static const GAGONG_FACILITY = _PathName.GAGONG_FACILITY;
 }
 
 abstract class _PathName {
@@ -76,6 +79,7 @@ abstract class _PathName {
   static const String BLUETOOTH_PRINTER = '/bluetooth_printer'; // 프린트
   static const String NOTICE = '/notice'; // 프린트
   static const String GONGJUNG_CHHECK = '/gongjung_check'; // 공정조회 페이지
+  static const String GAGONG_FACILITY = '/gagong_facility'; // 가공설 페이지
 }
 
 class AppRoute {
@@ -116,6 +120,8 @@ class AppRoute {
         name: _PathName.NOTICE, page: () => NoticePage(), binding: NoticeBinding()),
     GetPage(
         name: _PathName.GONGJUNG_CHHECK, page: () => GongjungCheckPage(), binding:  GongjungCheckBinding()),
+    GetPage(
+        name: _PathName.GAGONG_FACILITY, page: () => GagongFacilityPage(), binding:  GagongFacilityBinding()),
 
   ];
 }

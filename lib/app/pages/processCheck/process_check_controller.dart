@@ -1,8 +1,10 @@
 
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:flutter/animation.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 
 /// 이게 작업조회
@@ -14,6 +16,8 @@ class ProcessCheckController extends GetxController {
   RxList<dynamic> processList = [].obs;
   RxList<dynamic> lastList = [].obs;
   RxList<dynamic> currentList = [].obs;
+  List<PlutoRow> rowDatas = [];
+  late final PlutoGridStateManager gridStateMgr;
 
 
   RxBool isLoading = false.obs;
@@ -26,30 +30,47 @@ class ProcessCheckController extends GetxController {
       {
         if(value['DATAS'] != null) {
           processList.value = value['DATAS'],
-        }
+        },
+
       });
       var lastDate = await HomeApi.to.PROC('USP_MBR1600_R02', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)))}'}).then((value) =>
       {
         if(value['DATAS'] != null) {
           lastList.value = value['DATAS'],
-        }
+        },
       });
       var currentDate = await HomeApi.to.PROC('USP_MBR1600_R02', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now())}'}).then((value) =>
       {
         if(value['DATAS'] != null) {
           currentList.value = value['DATAS'],
-        }
+        },
       });
       Get.log('작업조회 200:::::::::::::: ${a}');
       Get.log('작업조회 200 전일:::::::::::::: ${lastDate}');
       Get.log('작업조회 200 금일:::::::::::::: ${currentDate}');
+
     }catch (err) {
       Get.log('USP_MBR1600_R02 err = ${err.toString()} ', isError: true);
     }finally {
       isLoading.value = false;
+      plutoRow();
    }
-
   }
+
+  Future<void> plutoRow() async {
+    rowDatas = List<PlutoRow>.generate(processList.length, (index) =>
+        PlutoRow(cells:
+        Map.from((processList[index]).map((key, value) =>
+            MapEntry(key, PlutoCell(value:  key == 'P_TIME' ? lastList[index]['BE_CNT'] : key == 'SHP_ID' ? currentList[index]['BE_CNT']
+                :  key == 'DT' ? '${value.substring(8, 10)}일 ${value.substring(11, 16)}'
+
+                : value)),
+        )))
+    );
+    gridStateMgr.removeAllRows();
+    gridStateMgr.appendRows(rowDatas);
+    gridStateMgr.scroll.vertical?.animateTo(25, curve: Curves.bounceIn, duration: Duration(milliseconds: 100));
+    }
 
   /// 600 조회
   Future<void> check600Button() async {
@@ -78,6 +99,7 @@ class ProcessCheckController extends GetxController {
       Get.log('USP_MBR1600_R01 err = ${err.toString()} ', isError: true);
     }finally {
       isLoading.value = false;
+      plutoRow();
     }
 
   }
@@ -111,5 +133,6 @@ class ProcessCheckController extends GetxController {
 
   @override
   void onReady() {
+    check400Button();
   }
 }

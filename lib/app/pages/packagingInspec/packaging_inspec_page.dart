@@ -100,7 +100,7 @@ class PackagingInspecPage extends StatelessWidget {
                       border: Border.all(color: AppTheme.ae2e2e2),
                       borderRadius: BorderRadius.circular(10)
                   ),
-                  child: /*NoKeyboardEditableText(controller: controller.textController, selectionColor: Colors.black,)*/
+                  child:
                  TextFormField(
                         showCursor: true,
                         keyboardAppearance: Brightness.dark,
@@ -120,6 +120,7 @@ class PackagingInspecPage extends StatelessWidget {
                           controller.checkButton3();
                           controller.textController.text = '';
                           focusNode.requestFocus();
+
                           Future.delayed(const Duration(), (){
                             focusNode.requestFocus();
                           //  FocusScope.of(context).requestFocus(focusNode);
@@ -347,6 +348,28 @@ class PackagingInspecPage extends StatelessWidget {
                             ),
                           ),
                         ),
+                        /*SizedBox(height: 4,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Row(
+                                children: [
+                                  Text('공차 두께: ', style: AppTheme.a12700.copyWith(color: AppTheme.a959595),),
+                                  Text('0.99 ~ 1.01', style: AppTheme.a12700.copyWith(color: AppTheme.black),),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Text('폭: ', style: AppTheme.a12700.copyWith(color: AppTheme.a959595),),
+                                  Text('389.5 + 390.0', style: AppTheme.a12700.copyWith(color: AppTheme.black),),
+                                ],
+                              ),
+                            )
+                          ],
+                        )*/
                       ],
                     ),
                   ),

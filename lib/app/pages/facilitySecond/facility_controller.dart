@@ -185,6 +185,7 @@ class FacilityController extends GetxController {
         irfgList.add(value['DATAS'][i]['TEXT'].toString()),
       }
     });
+
     var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
     {
       for(var i = 0; i < value['DATAS'].length; i++) {

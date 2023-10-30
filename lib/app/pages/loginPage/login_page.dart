@@ -230,7 +230,7 @@ class LoginPage extends StatelessWidget {
   Widget _logoWidget(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-              margin: const EdgeInsets.only(top: 50, bottom: 60),
+              margin: const EdgeInsets.only(top: 15, bottom: 60),
               child: Center(
                 child: Column(
                   children: [
@@ -340,23 +340,7 @@ class LoginPage extends StatelessWidget {
             CustomScrollView(
               slivers: [
                 // LoginHeader(strTitle: 'strTitle', appBarType: 1),
-                SliverAppBar(
-                  titleSpacing: 0,
-                  centerTitle: true,
-                  title:
-                  Text(
-                    '로그인',
-                    style: AppTheme.a18700.copyWith(color: Colors.black),
-                  ),
-                  backgroundColor: Colors.white,
-                  iconTheme: const IconThemeData(
-                    color: Colors.black,
-                  ),
-                  floating: true,
 
-                  expandedHeight: 30.0,
-                  //bottom: bottom,
-                ),
                 _logoWidget(context),
                 _textFieldArea(),
                 _bannerWidget(),

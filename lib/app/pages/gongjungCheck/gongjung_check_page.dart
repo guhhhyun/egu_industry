@@ -13,12 +13,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 
 class GongjungCheckPage extends StatelessWidget {
   GongjungCheckPage({Key? key}) : super(key: key);
 
   GongjungCheckController controller = Get.find();
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,7 @@ class GongjungCheckPage extends StatelessWidget {
               slivers: [
                 CommonAppbarWidget(title: '공정조회', isLogo: false, isFirstPage: true,),
                 _bodyArea(context),
-                Obx(() => controller.processList.isEmpty ? SliverToBoxAdapter(child: Container()) :
-                _topTitle(context),),
-                _listArea2(),
+                Obx(() => _list(context),),
                 SliverToBoxAdapter(child: SizedBox(height: 100,))
                 //   _listArea()
               ],
@@ -73,6 +73,306 @@ class GongjungCheckPage extends StatelessWidget {
         ),)
     );
   }
+
+  Widget _list(BuildContext context) {
+    final double height = 59*(double.parse((controller.processList.length + 1).toString()));
+
+    return SliverToBoxAdapter(
+      child: Column(children: [
+        Container(
+          width: MediaQuery.of(context).size.width-32,
+          height: height,
+          child: PlutoGrid(
+            columns: gridCols,
+            rows: controller.rowDatas,
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+              controller.gridStateMgr = event.stateManager;
+              controller.gridStateMgr.setSelectingMode(PlutoGridSelectingMode.cell);
+              //gridStateMgr.setShowColumnFilter(true);
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              print(event);
+            },
+            onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
+              Get.log('더블 클릭!!!');
+              Get.log('상세공정 page로 이동');
+              controller.selectedContainer.clear();
+              controller.selectedContainer.add(controller.processList[event.rowIdx]);
+              controller.detailCheckList();
+              Get.to(GongjungCheckDetailPage());
+            },
+            configuration: PlutoGridConfiguration(
+              style: PlutoGridStyleConfig(
+                //gridBorderColor: Colors.transparent,
+                  activatedColor: Colors.transparent,
+                  cellColorInReadOnlyState: Colors.white,
+                  columnTextStyle: AppTheme.a14500.copyWith(color: AppTheme.black),
+                  rowHeight: 55
+              ),
+            ),
+          ),
+        ),
+      ],),
+    );
+  }
+
+  final List<PlutoColumn> gridCols = <PlutoColumn>[
+    PlutoColumn(
+      title: 'NO',
+      field: 'ROW_NO',
+      type: PlutoColumnType.text(),
+      width: 50,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '공정카드번호',
+      field: 'CARD_LIST_NO',
+      type: PlutoColumnType.text(),
+      width: 130,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '연번',
+      field: 'tpage',
+      type: PlutoColumnType.text(),
+      width: 60,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '업체명',
+      field: 'CST_NM',
+      type: PlutoColumnType.text(),
+      width: 150,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '제품명',
+      field: 'CMP_NM',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '강도',
+      field: 'STT_NM',
+      type: PlutoColumnType.text(),
+      width: 60,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '두께',
+      field: 'DUKE',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '폭',
+      field: 'POUK',
+      type: PlutoColumnType.text(),
+      width: 60,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '폭2',
+      field: 'POUK2',
+      type: PlutoColumnType.text(),
+      width: 60,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업날짜',
+      field: 'PRC_INP_NO',
+      type: PlutoColumnType.text(),
+      width: 120,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업공정',
+      field: 'CPR_NM',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업두께',
+      field: 'ACT',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업호기',
+      field: 'CMH_NM',
+      type: PlutoColumnType.text(),
+      width: 120,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업자',
+      field: 'WRK_NM1',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '담당자',
+      field: 'saleman',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '메모',
+      field: 'memo',
+      type: PlutoColumnType.text(),
+      width: 350,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '공급소재',
+      field: 'COIL_ID',
+      type: PlutoColumnType.text(),
+      width: 130,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+  ];
 
   Widget _cmpAndSttItem() {
     return Row(
@@ -823,9 +1123,6 @@ class GongjungCheckPage extends StatelessWidget {
           controller.selectedContainer.clear();
           controller.selectedContainer.add(controller.processList[index]);
           controller.detailCheckList();
-        /*  Get.log('-------------------------------------------');
-          Get.log('-------------------------------------------');
-          Get.log('${controller.selectedContainer.value}');*/
           Get.to(GongjungCheckDetailPage());
         },
         child: Container(

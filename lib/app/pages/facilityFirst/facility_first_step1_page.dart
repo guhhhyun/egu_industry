@@ -930,14 +930,17 @@ class FacilityFirstStep1Page extends StatelessWidget {
           }
           controller.modifyCheck();
          // controller.modifyIrfqCdCv();
+          modifyEngineTeam();
+          controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
+          var indexLast = controller.modifyErrorTime.value.lastIndexOf(':');
+          controller.modifyErrorTime.value = controller.modifyErrorTime.value.replaceFirst('T', ' ').replaceRange(indexLast, controller.modifyErrorTime.value.length, '');
+          controller.selectedContainer[0]['INS_FG'] == 'M' ? controller.modifySelectedIns.value = '설비점검' : controller.modifySelectedIns.value = '안전점검';
+          controller.selectedContainer[0]['URGENCY_FG'] == 'N' ? controller.modifySelectedReadUrgency.value = '보통' : controller.modifySelectedReadUrgency.value = '긴급';
+          controller.modifySelectedMachMap['MACH_CODE'] = controller.selectedContainer[0]['MACH_CODE'];
+          controller.selectedContainer[0]['MACH_CODE'] == '' ? controller.modifySelectedMachMap['MACH_NAME'] = '전체' : controller.modifySelectedMachMap['MACH_NAME'] = modifyMach();
+          controller.modifyTextTitleController.text = controller.selectedContainer[0]['IR_TITLE'];
 
-          showDialog(
-              context: context,
-              builder: (BuildContext context)
-              {
-                return _modifyAlert();
-              }
-          );
+          Get.to(const FacilityFirstModifyPage());
         }
       },
       child: Obx(() => Container(

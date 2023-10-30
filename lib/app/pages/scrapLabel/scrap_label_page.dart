@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/scrapLabel/bottomSheet.dart';
 import 'package:egu_industry/app/pages/scrapLabel/scrap_label_controller.dart';
@@ -236,13 +237,18 @@ class ScrapLabelPage extends StatelessWidget {
 
                       /// 스크랩 선택으로 인한 적재위치 리스트 변경
                      if(flag == 1 && controller.selectedGubun.value == '지금류') {
-                       controller.matlGb.value = '1';
-                       await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W02'}).then((value) => // // 적재위치(지금류)
-                       {
-                         controller.selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
-                         controller.selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
-                         controller.scLocList.value = value['DATAS'],
-                       });
+                       try{
+                         controller.matlGb.value = '1';
+                         await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W02'}).then((value) => // // 적재위치(지금류)
+                         {
+                           controller.selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
+                           controller.selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
+                           controller.scLocList.value = value['DATAS'],
+                         });
+                       }catch(e) {
+                         print('USP_SCS0300_R01 err -----> $e');
+                         controller.selectedScLocMap['NAME'] = '네트워크 에러';
+                       }
                      }
                       Get.log('${controller.scLocList.value} 선택!!!!');
                       Get.log('$value 선택!!!!');
@@ -1197,8 +1203,11 @@ class ScrapLabelPage extends StatelessWidget {
     );
   }
 
+/*bool isButton = false;*/
 
   Widget _bottomButton(BuildContext context) {
+/*    if(isButton) return Container();
+    isButton = true;*/
     return Obx(() => BottomAppBar(
         color: AppTheme.white,
         surfaceTintColor: AppTheme.white,
@@ -1237,7 +1246,6 @@ class ScrapLabelPage extends StatelessWidget {
                       controller.isClearDuplication.value = true;
                       controller.isEndLabel.value = false;
                       Get.offAllNamed(Routes.SCRAP_LABEL);
-
                     }
                   },
                   child: Container(
@@ -1260,9 +1268,8 @@ class ScrapLabelPage extends StatelessWidget {
                   onTap: () async {
                     if (controller.isSecondDuplication.value == false){
                       controller.isSecondDuplication.value = true;
-                      controller.isPrinting.value = true;
                       controller.reButton(context);
-                      Future.delayed(Duration(seconds: 1), (){
+                      Future.delayed(Duration(seconds: 3), (){
                         controller.isSecondDuplication.value = false;
                       });
                     }

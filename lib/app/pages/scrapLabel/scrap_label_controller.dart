@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_detail_page.dart';
 import 'package:egu_industry/app/pages/processTransfer/process_transfer_controller.dart';
@@ -75,53 +76,63 @@ class ScrapLabelController extends GetxController {
 
 
   Future<void> popUpData() async {
-    var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '', '@p_DATE_FROM': '2023-08-22', '@p_DATE_TO': endValue.value }).then((value) => // pop
-    {
-      if(value['DATAS'] != null) {
-        for(var i = 0; i < value['DATAS'].length; i++){
-          popUpDataList.add(value['DATAS'][i]),
+    try{
+      var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '', '@p_DATE_FROM': '2023-08-22', '@p_DATE_TO': endValue.value }).then((value) => // pop
+      {
+        if(value['DATAS'] != null) {
+          for(var i = 0; i < value['DATAS'].length; i++){
+            popUpDataList.add(value['DATAS'][i]),
+          },
         },
-      },
-    });
-    Get.log('계량정보 선택::::: $a');
-    Get.log('계량정보 선택2::::: $popUpDataList');
+      });
+      Get.log('계량정보 선택::::: $a');
+      Get.log('계량정보 선택2::::: $popUpDataList');
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류');
+      print(e);
+    }
   }
 
   Future<void> convert() async {
     selectedIndustryMap.clear();
     selectedIndustryMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
 
-    var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PROC'}).then((value) => // 공정정보
-    {
-      value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-      industryList.value = value['DATAS'],
-    });
-    Get.log('공장정보::::: $a');
-    selectedScrapNmMap.clear();
-    selectedScrapNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
-    var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'SC'}).then((value) => // 스크랩품명
-    {
-      value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-      scrapNmList.value = value['DATAS'],
-    });
-    Get.log('스크랩품명::::: $b');
-    selectedRmNmMap.clear();
-    selectedRmNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
-    var c = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'RM'}).then((value) => // 지금류품명
-    {
-      value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-      rmNmList.value = value['DATAS'],
-    });
+    try{
+      var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PROC'}).then((value) => // 공정정보
+      {
+        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        industryList.value = value['DATAS'],
+      });
+      Get.log('공장정보::::: $a');
+      selectedScrapNmMap.clear();
+      selectedScrapNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
+      var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'SC'}).then((value) => // 스크랩품명
+      {
+        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        scrapNmList.value = value['DATAS'],
+      });
+      Get.log('스크랩품명::::: $b');
+      selectedRmNmMap.clear();
+      selectedRmNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
+      var c = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'RM'}).then((value) => // 지금류품명
+      {
+        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        rmNmList.value = value['DATAS'],
+      });
 
-    Get.log('지금류품명::::: $c');
-    selectedTareMap.clear();
-    selectedTareMap.addAll({'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT': ''});
-    var d = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SLT'}).then((value) => // 설통번호
-    {
-      value['DATAS'].insert(0, {'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT':'' }),
-      tareList.value = value['DATAS'],
-    });
-    Get.log('설통번호::::: $d');
+      Get.log('지금류품명::::: $c');
+      selectedTareMap.clear();
+      selectedTareMap.addAll({'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT': ''});
+      var d = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SLT'}).then((value) => // 설통번호
+      {
+        value['DATAS'].insert(0, {'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT':'' }),
+        tareList.value = value['DATAS'],
+      });
+      Get.log('설통번호::::: $d');
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
+
   }
 
 
@@ -229,69 +240,80 @@ class ScrapLabelController extends GetxController {
 
   // 지금류 라벨발행
   Future<void> saveButton(BuildContext context) async {
-   var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb',
-      '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
-      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : '', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
-      '@p_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@p_WH_NO' : 'WH02',
-      '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
-   {
-     Get.log('스크랩 라밸 성공::::::::::: $value'),
-     scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString()
-   });
-   var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
-   {
-     Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-     realLabelData.value = value['DATAS'],
-   });
-   await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
-
-
-  // Get.to(PrintPage(''));
-  // Get.toNamed(Routes.BLUETOOTH_PRINTER);
+    try{
+      var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb',
+        '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
+        , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : '', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
+        '@p_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@p_WH_NO' : 'WH02',
+        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
+      {
+        Get.log('스크랩 라밸 성공::::::::::: $value'),
+        scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
+        isEndLabel.value = true
+      });
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류입니다. (1)');
+      isFirstDuplication.value = false;
+    }
+    try{
+      var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
+      {
+        Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
+        realLabelData.value = value['DATAS'],
+        isEndLabel.value = true
+      });
+      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류입니다. (2)');
+      isFirstDuplication.value = false;
+    }
   }
+
 
   /// 재발행
   Future<void> reButton(BuildContext context) async {
-    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context);
+    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context);
   }
 
   // 스크랩 라벨발행
   Future<void> scrapSaveButton(BuildContext context) async {
-    var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
-      '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
-      , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : ''
-      , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : selectedTareMap['NAME'] == '설통번호 선택' ? '' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? '0' : '${selectedTareMap['WEIGHT']}',
-      '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? weighingTextController.text : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
-      '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
-    {
-      Get.log('스크랩 라밸 성공::::::::::: $value'),
-      scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString()
-    });
+    try{
+      var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
+        '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
+        , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : ''
+        , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : selectedTareMap['NAME'] == '설통번호 선택' ? '' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? '0' : '${selectedTareMap['WEIGHT']}',
+        '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? weighingTextController.text : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
+        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
+      {
+        Get.log('스크랩 라밸 성공::::::::::: $value'),
+        scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
+        isEndLabel.value = true
+      });
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류입니다. (1)');
+      isFirstDuplication.value = false;
+    }
 
-    var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
-    {
-      Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-      realLabelData.value = value['DATAS'],
-
-    });
-    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": '${realLabelData[0]['SCRAP_NO']}'}, context); // ex
-
-
-
-
+    try{
+      var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
+      {
+        Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
+        realLabelData.value = value['DATAS'],
+        isEndLabel.value = true
+      });
+      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
+    }catch(e) {
+      Utils.gErrorMessage('네트워크 오류입니다. (2)');
+      isFirstDuplication.value = false;
+    }
   }
 
 
   /// 프린트
   Future<void> PrintAlpha_3RB(String CODE, Map? PARAM,BuildContext context ) async{
-    isPrinting.value = true;
     var bluetoothManager = FlutterSimpleBluetoothPrinter.instance;
     final bondedDevices = await bluetoothManager.getAndroidPairedDevices();
-    _showDialog(
-        context,
-        '라벨발행 중입니다',
-        '잠시만 기다려주세요'
-    );
+
     bondedDevices.forEach((device) async {
       Get.log(device.name+"\t"+device.address+"\t"+device.isLE.toString());
       if(device.name.startsWith("Alpha-3R")){
@@ -300,12 +322,17 @@ class ScrapLabelController extends GetxController {
         }finally{}
         bool isConnected = await bluetoothManager.connect(address: device.address, isBLE: device.isLE);
         if(isConnected) {
+          _showDialog(
+              context,
+              '라벨발행 중입니다',
+              '잠시만 기다려주세요'
+          );
           try {
             Map map = await HomeApi.to.REPORT_MONO_BITMAP(CODE, PARAM);
             String str = "SIZE @WIDTH@mm,@HEIGHT@mm\r\nGAP 0,0\r\nCLS\r\nBITMAP 0,0,@BITMAP_WIDTH@,@BITMAP_HEIGHT@,0,@BitmapData@\r\nPRINT 1,1\r\n";
             str = str.replaceAll("@WIDTH@", (map["WIDTH"] / 10).floor().toString())
                 .replaceAll(
-                "@HEIGHT@", (map["HEIGHT"] / 10).floor().toString() )
+                "@HEIGHT@", (map["HEIGHT"] / 10).floor().toString())
                 .replaceAll("@BITMAP_WIDTH@",
                 ((map["BITMAP_WIDTH"] / 8).floor() + 1).toString())
                 .replaceAll("@BITMAP_HEIGHT@",
@@ -321,16 +348,20 @@ class ScrapLabelController extends GetxController {
             await bluetoothManager.writeRawData(bytes);
           }catch(ex){
             Get.log(ex.toString());
-            isPrinting.value = false;
+            isEndLabel.value = true;
+            Utils.gErrorMessage('네트워크 오류입니다.');
           }
           finally {
             await bluetoothManager.disconnect();
-            isPrinting.value = false;
             isEndLabel.value = true;
           }
+        }else {
+          Utils.gErrorMessage('프린터 연결이 끊어졌습니다.');
+          isEndLabel.value = true;
         }
       }
     });
+
 
   }
 
@@ -342,7 +373,7 @@ class ScrapLabelController extends GetxController {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              backgroundColor: AppTheme.dongkuk_white,
+              backgroundColor: AppTheme.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0)),
               title: Column(
@@ -391,7 +422,7 @@ class ScrapLabelController extends GetxController {
               actions: [
                 Container(
                   child: (() {
-                    Future.delayed(const Duration(seconds: 3), () {
+                    Future.delayed(const Duration(seconds: 2), () {
                       Get.back();
                     });
                   })(),

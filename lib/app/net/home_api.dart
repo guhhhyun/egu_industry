@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:get/get.dart';
 import 'network_manager.dart';
 import 'package:http/http.dart' as http;
@@ -44,6 +45,7 @@ class HomeApi {
       return result;
     } catch (ex) {
       exception = ex;
+      Utils.gErrorMessage('네트워크 오류');
     } finally {
       log({
         'url': url,
@@ -163,6 +165,13 @@ class HomeApi {
     return data;
   }
 
+  Future<String> LOGIN_MOB(String USER_ID, String PWD) async {
+    String res = await EXEC2("LOGIN_MOB", "", {"USER_ID":USER_ID,"PWD":PWD}) ?? "";
+    Map data = json.decode(res);
+    String STATUS = data["STATUS"];
+    return STATUS;
+  }
+
 
   Future<String?> EXEC2(
   String MODE,
@@ -204,6 +213,7 @@ class HomeApi {
       return result;
     }catch(ex){
       exception = ex;
+      Utils.gErrorMessage('네트워크 오류');
     }finally{
       //log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
       //log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());

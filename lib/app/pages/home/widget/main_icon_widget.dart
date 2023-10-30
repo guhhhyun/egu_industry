@@ -281,6 +281,23 @@ class MainIconWidget extends StatelessWidget {
                     }),),
               ],
             ),
+           /* const SizedBox(height: 12,),
+            Row(
+              children: [
+                Expanded(child: _buttonArea(
+                    imgUrl: 'assets/app/Group-5.png',
+                    title: '가공설',
+                    subTitle: '',
+                    onPressed: () {
+                      Get.log('가공설');
+                      Get.toNamed(Routes.GAGONG_FACILITY);
+                    }),),
+                const SizedBox(width: 12,),
+                Expanded(child: _buttonAreaWhite(),),
+                const SizedBox(width: 12,),
+                Expanded(child: _buttonAreaWhite(),),
+              ],
+            ),*/
           ],
         ),
       ),

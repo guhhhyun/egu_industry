@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -23,6 +24,10 @@ class GongjungCheckController extends GetxController {
   RxBool isLoading = false.obs;
   RxString gubunCd = '1'.obs;
   RxList selectedContainer = [].obs;
+  List<PlutoRow> rowDatas = [];
+  List<PlutoRow> rowDatasDetail = [];
+  late final PlutoGridStateManager gridStateMgr;
+  late PlutoGridStateManager gridStateMgr2;
 
 
   Future<void> checkButton() async {
@@ -40,6 +45,7 @@ class GongjungCheckController extends GetxController {
       Get.log('USP_MBR0800_R02 err = ${err.toString()} ', isError: true);
     }finally {
       isLoading.value = false;
+      plutoRow();
     }
   }
 
@@ -58,9 +64,33 @@ class GongjungCheckController extends GetxController {
       Get.log('USP_MBR0800_R03 err = ${err.toString()} ', isError: true);
     }finally {
       isLoading.value = false;
+      plutoRow2();
     }
   }
+  Future<void> plutoRow() async {
+    rowDatas = List<PlutoRow>.generate(processList.length, (index) =>
+        PlutoRow(cells:
+        Map.from((processList[index]).map((key, value) =>
+            MapEntry(key, PlutoCell(value: value)),
+        )))
+    );
+    gridStateMgr.removeAllRows();
+    gridStateMgr.appendRows(rowDatas);
+    gridStateMgr.scroll.vertical?.animateTo(25, curve: Curves.bounceIn, duration: Duration(milliseconds: 100));
+  }
 
+  Future<void> plutoRow2() async {
+
+    rowDatasDetail = List<PlutoRow>.generate(processDetailList.length, (index) =>
+        PlutoRow(cells:
+        Map.from((processDetailList[index]).map((key, value) =>
+            MapEntry(key, PlutoCell(value: value)),
+        )))
+    );
+    gridStateMgr2.removeAllRows();
+    gridStateMgr2.appendRows(rowDatasDetail);
+    gridStateMgr2.scroll.vertical?.animateTo(25, curve: Curves.bounceIn, duration: Duration(milliseconds: 100));
+  }
 
   Future<void> convert() async {
     cmpList.clear();
@@ -98,5 +128,6 @@ class GongjungCheckController extends GetxController {
 
   @override
   void onReady() {
+    checkButton();
   }
 }

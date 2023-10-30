@@ -513,7 +513,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                         child: Text(
                           value,
                           style: AppTheme.a16400
-                              .copyWith(color:  controller.modifySelectedIrFq.value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                              .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),

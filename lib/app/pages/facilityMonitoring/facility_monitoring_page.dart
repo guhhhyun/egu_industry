@@ -203,7 +203,8 @@ class FacilityMonitoringPage extends StatelessWidget {
                         BorderSide(color: AppTheme.ae2e2e2),
                         top: BorderSide(color: AppTheme.ae2e2e2),
                         right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
+                            color: AppTheme.ae2e2e2),
+                    )),
                 height: 34,
                 child: Center(
                   child: Text('설비',
@@ -213,8 +214,7 @@ class FacilityMonitoringPage extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Container(
+            Container(
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
@@ -222,6 +222,7 @@ class FacilityMonitoringPage extends StatelessWidget {
                         right: BorderSide(
                             color: AppTheme.ae2e2e2))),
                 height: 34,
+                width: 60,
                 child: Center(
                   child: Text(
                     '상태',
@@ -229,10 +230,8 @@ class FacilityMonitoringPage extends StatelessWidget {
                         .copyWith(color: AppTheme.light_text_primary),
                   ),
                 ),
-              ),
             ),
-            Expanded(
-              child: Container(
+            Container(
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
@@ -241,13 +240,13 @@ class FacilityMonitoringPage extends StatelessWidget {
                         right: BorderSide(
                             color: AppTheme.ae2e2e2))),
                 height: 34,
+                width: 60,
                 child: Center(
                   child: Text('시간',
                       style: AppTheme.titleSubhead1
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
-              ),
             ),
             Expanded(
               child: Container(
@@ -293,14 +292,18 @@ class FacilityMonitoringPage extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           left:
                           BorderSide(color: AppTheme.ae2e2e2),
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                          bottom: index ==  controller.monitoringList.length -1 ? BorderSide(
+                              color: AppTheme.ae2e2e2) : BorderSide(
+                              color: Colors.transparent),
+                      )),
                   height: 40,
                   child: Center(
                     child:   Text(controller.monitoringList[index]['CMH_NM'],
@@ -309,8 +312,7 @@ class FacilityMonitoringPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(
+              Container(
                   decoration: BoxDecoration(
                       color: controller.monitoringList[index]['STATUS_NM'] == '가동'
                           ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
@@ -319,41 +321,51 @@ class FacilityMonitoringPage extends StatelessWidget {
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                        bottom: index ==  controller.monitoringList.length -1 ? BorderSide(
+                            color: AppTheme.ae2e2e2) : BorderSide(
+                            color: Colors.transparent),)),
                   height: 40,
+                  width: 60,
                   child: Center(
                       child: Text(
                           controller.monitoringList[index]['STATUS_NM'],
                         style: AppTheme.a12500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
                   ),
-                ),
               ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
+              Container(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
 
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                        bottom: index ==  controller.monitoringList.length -1 ? BorderSide(
+                            color: AppTheme.ae2e2e2) : BorderSide(
+                            color: Colors.transparent),
+                      )),
                   height: 40,
+                  width: 60,
                   child: Center(
                     child: Text(controller.monitoringList[index]['LEAD_TIME'].toString(),
                       style: AppTheme.a12500
                           .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
-                ),
               ),
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),
                           right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
+                              color: AppTheme.ae2e2e2),
+                        bottom: index ==  controller.monitoringList.length -1 ? BorderSide(
+                            color: AppTheme.ae2e2e2) : BorderSide(
+                            color: Colors.transparent),
+                      )),
                   height: 40,
                   child: Center(
                     child: Text(controller.monitoringList[index]['ALARM_VAL'] != '' ? '${controller.monitoringList[index]['ALARM_VAL']}' : '',

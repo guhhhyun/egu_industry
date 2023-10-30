@@ -47,11 +47,6 @@ class AlarmPage extends GetView<AlarmController> {
             controller: controller.tabController,
             indicatorColor: AppTheme.black,
             labelColor: AppTheme.black,
-            onTap: (value) {
-              if (value == 1) {
-                gs.isLogin.value ? null : Get.toNamed(Routes.LOGIN_PAGE);
-              }
-            },
             unselectedLabelColor: AppTheme.light_ui_05,
             tabs: [
               Container(
@@ -289,6 +284,64 @@ class AlarmPage extends GetView<AlarmController> {
       ],
     );
   }
+
+
+ /* Widget _listArea() {
+
+    return Obx(() => SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _listItem(index: index, context: context);
+        }, childCount: controller.noticeList.length)));
+  }
+
+
+  Widget _listItem({required BuildContext context, required int index}) {
+    return Obx(() => Container(
+      margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
+      padding: EdgeInsets.only(top: 24, bottom: 18, left: 18, right: 18),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.aE2E2E2),
+          color: AppTheme.white,
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.gray_c_gray_100.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ]
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          controller.noticeList.isNotEmpty ?
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(controller.noticeList[index]['GUBUN'],
+                  style: AppTheme.a16700
+                      .copyWith(color: AppTheme.black)),
+            ],
+          )
+              : Container(),
+          SizedBox(height: 4,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(controller.noticeList[index]['TITLE'].toString(),
+                    style: AppTheme.a14500
+                        .copyWith(color: AppTheme.a6c6c6c), softWrap: true),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+    );
+  }*/
+
 
 
   @override

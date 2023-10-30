@@ -769,8 +769,7 @@ class ProcessTransferPage extends StatelessWidget {
             ),
           child: Row(
             children: [
-              Expanded(
-                child: Container(
+              Container(
                   decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
@@ -780,16 +779,16 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
+                  width: 60,
                   child: Center(
                     child: Text('${index + 1}',
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
-                ),
+
               ),
-              Expanded(
-                child: Container(
+             Container(
                   decoration: BoxDecoration(
                       color: AppTheme.white,
                       border: Border(
@@ -797,14 +796,15 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
+                  width: 90,
                   child: Center(
                     child: Text(
                         controller.processList[index]['URGENCY_FG'] == 'U' ? '긴급' : '보통', /// 긴급 or 보통 으로
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
                   ),
-                ),
+       
               ),
               Expanded(
                 child: Container(
@@ -816,12 +816,18 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
-                  child: Center(
-                    child: Text(controller.processList[index]['FROM_DATE'],
-                        style: AppTheme.a14500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
+                  height: 80,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(controller.processList[index]['FROM_DATE'].toString().substring(0, 10),
+                            style: AppTheme.a16500
+                                .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                        Text(controller.processList[index]['FROM_DATE'].toString().substring(11, 16),
+                          style: AppTheme.a16500
+                              .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      ],
+                    ),
                 ),
               ),
               MediaQuery.of(context).size.width <= 450 ? Container() :
@@ -834,10 +840,10 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
                   child: Center(
                     child: Text(controller.processList[index]['CMP_NM'].toString(),
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -853,10 +859,10 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
                   child: Center(
                     child: Text(controller.processList[index]['FROM_MACH_NM'].toString(),
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -872,10 +878,10 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
                   child: Center(
                     child: Text(controller.processList[index]['TO_MACH_NM'].toString(),
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -890,10 +896,10 @@ class ProcessTransferPage extends StatelessWidget {
                           right: BorderSide(
                               color: AppTheme.ae2e2e2),
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 50,
+                  height: 80,
                   child: Center(
                     child: Text(controller.processList[index]['FKF_NM'].toString(),
-                        style: AppTheme.a14500
+                        style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                   ),
                 ),
@@ -910,12 +916,18 @@ class ProcessTransferPage extends StatelessWidget {
                               color: AppTheme.ae2e2e2),
                         bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent),)),
 
-                  height: 50,
-                  child: Center(
-                    child: Text(controller.processList[index]['TO_DATE'].toString(),
-                        style: AppTheme.a14500
-                            .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
-                  ),
+                  height: 80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(controller.processList[index]['TO_DATE'].toString().substring(0, 10),
+                            style: AppTheme.a16500
+                                .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
+                        Text(controller.processList[index]['TO_DATE'].toString().substring(11, 16),
+                          style: AppTheme.a16500
+                              .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
+                      ],
+                    ),
                 ),
               ),
               Expanded(
@@ -929,9 +941,9 @@ class ProcessTransferPage extends StatelessWidget {
                           bottom: index == controller.processList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent),
 
                       )),
-                  height: 50,
+                  height: 80,
                   child: Center(
-                    child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.red_red_800,)
+                    child: controller.isprocessSelectedList.isEmpty ?  Container() : controller.isprocessSelectedList[index] ? Icon(Icons.check, color: AppTheme.red_red_800, size: 35,)
                         : Container()
                   ),
                 ),
@@ -953,8 +965,7 @@ class ProcessTransferPage extends StatelessWidget {
         padding: EdgeInsets.only(left: 18, right: 18),
         child: Row(
           children: [
-            Expanded(
-              child: Container(
+            Container(
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
@@ -963,32 +974,32 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 50,
+                height: 80,
+                width: 60,
                 child: Center(
                   child: Text('번호',
-                      style: AppTheme.a14700
+                      style: AppTheme.a16700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
-              ),
             ),
-            Expanded(
-              child: Container(
+            Container(
                 decoration: const BoxDecoration(
                     color: AppTheme.blue_blue_300,
                     border: Border(
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 50,
+                height: 80,
+                width: 90,
                 child: Center(
                   child: Text(
                     '이동구분',
-                    style: AppTheme.a14700
+                    style: AppTheme.a16700
                         .copyWith(color: AppTheme.light_text_primary),
                   ),
                 ),
-              ),
+
             ),
             Expanded(
               child: Container(
@@ -999,10 +1010,10 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 50,
+                height: 80,
                 child: Center(
                   child: Text('요청일시',
-                      style: AppTheme.a14700
+                      style: AppTheme.a16700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
@@ -1018,10 +1029,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 50,
+                    height: 80,
                     child: Center(
                       child: Text('제품명',
-                          style: AppTheme.a14700
+                          style: AppTheme.a16700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1035,10 +1046,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 50,
+                    height: 80,
                     child: Center(
                       child: Text('작업위치',
-                          style: AppTheme.a14700
+                          style: AppTheme.a16700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1054,10 +1065,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 50,
+                    height: 80,
                     child: Center(
                       child: Text('이동위치',
-                          style: AppTheme.a14700
+                          style: AppTheme.a16700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1072,10 +1083,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 50,
+                    height: 80,
                     child: Center(
                       child: Text('지게차호기',
-                          style: AppTheme.a14700
+                          style: AppTheme.a16700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1091,10 +1102,10 @@ class ProcessTransferPage extends StatelessWidget {
                             top: BorderSide(color: AppTheme.gray_c_gray_200),
                             right: BorderSide(
                                 color: AppTheme.gray_c_gray_200))),
-                    height: 50,
+                    height: 80,
                     child: Center(
                       child: Text('처리일시',
-                          style: AppTheme.a14700
+                          style: AppTheme.a16700
                               .copyWith(color: AppTheme.light_text_primary),
                           textAlign: TextAlign.left),
                     ),
@@ -1110,10 +1121,10 @@ class ProcessTransferPage extends StatelessWidget {
                         top: BorderSide(color: AppTheme.gray_c_gray_200),
                         right: BorderSide(
                             color: AppTheme.gray_c_gray_200))),
-                height: 50,
+                height: 80,
                 child: Center(
                   child: Text('작업선택',
-                      style: AppTheme.a14700
+                      style: AppTheme.a16700
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
                 ),
