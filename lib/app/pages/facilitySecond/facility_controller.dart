@@ -1,5 +1,6 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilitySecond/modal_part_list_widget.dart';
 import 'package:egu_industry/app/pages/facilitySecond/modal_user_list_widget.dart';
@@ -48,17 +49,18 @@ class FacilityController extends GetxController {
   RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
   RxString selectedResultFg = '전체'.obs;
   RxString selectedCheckResultFg = '전체'.obs;
-  RxList<String> resultIrFqList = ['전체','돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
-  RxString selectedCheckIrFg = '전체'.obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString resultFgCd = ''.obs;
   RxList<String> noReasonList = [''].obs;
   RxString selectedNoReason = '선택해주세요'.obs;
   RxString noReasonCd = ''.obs;
   RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
   RxString rpUser = ''.obs;
-  RxList<String> urgencyList = ['보통', '긴급'].obs;
+  RxList<String> urgencyList = ['전체','보통', '긴급'].obs;
   RxString selectedUrgency = '보통'.obs;
-  RxString selectedReadUrgency = '보통'.obs;
+  RxString selectedReadUrgency = '전체'.obs;
   RxString urgencyReadCd = ''.obs;
   RxList<String> insList = ['선택해주세요', '설비점검', '안전점검'].obs;
   RxString selectedIns = '선택해주세요'.obs;
@@ -66,7 +68,7 @@ class FacilityController extends GetxController {
   RxString insReadCd = ''.obs;
   RxList<String> engineTeamList = [''].obs;
   RxString selectedEngineTeam = '선택해주세요'.obs;
-  RxString selectedReadEngineTeam = '전기팀'.obs;
+  RxString selectedReadEngineTeam = '전체'.obs;
   RxString engineTeamReadCd = ''.obs;
   RxList<bool> isEngineerSelectedList = [false].obs;
   RxList<dynamic> engineerSelectedList = [].obs;
@@ -84,6 +86,7 @@ class FacilityController extends GetxController {
   RxList<String> machCdList = [''].obs;
   RxString selectedMachCd = ''.obs;
   RxList<dynamic> engineer2List = [].obs;
+
 
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
@@ -157,49 +160,54 @@ class FacilityController extends GetxController {
     isEngineerSelectedList.clear();
     engineerIdList.clear();
     engineTeamList.clear();
+    engineTeamList.add('전체');
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
 
+    try{
+      /// 정비자 리스트
+      var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
+      {
+        for(var i = 0; i < value['DATAS'].length; i++) {
 
-    /// 정비자 리스트
-    var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
-    {
-      for(var i = 0; i < value['DATAS'].length; i++) {
+          engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
+          engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
+          isEngineerSelectedList.add(false)
+        },
+        engineer2List.value = value['DATAS'],
+      });
+      /// 설비
+      var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+      {
+        // Get.log('우웅ㅇ ${value}'),
+        machList.value = value['DATAS']
+      });
+      Get.log('이거봥 ${engineer2}');
+      var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+      {
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          irfgList.add(value['DATAS'][i]['TEXT'].toString()),
+        }
+      });
 
-        engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
-        engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
-        isEngineerSelectedList.add(false)
-      },
-      engineer2List.value = value['DATAS'],
-    });
-    /// 설비
-    var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
-    {
-      // Get.log('우웅ㅇ ${value}'),
-      machList.value = value['DATAS']
-    });
-    Get.log('이거봥 ${engineer2}');
-    var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
-    {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        irfgList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
+      var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
+      {
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
+        }
+      });
+      /// 점검부서
+      var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
+      {
+        //Get.log('우웅ㅇ ${value}'),
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
+        }
+      });
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
 
-    var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
-    {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
-    /// 점검부서
-    var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
-    {
-      //Get.log('우웅ㅇ ${value}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
   }
 
   void readCdConvert() {
@@ -323,7 +331,8 @@ class FacilityController extends GetxController {
   void onInit() {
     readCdConvert();
     datasList.clear();
-    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
+      , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : irFgCd.value}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {

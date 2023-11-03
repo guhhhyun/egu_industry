@@ -1,4 +1,5 @@
 
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/animation.dart';
 
@@ -51,6 +52,7 @@ class ProcessCheckController extends GetxController {
 
     }catch (err) {
       Get.log('USP_MBR1600_R02 err = ${err.toString()} ', isError: true);
+      Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;
       plutoRow();
@@ -97,6 +99,7 @@ class ProcessCheckController extends GetxController {
       Get.log('작업조회 600 :::::::::::::: ${a}');
     }catch (err) {
       Get.log('USP_MBR1600_R01 err = ${err.toString()} ', isError: true);
+      Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;
       plutoRow();

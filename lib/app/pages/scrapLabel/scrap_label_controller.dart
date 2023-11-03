@@ -249,24 +249,25 @@ class ScrapLabelController extends GetxController {
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
-        isEndLabel.value = true
       });
+      isEndLabel.value = true;
+      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;
     }
-    try{
+ /*   try{
       var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
       {
         Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
         realLabelData.value = value['DATAS'],
-        isEndLabel.value = true
       });
+      isEndLabel.value = true;
       await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (2)');
       isFirstDuplication.value = false;
-    }
+    }*/
   }
 
 
@@ -287,14 +288,16 @@ class ScrapLabelController extends GetxController {
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
-        isEndLabel.value = true
       });
+      isEndLabel.value = true;
+      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
+      Get.log('트루 ::: ${isEndLabel.value}');
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;
     }
 
-    try{
+   /* try{
       var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
       {
         Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
@@ -305,7 +308,7 @@ class ScrapLabelController extends GetxController {
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (2)');
       isFirstDuplication.value = false;
-    }
+    }*/
   }
 
 
@@ -317,9 +320,6 @@ class ScrapLabelController extends GetxController {
     bondedDevices.forEach((device) async {
       Get.log(device.name+"\t"+device.address+"\t"+device.isLE.toString());
       if(device.name.startsWith("Alpha-3R")){
-        try {
-          await bluetoothManager.disconnect();
-        }finally{}
         bool isConnected = await bluetoothManager.connect(address: device.address, isBLE: device.isLE);
         if(isConnected) {
           _showDialog(
@@ -349,7 +349,8 @@ class ScrapLabelController extends GetxController {
           }catch(ex){
             Get.log(ex.toString());
             isEndLabel.value = true;
-            Utils.gErrorMessage('네트워크 오류입니다.');
+            Utils.gErrorMessage('프린트 오류입니다.');
+            Get.back();
           }
           finally {
             await bluetoothManager.disconnect();
@@ -425,6 +426,44 @@ class ScrapLabelController extends GetxController {
                     Future.delayed(const Duration(seconds: 2), () {
                       Get.back();
                     });
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                      const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(15),
+                                              bottomRight: Radius.circular(15)))),
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.all(0))),
+                              onPressed: () {
+                                Get.log('취소 클릭!');
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(color: const Color(0x5c3c3c43),)
+                                    )
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                  top: AppTheme.spacing_s_12,
+                                  bottom: AppTheme.spacing_s_12,
+                                ),
+                                child: Center(
+                                  child: Text('닫기',
+                                      style: AppTheme.titleHeadline.copyWith(
+                                          color: AppTheme.black,
+                                          fontSize: 17)),
+                                ),
+                              ),
+                            ),
+                          )]);
                   })(),
                 ),
               ]);

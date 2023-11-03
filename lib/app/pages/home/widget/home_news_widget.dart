@@ -1,4 +1,5 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class HomeNewsWidget extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Column(
         children: [
-         // _alarmItem('알림'),
+          _alarmItem('알림사항'),
           _newItem('공지사항'),
         ],
       ),
@@ -38,7 +39,7 @@ class HomeNewsWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             color: Colors.white
         ),
-        child: controller.noticeList.isNotEmpty ? Column(
+        child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,62 +53,125 @@ class HomeNewsWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16,),
             /// 여긴 api 불러와서 list 최신 3개만 뿌려줘야함 --------------------
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            controller.alarmNList.isNotEmpty ?
+            Column(
               children: [
-                Text('${controller.noticeList[0]['GUBUN']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
-                SizedBox(
-                  width: 152,
+                InkWell(
+                  onDoubleTap: () async{
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[0]["ID"]});
+                    controller.reqListAlarm();
+                  },
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 12,),
-                      Expanded(
-                        child: Container(
-                            child: Text('${controller.noticeList[0]['TITLE']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c),
-                              overflow: TextOverflow.ellipsis,), alignment: Alignment.centerRight
+                      Row(
+                        children: [
+                          Text(controller.alarmNList[0]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[0]['TYPE_MSG_NM']}] ' : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                          Text(controller.alarmNList[0]['TEXT_TG'] != null ? controller.alarmNList[0]['TEXT_TG'] : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 152,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 12,),
+                            Expanded(
+                              child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child:   Text(controller.alarmNList[0]['TEXT_CT'] ?? '',
+                                      style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis)
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8,),
+                InkWell(
+                  onDoubleTap: () async{
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[1]["ID"]});
+                    controller.reqListAlarm();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(controller.alarmNList[1]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[0]['TYPE_MSG_NM']}] ' : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                          Text(controller.alarmNList[1]['TEXT_TG'] != null ? controller.alarmNList[0]['TEXT_TG'] : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 152,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 12,),
+                            Expanded(
+                              child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child:   Text(controller.alarmNList[1]['TEXT_CT'] ?? '',
+                                      style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis)
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8,),
+                InkWell(
+                  onDoubleTap: () async{
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[2]["ID"]});
+                    controller.reqListAlarm();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(controller.alarmNList[2]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[0]['TYPE_MSG_NM']}] ' : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                          Text(controller.alarmNList[2]['TEXT_TG'] != null ? controller.alarmNList[0]['TEXT_TG'] : '',
+                              style: AppTheme.a14400
+                                  .copyWith(color: AppTheme.a6c6c6c)),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 152,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 12,),
+                            Expanded(
+                              child: Container(
+                                  alignment: Alignment.centerRight,
+                                  child:   Text(controller.alarmNList[2]['TEXT_CT'] ?? '',
+                                      style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis)
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 8,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('${controller.noticeList[1]['GUBUN']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
-                Container(
-                  width: 152,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 12,),
-                      Expanded(child: Container(
-                          child: Text('${controller.noticeList[1]['TITLE']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis), alignment: Alignment.centerRight)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('${controller.noticeList[2]['GUBUN']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c)),
-                Container(
-                  width: 152,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 12,),
-                      Expanded(child: Container( child: Text('${controller.noticeList[2]['TITLE']}', style: AppTheme.a14400.copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis), alignment: Alignment.centerRight,)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            ) : Container()
+
             /// ---------------------------------------------------
           ],
-        ) : Container()
+        )
     ));
   }
   

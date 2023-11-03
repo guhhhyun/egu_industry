@@ -712,7 +712,7 @@ class ProcessTransferPage extends StatelessWidget {
                     await controller.saveButton(i);
                   }
                   SchedulerBinding.instance!.addPostFrameCallback((_) {
-                    Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 5,));
+                    Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 5,));
                     controller.processSelectedList.clear();
                   });
                 } : null : null,

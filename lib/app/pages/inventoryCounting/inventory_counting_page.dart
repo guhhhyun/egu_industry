@@ -54,12 +54,12 @@ class InventoryCountingPage extends StatelessWidget {
             //  _scrapDropdown(),
               Column(
                 children: [
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   _calendarItem(),
                   controller.isShowCalendar.value == true ? _calendar() : Container(),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   _checkButton(),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   _barcodeField(context)
                 ],
               ),
@@ -476,7 +476,7 @@ class InventoryCountingPage extends StatelessWidget {
                  controller.textController.text = '바코드를 재스캔해주세요';
                 }
               },
-              child: Icon(Icons.camera_alt_outlined, size: 30,)
+              child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
           )
         ],
       ),

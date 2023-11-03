@@ -208,7 +208,7 @@ class ProductLocationPage extends StatelessWidget {
                     Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
                   });
                 },
-                child: Icon(Icons.camera_alt_outlined, size: 30,)
+                child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
             ),
           )
         ],
@@ -393,7 +393,7 @@ class ProductLocationPage extends StatelessWidget {
                 Get.log('저장 버튼 클릭');
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
-                      CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 3,)
+                      CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 3,)
                   );
                   controller.checkButton();
                   controller.textBc.value = '';

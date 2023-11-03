@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 class CommonDialogWidget extends StatelessWidget {
   String? contentText;
   Widget? contentWidget;
-  int? flag;
   int pageFlag;
 
   Function()? onOk;
@@ -20,7 +19,6 @@ class CommonDialogWidget extends StatelessWidget {
         this.contentText,
         this.contentWidget,
         this.onOk,
-        this.flag,
         required this.pageFlag
       });
 

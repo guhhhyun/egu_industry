@@ -17,6 +17,7 @@ class GlobalService extends GetxService {
   RxBool isLogin = false.obs;
   var loginId = ''.obs;
   var loginPassword = ''.obs;
+  var loginNm = ''.obs;
 
   // var userInfo = UserModel();
 
@@ -39,35 +40,6 @@ class GlobalService extends GetxService {
      }
    }
 
-  /*
-
-
-  void logout() async {
-    await Utils.getStorage.erase();
-    isLogin.value = false;
-    userInfo = UserModel();
-
-    HttpUtil.setToken(token: '');
-    Get.offAllNamed(Routes.LOGIN);
-
-    Utils.gErrorMessage('로그아웃');
-  }
-
-  /// 로그인 정보 저장
-  void setLoginInfo({required UserModel userModel}) async {
-    try {
-      userInfo = userModel;
-
-      await Utils.getStorage.write('userModel', userInfo.toJson());
-
-      isLogin.value = true;
-    } catch (err) {
-      Get.log('GlobalService - setLoginInfo Err ', isError: true);
-      Get.log(err.toString(), isError: true);
-    }
-  }
-
-   */
   void setLoginInfo({required String id, required String password}) async {
     try {
       loginId.value = id;
@@ -87,23 +59,10 @@ class GlobalService extends GetxService {
     isLogin.value = false;
     loginId.value = '';
     loginPassword.value = '';
+    loginNm.value = '';
     Get.offAllNamed(Routes.LOGIN_PAGE);
 
     Utils.gErrorMessage('로그아웃');
-  }
-
-  /// 로그인 정보 저장
-  void setLoginInfo2() async {
-    try {
-
-   //   await Utils.getStorage.write('userModel', userInfo.toJson());
-
-      isLogin.value = true;
-      Utils.gErrorMessage('로그인');
-    } catch (err) {
-      Get.log('GlobalService - setLoginInfo Err ', isError: true);
-      Get.log(err.toString(), isError: true);
-    }
   }
 
   @override

@@ -252,7 +252,7 @@ class FacilityStep2Page extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(_test(),
+                  Text(_machName(),
                       style: AppTheme.a22700
                           .copyWith(color: AppTheme.black)),
                 ],
@@ -1129,7 +1129,7 @@ class FacilityStep2Page extends StatelessWidget {
 
               SchedulerBinding.instance!.addPostFrameCallback((_) {
                 Get.dialog(
-                    CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 2,)
+                    CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 2,)
                 );
               });
             } : null,
@@ -1147,7 +1147,7 @@ class FacilityStep2Page extends StatelessWidget {
       })()
     ));
   }
-  String _test() {
+  String _machName() {
     for(var i = 0; i < controller.machList.length; i++) {
       if(controller.machList[i]['MACH_CODE'].toString() ==controller.selectedContainer[0]['MACH_CODE'].toString()) {
         return controller.machList[i]['MACH_NAME'];
@@ -1172,13 +1172,10 @@ class FacilityStep2Page extends StatelessWidget {
     switch(controller.selectedContainer[0]['INS_DEPT'].toString()) {
       case "1110":
         return '생산팀';
-        break;
       case "1160":
         return '공무팀';
-        break;
       case "1170":
         return '전기팀';
-        break;
       case "9999":
         return '기타';
       default:

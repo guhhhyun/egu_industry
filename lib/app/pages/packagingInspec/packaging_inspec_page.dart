@@ -177,7 +177,7 @@ class PackagingInspecPage extends StatelessWidget {
                 },
                 child: Container(
                   padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
-                    child: const Icon(Icons.camera_alt_outlined, size: 30,))
+                    child: const Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black))
             ),
           )
         ],
@@ -308,44 +308,64 @@ class PackagingInspecPage extends StatelessWidget {
                         SizedBox(height: 4,),
                         Container(
                           width: MediaQuery.of(context).size.width - 30,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text('규격: ',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.a959595)),
-                                SizedBox(width: 4,),
-                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['SPEC'] != null ? '${controller.productDetailRealList[index]['SPEC']}' : '' : '',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.black)),
-                                SizedBox(width: 8,),
-                                Text('실중량: ',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.a959595)),
-                                SizedBox(width: 4,),
-                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['REAL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['REAL_WEIGHT']}' : '' : '',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.black)),
-                                const SizedBox(width: 8,),
-                                Text('지관: ',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.a959595)),
-                                const SizedBox(width: 4,),
-                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['JIGWAN'] != null ? '${controller.productDetailRealList[index]['JIGWAN']}' : '0' : '',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.black)),
-                                const SizedBox(width: 8,),
-                                Text('총중량: ',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.a959595)),
-                                const SizedBox(width: 4,),
-                                Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['ALL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['ALL_WEIGHT']}' : '' : '',
-                                    style: AppTheme.a12700
-                                        .copyWith(color: AppTheme.black)),
-                              ],
-                            ),
+                          child: Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text('규격: ',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.a959595)),
+                                    SizedBox(width: 4,),
+                                    Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['SPEC'] != null ? '${controller.productDetailRealList[index]['SPEC']}' : '' : '',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.black)),
+                                    SizedBox(width: 8,),
+                                    Text('실중량: ',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.a959595)),
+                                    SizedBox(width: 4,),
+                                    Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['REAL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['REAL_WEIGHT']}' : '' : '',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.black)),
+                                    const SizedBox(width: 8,),
+                                    Text('지관: ',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.a959595)),
+                                    const SizedBox(width: 4,),
+                                    Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['JIGWAN'] != null ? '${controller.productDetailRealList[index]['JIGWAN']}' : '0' : '',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.black)),
+                                    const SizedBox(width: 8,),
+                                    Text('총중량: ',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.a959595)),
+                                    const SizedBox(width: 4,),
+                                    Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['ALL_WEIGHT'] != null ? '${controller.productDetailRealList[index]['ALL_WEIGHT']}' : '' : '',
+                                        style: AppTheme.a12700
+                                            .copyWith(color: AppTheme.black)),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 4,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text('공차 두께: ',
+                                      style: AppTheme.a12700
+                                          .copyWith(color: AppTheme.a959595)),
+                                  SizedBox(width: 4,),
+                                  Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['THICK_MIN'] != null ? '${controller.productDetailRealList[index]['THICK_MIN']} - ' : '' : '',
+                                      style: AppTheme.a12700
+                                          .copyWith(color: AppTheme.black)),
+                                  Text(controller.productDetailRealList.isNotEmpty ? controller.productDetailRealList[index]['THICK_MAX'] != null ? '${controller.productDetailRealList[index]['THICK_MAX']}' : '' : '',
+                                      style: AppTheme.a12700
+                                          .copyWith(color: AppTheme.black)),
+                                ],
+                              )
+                            ],
                           ),
                         ),
                         /*SizedBox(height: 4,),
@@ -594,7 +614,7 @@ class PackagingInspecPage extends StatelessWidget {
                           style: AppTheme.a16400
                               .copyWith(color: AppTheme.a959595)),
                       Text('${controller.inspecDetailList[0]['REMARK']}',
-                          style: AppTheme.a16400
+                          style: AppTheme.a15400
                               .copyWith(color: AppTheme.black)),
               ],
             ),))
@@ -625,7 +645,7 @@ class PackagingInspecPage extends StatelessWidget {
                 Get.log('검수완료 클릭');
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(
-                      CommonDialogWidget(contentText: '저장되었습니다', flag: 2, pageFlag: 6,)
+                      CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 6,)
                   );
                 });
               } : null,

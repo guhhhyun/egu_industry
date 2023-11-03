@@ -1,5 +1,6 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_modify_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
@@ -28,9 +29,9 @@ class FacilityFirstController extends GetxController {
   RxString selectedReadIns = '선택해주세요'.obs;
   RxString insCd = ''.obs;
   RxString insReadCd = ''.obs;
-  RxList<String> urgencyList = ['보통', '긴급'].obs;
+  RxList<String> urgencyList = ['전체','보통', '긴급'].obs;
   RxString selectedUrgency = '보통'.obs;
-  RxString selectedReadUrgency = '보통'.obs;
+  RxString selectedReadUrgency = '전체'.obs;
   RxString urgencyCd = ''.obs;
   RxString urgencyReadCd = ''.obs;
   RxList<dynamic> machList = [].obs;
@@ -45,12 +46,13 @@ class FacilityFirstController extends GetxController {
   RxString irfqCd = ''.obs;
   RxList<String> engineTeamList = [''].obs;
   RxString selectedEngineTeam = '전기팀'.obs;
-  RxString selectedReadEngineTeam = '전기팀'.obs;
+  RxString selectedReadEngineTeam = '전체'.obs;
   RxString engineTeamCd = ''.obs;
   RxString engineTeamReadCd = ''.obs;
   RxString errorTime = ''.obs;
   RxString errorTime2 = ''.obs;
   RxBool isStep2RegistBtn = false.obs; // step2 정비등록 버튼 활성화
+  RxString engineTeamRead = ''.obs;
 
   RxString irFileCode = ''.obs; // 파일 저장을 위한 ir코드
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
@@ -113,8 +115,9 @@ class FacilityFirstController extends GetxController {
   RxList<String> modifyResultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
   RxString modifySelectedResultFg = '전체'.obs;
   RxString selectedCheckResultFg = '전체'.obs;
-  RxList<String> resultIrFqList = ['전체','돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
-  RxString selectedCheckIrFg = '전체'.obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString modifyResultFgCd = ''.obs;
   RxBool isModifyErrorDateChoice = false.obs;
   RxList<String> modifyEngineTeamList = [''].obs;
@@ -166,7 +169,7 @@ class FacilityFirstController extends GetxController {
   void modifyIrfqCdCv() {
     switch(modifyIrfqCd.value) {
       case "010":
-        modifySelectedIrFq.value = '돌발 정비';
+        modifySelectedIrFq.value = '돌발정비';
         break;
       case "020":
         modifySelectedIrFq.value = '예방정비';
@@ -180,7 +183,7 @@ class FacilityFirstController extends GetxController {
       case "999":
         modifySelectedIrFq.value = '기타';
       default:
-        modifySelectedIrFq.value = '돌발 정비';
+        modifySelectedIrFq.value = '돌발정비';
     }
 
     switch(modifyEngineTeamCd.value) {
@@ -211,37 +214,43 @@ class FacilityFirstController extends GetxController {
     selectedMachMap.clear();
     modifySelectedMachMap.clear();
     irfgList.add('선택해주세요');
+    engineTeamList.add('전체');
     modifyIrfgList.add('선택해주세요');
     selectedMachMap.addAll({'MACH_CODE':'00', 'MACH_NAME': '전체'});
     modifySelectedMachMap.addAll({'MACH_CODE':'00', 'MACH_NAME': '전체'});
 
-    /// 설비
-    var muc = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
-    {
-     // Get.log('우웅ㅇ ${value}'),
-      value['DATAS'].insert(0, {'MACH_CODE':'00', 'MACH_NAME': '전체'}),
-      machList.value = value['DATAS'],
-      modifyMachList.value = value['DATAS']
-    });
-    Get.log('설비 :  : : $muc');
-    /// 정비유형
-    var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
-    {
-      //Get.log('우웅ㅇ ${value}'),
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        irfgList.add(value['DATAS'][i]['TEXT'].toString()),
-        modifyIrfgList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
+    try{
+      /// 설비
+      var muc = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+      {
+        // Get.log('우웅ㅇ ${value}'),
+        value['DATAS'].insert(0, {'MACH_CODE':'00', 'MACH_NAME': '전체'}),
+        machList.value = value['DATAS'],
+        modifyMachList.value = value['DATAS']
+      });
+      Get.log('설비 :  : : $muc');
+      /// 정비유형
+      var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+      {
+        //Get.log('우웅ㅇ ${value}'),
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          irfgList.add(value['DATAS'][i]['TEXT'].toString()),
+          modifyIrfgList.add(value['DATAS'][i]['TEXT'].toString()),
+        }
+      });
 
-    /// 점검부서
-    var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
-    {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
-        modifyEngineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
-      }
-    });
+      /// 점검부서
+      var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
+      {
+        for(var i = 0; i < value['DATAS'].length; i++) {
+          engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
+          modifyEngineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
+        }
+      });
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
+
   }
   void readCdConvert() {
     switch(selectedReadUrgency.value) {
@@ -293,7 +302,7 @@ class FacilityFirstController extends GetxController {
         irfqCd.value = '';
     }
     switch(modifySelectedIrFq.value) {
-      case "돌발 정비":
+      case "돌발정비":
         modifyIrfqCd.value = '010';
         break;
       case "예방정비":
@@ -386,6 +395,7 @@ class FacilityFirstController extends GetxController {
 
 
 
+
   void step2RegistBtn() {
     if(selectedIrFq.value != '전체' && selectedResultFg.value != '전체'
         && selectedNoReason.value != '전체') {
@@ -396,7 +406,8 @@ class FacilityFirstController extends GetxController {
   }
 
   void check() {
-    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
+      , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : irFgCd.value}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {
@@ -429,14 +440,12 @@ class FacilityFirstController extends GetxController {
     });
   }
 
-
-
-
   @override
   void onInit() {
     readCdConvert();
     datasList.clear();
-    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value}).then((value) =>
+    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : '${engineTeamReadCd.value}'
+      , '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : irFgCd.value}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {

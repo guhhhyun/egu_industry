@@ -1,3 +1,4 @@
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,18 +41,23 @@ class InventoryCountingController extends GetxController {
     locationList.clear();
     selectedSaveLocationMap.clear();
     selectedCheckLocationMap.clear();
-    var location = await HomeApi.to.BIZ_DATA('L_BSS035').then((value) =>
-    {
-      selectedCheckLocationMap['DETAIL_CD'] =  value['DATAS'][1]['DETAIL_CD'],
-      selectedCheckLocationMap['DETAIL_NM'] =  value['DATAS'][1]['DETAIL_NM'],
-      locationList.value = value['DATAS']
-    });
-    Get.log('위치 : $locationList');
-    var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
-    {
-      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
-      machList.value = value['DATAS']
-    });
+
+    try{
+      var location = await HomeApi.to.BIZ_DATA('L_BSS035').then((value) =>
+      {
+        selectedCheckLocationMap['DETAIL_CD'] =  value['DATAS'][1]['DETAIL_CD'],
+        selectedCheckLocationMap['DETAIL_NM'] =  value['DATAS'][1]['DETAIL_NM'],
+        locationList.value = value['DATAS']
+      });
+      Get.log('위치 : $locationList');
+      var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+      {
+        value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
+        machList.value = value['DATAS']
+      });
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
   }
 
 

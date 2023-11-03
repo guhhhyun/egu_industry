@@ -53,6 +53,8 @@ class LoginController extends GetxController {
       Get.log('btnLogin catch !!!!');
       Get.log(e.toString());
     } finally {
+     /* gs.setLoginInfo(id: idTextController.text, password: pwTextController.text);
+      Get.offAllNamed(Routes.MAIN);*/
     }
   }
 

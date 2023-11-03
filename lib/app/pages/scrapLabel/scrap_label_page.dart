@@ -715,7 +715,7 @@ class ScrapLabelPage extends StatelessWidget {
                   });
                   Get.log('외주스크랩 스캔결과:::::: $a');
                 },
-                child: const Icon(Icons.camera_alt_outlined, size: 30,)
+                child: const Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
             )
           ],
         ),

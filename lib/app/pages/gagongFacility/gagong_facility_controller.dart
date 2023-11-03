@@ -1,4 +1,5 @@
 
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -48,6 +49,7 @@ class GagongFacilityController extends GetxController {
       });
     }catch(err) {
       Get.log('USP_MBS0600_R01 err = ${err.toString()} ', isError: true);
+      Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;
     }

@@ -1,4 +1,5 @@
 
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -50,6 +51,7 @@ class ProcessTransferController extends GetxController {
       });
     }catch(err) {
       Get.log('USP_MBS0600_R01 err = ${err.toString()} ', isError: true);
+      Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;
     }
@@ -66,20 +68,26 @@ class ProcessTransferController extends GetxController {
     selectedSaveFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '지게차 선택'});
     selectedFkfNm.addAll({'FKF_NO':'', 'FKF_NM': '지게차 선택'});
     selectedMachMap.addAll({'MACH_CODE':'', 'MACH_NAME': '설비 선택'});
-    var fkfList2 = await HomeApi.to.BIZ_DATA('L_BSS032').then((value) =>
-    {
-      value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '지게차 선택'}),
 
-      fkfList.value = value['DATAS']
-    });
-    Get.log('위치 : $fkfList2');
-    /// 작업위치
-    var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
-    {
-      value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
-      machList.value = value['DATAS']
-    });
-    Get.log('$engineer');
+    try{
+      var fkfList2 = await HomeApi.to.BIZ_DATA('L_BSS032').then((value) =>
+      {
+        value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '지게차 선택'}),
+
+        fkfList.value = value['DATAS']
+      });
+      Get.log('위치 : $fkfList2');
+      /// 작업위치
+      var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+      {
+        value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
+        machList.value = value['DATAS']
+      });
+      Get.log('$engineer');
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
+
   }
 
   Future<void> saveButton(int index) async {

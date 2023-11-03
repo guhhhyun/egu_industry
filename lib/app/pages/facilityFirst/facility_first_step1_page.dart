@@ -93,7 +93,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -164,7 +165,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -289,7 +291,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':controller.urgencyReadCd.value, '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':controller.urgencyReadCd.value, '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -345,7 +348,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -411,7 +415,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   controller.datasList.clear(),
@@ -423,6 +428,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   },
                   Get.log('datasList: ${controller.datasList}'),
                 });
+
               }else if(value == '미조치') {
                 Get.log('미조치 클릭');
                 controller.choiceButtonVal.value = 2;
@@ -433,7 +439,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -444,6 +451,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   },
                   Get.log('datasList: ${controller.datasList}'),
                 });
+
               }else if(value == '조치완료') {
                 Get.log('조치완료 클릭');
                 controller.choiceButtonVal.value = 3;
@@ -454,7 +462,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -465,7 +474,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   },
                   Get.log('datasList: ${controller.datasList}'),
                 });
-              }else if(value == '진행중') {
+
+              }else if(value == '정비 진행중') {
                 Get.log('조치 진행중 클릭');
                 controller.choiceButtonVal.value = 4;
                 controller.pResultFg.value = 'I';
@@ -475,7 +485,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -528,6 +539,26 @@ class FacilityFirstStep1Page extends StatelessWidget {
             }).toList(),
             onChanged: (value) {
               controller.selectedCheckIrFg.value = value!;
+              if(value == '돌발정비') {
+                controller.irFgCd.value = '010';
+              }else if(value == '예방정비') {
+                controller.irFgCd.value = '020';
+              }else {
+                controller.irFgCd.value = '';
+              }
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
             }),
 
       ),
@@ -867,7 +898,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.isShowCalendar.value = false;
                 if(controller.choiceButtonVal.value != 0) {
                   controller.datasList.clear();
-                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
+                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
+                    , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                   {
                     Get.log('value[DATAS]: ${value['DATAS']}'),
                     if(value['DATAS'] != null) {
@@ -974,7 +1006,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                           color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
                           AppTheme.aecf9f2
                       ),
-                      child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                      child: Text(controller.datasList[index]['URGENCY_FG'].toString() == 'N' ? '보통' : '긴급', /// 긴급 or 보통 으로
                           style: AppTheme.a12500
                               .copyWith(color: controller.selectedReadUrgency.value == '긴급'
                               ? AppTheme.af34f39 : AppTheme.a18b858)),
@@ -987,7 +1019,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                           color:  AppTheme.af4f4f4
                       ),
 
-                      child: Text( controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비점검' : '안전점검',
+                      child: Text(controller.datasList[index]['INS_FG'].toString() == 'M' ? '설비점검' : '안전점검',
                           style: AppTheme.a12500
                               .copyWith(color: AppTheme.a969696)),
                     ),
@@ -1003,6 +1035,21 @@ class FacilityFirstStep1Page extends StatelessWidget {
                       child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
                           : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
                       controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
+                          style: AppTheme.a12500
+                              .copyWith(color: AppTheme.a969696)),
+                    ),
+
+                    controller.datasList[index]['IR_FG'].toString() == '' ? Container() :
+                    Container(
+                      margin: controller.datasList[index]['RESULT_FG'].toString() != '' ?const EdgeInsets.only(left: 4) : null,
+                      padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color:  AppTheme.af4f4f4
+                      ),
+
+                      child: Text( controller.datasList[index]['IR_FG'].toString() == '010' ? '돌발정비'
+                          : controller.datasList[index]['IR_FG'].toString() == '020' ? '예방정비' : '기타',
                           style: AppTheme.a12500
                               .copyWith(color: AppTheme.a969696)),
                     )
@@ -1036,7 +1083,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 Text('|', style: AppTheme.a16400
                     .copyWith(color: AppTheme.a6c6c6c)),
                 const SizedBox(width: 4,),
-                Text(controller.selectedReadEngineTeam.value,
+                Text(controller.datasList[index]['INS_DEPT'] == '1110' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '1160' ? '공무팀' : controller.datasList[index]['INS_DEPT'] == '1170' ? '전기팀' :
+                    controller.datasList[index]['INS_DEPT'] == '9999' ? '기타' : '',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a6c6c6c)),
               ],
@@ -1253,6 +1301,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
         controller.modifySelectedReadEngineTeam.value = '';
     }
   }
+
 
 
 

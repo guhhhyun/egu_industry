@@ -1,3 +1,4 @@
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,24 +22,29 @@ class ProductLocationController extends GetxController {
 
 
   Future<void> checkButton() async {
-    var a = await HomeApi.to.PROC('USP_MBS0400_R01',
-        {'@p_WORK_TYPE': 'Q', '@p_BARCODE_NO': textBc.value}).then((value) =>
-    {
-      if(value['DATAS'] != null) {
-        productList.value = value['DATAS'],
+    try{
+      var a = await HomeApi.to.PROC('USP_MBS0400_R01',
+          {'@p_WORK_TYPE': 'Q', '@p_BARCODE_NO': textBc.value}).then((value) =>
+      {
+        if(value['DATAS'] != null) {
+          productList.value = value['DATAS'],
           /*if(value['DATAS']['BARCODE_NO'] != null) {
             isBcCode.value = true
           }else {
             isBcCode.value = false
           }*/
+        }
+      });
+      Get.log('바코드 조회 쿼리: $a');
+      if(productList.isNotEmpty) {
+        isBcCode.value = true;
+      }else {
+        isBcCode.value = false;
       }
-    });
-    Get.log('바코드 조회 쿼리: $a');
-    if(productList.isNotEmpty) {
-      isBcCode.value = true;
-    }else {
-      isBcCode.value = false;
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
     }
+
   }
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정
@@ -53,12 +59,17 @@ class ProductLocationController extends GetxController {
     locationList.clear();
     selectedLocationMap.clear();
     selectedLocationMap.addAll({'RACK_BARCODE':'', 'AREA': '선택해주세요'});
-    var location = await HomeApi.to.BIZ_DATA('L_BSS030').then((value) =>
-    {
-      value['DATAS'].insert(0, {'RACK_BARCODE':'', 'AREA': '선택해주세요'}),
-      locationList.value = value['DATAS'],
+    try{
+      var location = await HomeApi.to.BIZ_DATA('L_BSS030').then((value) =>
+      {
+        value['DATAS'].insert(0, {'RACK_BARCODE':'', 'AREA': '선택해주세요'}),
+        locationList.value = value['DATAS'],
 
-    });
+      });
+    }catch(err) {
+      Utils.gErrorMessage('네트워크 오류');
+    }
+
     Get.log('위치 : $locationList');
   }
 
