@@ -1217,7 +1217,11 @@ class ScrapLabelPage extends StatelessWidget {
                 if (controller.isFirstDuplication.value == false){
                   controller.isFirstDuplication.value = true;
                   controller.checkLogic();
-                  controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? await controller.saveButton(context) :  await controller.scrapSaveButton(context) : _showDialog(context, '라벨발행');
+                  controller.isLabelBtn.value ? controller.selectedGubun.value == '지금류' ? {await controller.saveButton(context),  controller.isFirstDuplication.value ?
+                    await controller.PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": controller.realLabelData.isNotEmpty ? '${controller.realLabelData[0]['SCRAP_NO']}' : controller.scrapNo.value }, context): null}
+                      : {await controller.scrapSaveButton(context) ,  controller.isFirstDuplication.value
+                      ?  await controller.PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": controller.realLabelData.isNotEmpty ? '${controller.realLabelData[0]['SCRAP_NO']}' : controller.scrapNo.value}, context): null}
+                          : _showDialog(context, '라벨발행');
                 }
                 Get.log('중복클릭 test');
               /*  controller.checkLogic();
@@ -1244,7 +1248,6 @@ class ScrapLabelPage extends StatelessWidget {
                   onTap: () async {
                     if (controller.isClearDuplication.value == false){
                       controller.isClearDuplication.value = true;
-                      controller.isEndLabel.value = false;
                       Get.offAllNamed(Routes.SCRAP_LABEL);
                     }
                   },

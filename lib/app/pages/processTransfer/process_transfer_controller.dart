@@ -92,7 +92,7 @@ class ProcessTransferController extends GetxController {
 
   Future<void> saveButton(int index) async {
     var a = await HomeApi.to.PROC('USP_MBS0600_S01', {'@p_WORK_TYPE':'U', '@p_MOV_ID': movIds[index] // 리스트로는 안들어감.
-      , '@p_FKF_NO': selectedSaveFkfNm['FKF_NO'], '@p_MOV_YN':'Y', '@p_USER':'admin'});
+      , '@p_FKF_NO': selectedSaveFkfNm['FKF_NO'], '@p_MOV_YN':'Y', '@p_USER':Utils.getStorage.read('userId')});
 
     Get.log('공정이동 저장: $a');
   }

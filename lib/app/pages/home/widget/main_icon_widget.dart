@@ -1,11 +1,13 @@
+import 'package:egu_industry/app/common/global_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 
 class MainIconWidget extends StatelessWidget {
-  const MainIconWidget({Key? key}) : super(key: key);
+  MainIconWidget({Key? key}) : super(key: key);
 
+  GlobalService gs = Get.find();
   Widget _buttonAreaWhite() {
     return Column(
       children: [
@@ -277,7 +279,7 @@ class MainIconWidget extends StatelessWidget {
                     subTitle: '',
                     onPressed: () {
                       Get.log('로그아웃');
-                      Get.toNamed(Routes.LOGIN_PAGE);
+                      gs.logout();
                     }),),
               ],
             ),

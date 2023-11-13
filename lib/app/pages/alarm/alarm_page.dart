@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/common/global_service.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/alarm/alarm_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
@@ -251,7 +252,7 @@ class AlarmPage extends GetView<AlarmController> {
               ),
               InkWell(
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
-                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":gs.loginId.value,"@p_ID":controller.alarmAllList[index]["ID"]}).then((value) =>
+                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmAllList[index]["ID"]}).then((value) =>
                   {
                     controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
                   });
@@ -453,7 +454,7 @@ class AlarmPage extends GetView<AlarmController> {
               ),
               InkWell(
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
-                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":gs.loginId.value,"@p_ID":controller.alarmNList[index]["ID"]}).then((value) =>
+                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[index]["ID"]}).then((value) =>
                   {
                     controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
                   });
@@ -584,7 +585,7 @@ class AlarmPage extends GetView<AlarmController> {
               ),
               InkWell(
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
-                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":gs.loginId.value,"@p_ID":controller.alarmYList[index]["ID"]}).then((value) =>
+                  var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmYList[index]["ID"]}).then((value) =>
                   {
                     controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
                   });

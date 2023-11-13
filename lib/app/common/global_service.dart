@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:egu_industry/app/common/utils.dart';
+import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -10,9 +11,8 @@ import '../net/http_util.dart';
 import '../routes/app_route.dart';
 
 class GlobalService extends GetxService {
+
   static GlobalService get to => Get.find();
-
-
   String authToken = '';
   RxBool isLogin = false.obs;
   var loginId = ''.obs;
@@ -22,18 +22,32 @@ class GlobalService extends GetxService {
   // var userInfo = UserModel();
 
    /// 로그인 정보 불러오기
-   void _loadLoginInfo() async {
+   void loadLoginInfo() async {
     try {
       if (Utils.getStorage.hasData('userId') &&
            Utils.getStorage.hasData('userPw')) {
-
+          isLogin.value = true;
+          loginId.value = Utils.getStorage.read('userId');
+          loginPassword.value = Utils.getStorage.read('userPw');
          String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
+          try{
+            var a = await HomeApi.to.PROC22('USP_MBR0000_R01', {'@p_WORK_TYPE':'MENU', '@p_USER_ID': Utils.getStorage.read('userId')}).then((value) =>
+            {
+
+            });
+            Get.log('엥:: ${a}');
+          }catch(e) {
+            Utils.gErrorMessage('네트워크 오류');
+            print(e);
+          }
 
          Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
+         Get.toNamed(Routes.MAIN);
 
-         isLogin.value = true;
-         Get.offAllNamed(Routes.MAIN);
-       }
+       }else {
+        isLogin.value = false;
+        Get.toNamed(Routes.LOGIN_PAGE);
+      }
      } catch (err) {
        Get.log('GlobalService - onInit Err ', isError: true);
        Get.log(err.toString(), isError: true);
@@ -60,9 +74,9 @@ class GlobalService extends GetxService {
     loginId.value = '';
     loginPassword.value = '';
     loginNm.value = '';
-    Get.offAllNamed(Routes.LOGIN_PAGE);
-
+    Get.toNamed(Routes.LOGIN_PAGE);
     Utils.gErrorMessage('로그아웃');
+
   }
 
   @override
@@ -75,7 +89,7 @@ class GlobalService extends GetxService {
   @override
   void onInit() async {
     Get.log('GlobalService - onInit !!');
-    _loadLoginInfo();
+    loadLoginInfo();
     super.onInit();
   }
 

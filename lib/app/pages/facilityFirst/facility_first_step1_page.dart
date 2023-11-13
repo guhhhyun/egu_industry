@@ -20,6 +20,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
   FacilityFirstController controller = Get.find();
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +40,12 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
   Widget _bodyArea(BuildContext context) {
     return SliverToBoxAdapter(
-        child: Obx(() => Container(
+        child: Container(
           color: AppTheme.white,
           padding: EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
             children: [
-              _calendar2(context),
+              Obx(() => _calendar2(context),),
               SizedBox(height: 12,),
               _urgenTeamItem(),
               SizedBox(height: 12,),
@@ -55,12 +56,10 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   _irFqDropDownItem()
                 ],
               ),
-              SizedBox(height: 24,),
-            //  controller.isShowCalendar.value == true ? _calendar() : Container(),
-              SizedBox(height: 12,),
+              SizedBox(height: 36,),
             ],
           ),
-        ),)
+        ),
     );
   }
 
@@ -93,8 +92,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -165,8 +164,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -251,7 +250,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
   }
 
   Widget _urgenTeamItem() {
-    return Row(
+    return Obx(()=> Row(
       children: [
         Expanded(
           child: Container(
@@ -259,7 +258,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: AppTheme.ae2e2e2
+                    color: AppTheme.ae2e2e2
                 )),
             padding: const EdgeInsets.only(left: 16, right: 12),
             child: DropdownButton<String>(
@@ -291,8 +290,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':controller.urgencyReadCd.value, '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -319,7 +318,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     color: AppTheme.ae2e2e2
                 )),
             padding: const EdgeInsets.only(left: 16, right: 12),
-            child: DropdownButton<String>(
+            child: DropdownButton(
                 borderRadius: BorderRadius.circular(10),
                 isExpanded: true,
                 underline: Container(
@@ -331,25 +330,32 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   color: AppTheme.light_placeholder,
                 ),
                 dropdownColor: AppTheme.light_ui_01,
-                value: controller.selectedReadEngineTeam.value,
+                value: controller.selectedReadEngineTeamMap['TEXT'],
                 //  flag == 3 ? controller.selectedNoReason.value :
                 items: controller.engineTeamList.map((value) {
-                  return DropdownMenuItem(
-                    value: value,
+                  return DropdownMenuItem<String>(
+                    value: value['TEXT'],
                     child: Text(
-                      value,
+                      value['TEXT'],
                       style: AppTheme.a14500
                           .copyWith(color: AppTheme.a6c6c6c),
                     ),
                   );
                 }).toList(),
                 onChanged: (value) {
-                  controller.selectedReadEngineTeam.value = value!;
+                  controller.engineTeamList.map((e) {
+                    if(e['TEXT'] == value) {
+                      controller.selectedReadEngineTeamMap['CODE'] = e['CODE'];
+                      controller.selectedReadEngineTeamMap['TEXT'] = e['TEXT'];
+                    }
+
+                    //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                  }).toList();
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
-                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -368,11 +374,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ));
   }
 
   Widget _dropDownItem() {
-    return Expanded(
+    return Obx(() => Expanded(
       child: Container(
         height: 50,
         decoration: BoxDecoration(
@@ -415,8 +421,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   controller.datasList.clear(),
@@ -439,8 +445,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -452,8 +458,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   Get.log('datasList: ${controller.datasList}'),
                 });
 
-              }else if(value == '조치완료') {
-                Get.log('조치완료 클릭');
+              }else if(value == '정비완료') {
+                Get.log('정비완료 클릭');
                 controller.choiceButtonVal.value = 3;
                 controller.pResultFg.value = 'Y';
                 for(var i = 0; i < controller.test.length; i++) {
@@ -462,8 +468,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -485,8 +491,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
-                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+                HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -501,11 +507,11 @@ class FacilityFirstStep1Page extends StatelessWidget {
             }),
 
       ),
-    );
+    ));
   }
 
   Widget _irFqDropDownItem() {
-    return Expanded(
+    return Obx(()=> Expanded(
       child: Container(
         height: 50,
         decoration: BoxDecoration(
@@ -547,8 +553,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.irFgCd.value = '';
               }
               controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 if(value['DATAS'] != null) {
@@ -562,367 +568,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
             }),
 
       ),
-    );
+    ));
   }
-
- /* Widget _choiceButtonItem() {
-    return Row(
-      children: [
-        Expanded(child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  AppTheme.light_ui_background
-              ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      side: controller.choiceButtonVal.value == 1 ? BorderSide(color: Colors.black): BorderSide(color: AppTheme.ae2e2e2),
-                      borderRadius: BorderRadius.circular(10)
-                  )),
-            ),
-            onPressed: () {
-              Get.log('전체 클릭');
-              controller.choiceButtonVal.value = 1;
-              controller.pResultFg.value = 'A';
-              for(var i = 0; i < controller.test.length; i++) {
-                controller.test[i] = false;
-              }
-              controller.registButton.value = false;
-              controller.readCdConvert();
-              controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
-              {
-                controller.datasList.clear(),
-                Get.log('value[DATAS]: ${value['DATAS']}'),
-                if(value['DATAS'] != null) {
-                  controller.datasLength.value = value['DATAS'].length,
-                  for(var i = 0; i < controller.datasLength.value; i++){
-                    controller.datasList.add(value['DATAS'][i]),
-                  },
-                },
-                Get.log('datasList: ${controller.datasList}'),
-              });
-            //  Get.log('히히 ${controller.datasList[0]}');
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              padding: EdgeInsets.only(top: 14, bottom: 14),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    controller.choiceButtonVal.value == 1 ?
-                    Row(
-                      children: [
-                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
-                        SizedBox(width: 2,)
-                      ],
-                    ) : Container(),
-                    Text('전체', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
-                  ],
-                ),
-              ),
-            )
-        )),
-        const SizedBox(width: 10,),
-        Expanded(child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  AppTheme.light_ui_background
-              ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      side: controller.choiceButtonVal.value == 2 ? BorderSide(color: Colors.black): BorderSide(color: AppTheme.ae2e2e2),
-                      borderRadius: BorderRadius.circular(10)
-                  )),
-            ),
-            onPressed: () {
-              Get.log('미조치 클릭');
-              controller.choiceButtonVal.value = 2;
-              controller.pResultFg.value = 'N';
-              for(var i = 0; i < controller.test.length; i++) {
-                controller.test[i] = false;
-              }
-              controller.registButton.value = false;
-              controller.readCdConvert();
-              controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
-              {
-                controller.datasList.clear(),
-                Get.log('value[DATAS]: ${value['DATAS']}'),
-                if(value['DATAS'] != null) {
-                  controller.datasLength.value = value['DATAS'].length,
-                  for(var i = 0; i < controller.datasLength.value; i++){
-                    controller.datasList.add(value['DATAS'][i]),
-                  },
-                },
-                Get.log('datasList: ${controller.datasList}'),
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.only(top: 14, bottom: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    controller.choiceButtonVal.value == 2 ?
-                    const Row(
-                      children: [
-                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
-                        SizedBox(width: 2,)
-                      ],
-                    )  : Container(),
-                    Text('미조치', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
-                  ],
-                ),
-              ),
-            )
-        )),
-        const SizedBox(width: 10,),
-        Expanded(child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  AppTheme.light_ui_background
-              ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      side: controller.choiceButtonVal.value == 3 ? const BorderSide(color: Colors.black): const BorderSide(color: AppTheme.ae2e2e2),
-                      borderRadius: BorderRadius.circular(10)
-                  )),
-            ),
-            onPressed: () {
-              Get.log('조치완료 클릭');
-              controller.choiceButtonVal.value = 3;
-              controller.pResultFg.value = 'Y';
-              for(var i = 0; i < controller.test.length; i++) {
-                controller.test[i] = false;
-              }
-              controller.registButton.value = false;
-              controller.readCdConvert();
-              controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':controller.urgencyReadCd.value, '@p_INS_DEPT' : controller.engineTeamReadCd.value, '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
-              {
-                controller.datasList.clear(),
-                Get.log('value[DATAS]: ${value['DATAS']}'),
-                if(value['DATAS'] != null) {
-                  controller.datasLength.value = value['DATAS'].length,
-                  for(var i = 0; i < controller.datasLength.value; i++){
-                    controller.datasList.add(value['DATAS'][i]),
-                  },
-                },
-                Get.log('datasList: ${controller.datasList}'),
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.only(top: 14, bottom: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    controller.choiceButtonVal.value == 3 ?
-                    const Row(
-                      children: [
-                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
-                        SizedBox(width: 2,)
-                      ],
-                    )  : Container(),
-                    Text('조치완료', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
-                  ],
-                ),
-              ),
-            )
-        )),
-        const SizedBox(width: 10,),
-        Expanded(child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  AppTheme.light_ui_background
-              ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      side: controller.choiceButtonVal.value == 4 ? BorderSide(color: Colors.black): BorderSide(color: AppTheme.ae2e2e2),
-                      borderRadius: BorderRadius.circular(10)
-                  )),
-            ),
-            onPressed: () {
-              Get.log('조치 진행중 클릭');
-              controller.choiceButtonVal.value = 4;
-              controller.pResultFg.value = 'I';
-              for(var i = 0; i < controller.test.length; i++) {
-                controller.test[i] = false;
-              }
-              controller.registButton.value = false;
-              controller.readCdConvert();
-              controller.datasList.clear();
-              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}', '@p_RESULT_FG' : controller.pResultFg.value}).then((value) =>
-              {
-                controller.datasList.clear(),
-                Get.log('value[DATAS]: ${value['DATAS']}'),
-                if(value['DATAS'] != null) {
-                  controller.datasLength.value = value['DATAS'].length,
-                  for(var i = 0; i < controller.datasLength.value; i++){
-                    controller.datasList.add(value['DATAS'][i]),
-                  },
-                },
-                Get.log('datasList: ${controller.datasList}'),
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.only(top: 14, bottom: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    controller.choiceButtonVal.value == 4 ?
-                    const Row(
-                      children: [
-                        Icon(Icons.check_circle, color: AppTheme.black, size: 20,),
-                        SizedBox(width: 2,)
-                      ],
-                    ) : Container(),
-                    Text('진행중', style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),),
-                  ],
-                ),
-              ),
-            )
-        )),
-
-      ],
-    );
-  }*/
-
-  Widget _calendar() {
-    var firstDay = DateTime.utc(2022, 1, 1);
-    var lastDay = DateTime.utc(2070, 12, 31);
-    return Obx(
-          () => Container(
-
-        padding: const EdgeInsets.only(bottom: 24),
-        decoration: BoxDecoration(
-            color: AppTheme.light_ui_background,
-            border: Border.all(color: AppTheme.light_ui_02),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  //  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(0, 3)),
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  //  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(1, 0))
-            ]),
-        margin: const EdgeInsets.only(
-            left: AppTheme.spacing_m_16, right: AppTheme.spacing_m_16, bottom: 50),
-        child: Column(
-          children: [
-            TableCalendar(
-        currentDay: DateTime.now(),
-              calendarStyle:  CalendarStyle(
-                  selectedDecoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  todayTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-                  todayDecoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  defaultDecoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  weekendDecoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  outsideDaysVisible: false,
-                  defaultTextStyle: const TextStyle(fontWeight: FontWeight.w600),
-                  weekendTextStyle: const TextStyle(fontWeight: FontWeight.w600)),
-              locale: 'ko-KR',
-              headerStyle: HeaderStyle(
-                  titleCentered: true,
-                  titleTextStyle: AppTheme.titleSubhead3
-                      .copyWith(color: AppTheme.light_text_primary),
-                  leftChevronIcon: SvgPicture.asset(
-                    'assets/app/arrow2Left.svg',
-                    width: 24,
-                  ),
-                  leftChevronPadding: const EdgeInsets.only(left: 0),
-                  formatButtonVisible: false,
-                  rightChevronIcon: SvgPicture.asset(
-                    'assets/app/arrow2Right.svg',
-                    width: 24,
-                  ) // formatButtonShowsNext: false
-              ),
-              firstDay: firstDay,
-              lastDay: lastDay,
-              /*enabledDayPredicate: (day) {
-                  return controller.checkPossibleDate(day: day);
-                },*/
-              focusedDay: controller.selectedDay.value,
-              selectedDayPredicate: (day) {
-                return isSameDay(controller.selectedDay.value, day);
-              },
-              onDaySelected: (_selectedDay, _focusedDay) {
-                Get.log('onDaySelected');
-                Get.log('_selectedDay = ${_selectedDay.toString()}');
-                Get.log('_focusedDay = ${_focusedDay.toString()}');
-                // focusedDay = _focusedDay;
-
-
-              //  controller.bSelectedDayFlag.value = true;
-                //  controller.isShowCalendar.value = false;
-                controller.selectedDay.value = _focusedDay;
-                controller.dayValue.value = controller.dayValue.value = DateFormat('yyyy-MM-dd').format(controller.selectedDay.value);
-                controller.bSelectedDayFlag.value = true;
-                controller.isShowCalendar.value = false;
-                if(controller.choiceButtonVal.value != 0) {
-                  controller.datasList.clear();
-                  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : '${controller.engineTeamReadCd.value}'
-                    , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
-                  {
-                    Get.log('value[DATAS]: ${value['DATAS']}'),
-                    if(value['DATAS'] != null) {
-                      controller.datasLength.value = value['DATAS'].length,
-                      for(var i = 0; i < controller.datasLength.value; i++){
-                        controller.datasList.add(value['DATAS'][i]),
-                      },
-                    },
-                    Get.log('datasList: ${controller.datasList}'),
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 12,),
-            const SizedBox(height: 12,),
-
-          ],
-        ),
-      ),
-    );
-  }
-
-
 
   Widget _listArea() {
     controller.test.clear();
@@ -961,7 +608,6 @@ class FacilityFirstStep1Page extends StatelessWidget {
             controller.selectedContainer.add(controller.datasList[index]);
           }
           controller.modifyCheck();
-         // controller.modifyIrfqCdCv();
           modifyEngineTeam();
           controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
           var indexLast = controller.modifyErrorTime.value.lastIndexOf(':');
@@ -1003,13 +649,12 @@ class FacilityFirstStep1Page extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
+                          color: controller.datasList[index]['URGENCY_FG'].toString() != 'N' ? AppTheme.afef1ef :
                           AppTheme.aecf9f2
                       ),
                       child: Text(controller.datasList[index]['URGENCY_FG'].toString() == 'N' ? '보통' : '긴급', /// 긴급 or 보통 으로
                           style: AppTheme.a12500
-                              .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                              ? AppTheme.af34f39 : AppTheme.a18b858)),
+                              .copyWith(color: controller.datasList[index]['URGENCY_FG'].toString() != 'N' ? AppTheme.af34f39 : AppTheme.a18b858)),
                     ),
                     const SizedBox(width: 4,),
                     Container(
@@ -1083,8 +728,9 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 Text('|', style: AppTheme.a16400
                     .copyWith(color: AppTheme.a6c6c6c)),
                 const SizedBox(width: 4,),
-                Text(controller.datasList[index]['INS_DEPT'] == '1110' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '1160' ? '공무팀' : controller.datasList[index]['INS_DEPT'] == '1170' ? '전기팀' :
-                    controller.datasList[index]['INS_DEPT'] == '9999' ? '기타' : '',
+                Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
+                controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
+                    controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a6c6c6c)),
               ],
@@ -1163,94 +809,6 @@ class FacilityFirstStep1Page extends StatelessWidget {
     );
   }
 
-  Widget _modifyAlert() {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-      scrollable: true,
-      content: Container(
-        padding: EdgeInsets.only(top: 12, bottom: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              '수정하시겠습니까?',
-              style: AppTheme.bodyBody2,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-            ),
-          ],
-        ),
-      ),
-      buttonPadding: const EdgeInsets.all(0),
-      insetPadding: const EdgeInsets.all(0),
-      titlePadding: const EdgeInsets.all(0),
-      contentPadding: const EdgeInsets.only(top: 16, bottom: 12),
-      actions: [
-        Row(
-          children: [
-            Expanded(
-              child: TextButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(5)))),
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
-                // 성공
-                onPressed: () {
-                  Get.back();
-                },
-                child: Container(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  color: AppTheme.light_cancel,
-                  child: Center(
-                      child: Text(
-                          '취소',
-                          style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
-                      )),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12,),
-            Expanded(
-              child: TextButton(
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(5)))),
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(0))),
-                // 성공
-                onPressed: () {
-                  modifyEngineTeam();
-                  controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
-                  var index = controller.modifyErrorTime.value.lastIndexOf(':');
-                  controller.modifyErrorTime.value = controller.modifyErrorTime.value.replaceFirst('T', ' ').replaceRange(index, controller.modifyErrorTime.value.length, '');
-                  controller.selectedContainer[0]['INS_FG'] == 'M' ? controller.modifySelectedIns.value = '설비점검' : controller.modifySelectedIns.value = '안전점검';
-                  controller.selectedContainer[0]['URGENCY_FG'] == 'N' ? controller.modifySelectedReadUrgency.value = '보통' : controller.modifySelectedReadUrgency.value = '긴급';
-                  controller.modifySelectedMachMap['MACH_CODE'] = controller.selectedContainer[0]['MACH_CODE'];
-                  controller.selectedContainer[0]['MACH_CODE'] == '' ? controller.modifySelectedMachMap['MACH_NAME'] = '전체' : controller.modifySelectedMachMap['MACH_NAME'] = modifyMach();
-                  controller.modifyTextTitleController.text = controller.selectedContainer[0]['IR_TITLE'];
-
-                  Get.to(const FacilityFirstModifyPage());
-                },
-                child: Container(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  color: Colors.black,
-                  child: Center(
-                      child: Text(
-                          '확인',
-                          style: AppTheme.titleSubhead2.copyWith(color: AppTheme.white)
-                      )),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   String _dateDifference(int index) {
     var start = controller.datasList[index]['IR_DATE'].toString().indexOf('.');
@@ -1280,26 +838,20 @@ class FacilityFirstStep1Page extends StatelessWidget {
         return controller.modifyMachList[u]['MACH_NAME'];
       }
     }
-
     return '전체';
   }
 
   void modifyEngineTeam() {
-    switch(controller.selectedContainer[0]['INS_DEPT']) {
-      case "1110":
-        controller.modifySelectedReadEngineTeam.value = '생산팀';
-        break;
-      case "1160":
-        controller.modifySelectedReadEngineTeam.value = '공무팀';
-        break;
-      case "1170":
-        controller.modifySelectedReadEngineTeam.value = '전기팀';
-        break;
-      case "9999":
-        controller.modifySelectedReadEngineTeam.value = '기타';
-      default:
-        controller.modifySelectedReadEngineTeam.value = '';
-    }
+    controller.modifyEngineTeamList.map((e) {
+      if(e['CODE'] ==controller.selectedContainer[0]['INS_DEPT']) {
+        controller.modifyEngineTeamCdMap['CODE'] = e['CODE'];
+        controller.modifyEngineTeamCdMap['TEXT'] = e['TEXT'];
+      }else {
+        controller.modifyEngineTeamCdMap['CODE'] =  '9999';
+        controller.modifyEngineTeamCdMap['TEXT'] = '기타';
+      }
+      Get.log('modifyEngineTeamCdMap::: ${controller.modifyEngineTeamCdMap} 선택!!!!');
+    }).toList();
   }
 
 

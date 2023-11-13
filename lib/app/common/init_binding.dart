@@ -8,8 +8,8 @@ class InitBinding implements Bindings {
   @override
   void dependencies() {
     Get.log('InitBinding start');
-    Get.put(GlobalService());
     Get.put(HomeApi());
+    Get.put(GlobalService());
     Get.log('InitBinding end');
   }
 }

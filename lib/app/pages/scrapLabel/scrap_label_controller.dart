@@ -137,74 +137,81 @@ class ScrapLabelController extends GetxController {
 
 
   void checkLogic() {
-    if(selectedGubun.value == '지금류') {
-      if( selectedRmNmMap['NAME'] != '선택해주세요' && selectedScLocMap['NAME'] != '선택해주세요'
-        && qtyTextController.text != '' && partWeiTextController.text != ''){
-        isLabelBtn.value = true;
-      }else {
-        isLabelBtn.value = false;
-      }
-    }else if(selectedGubun.value == '스크랩') {
-      if(selectedGold.value == '도금') {
-        selectedGoldCd.value = '1';
-        scrapFg.value = 'F1';
-      }else if(selectedGold.value == '박리'){
-        selectedGoldCd.value = '2';
-        scrapFg.value = 'FF';
-      }else {
-        selectedGoldCd.value = '0';
-        if(selectedScrapType.value == '외주') {
-          scrapFg.value = '${outScrapList[0]['SCRAP_FG']}';
-        }else if(selectedScrapType.value == '매입') {
-          scrapFg.value = 'DD';
-        }else if(selectedScrapType.value == '공정회수') {
-          if(selectedIndustryMap['NAME'] == '미노면삭' || selectedIndustryMap['NAME'] == '이쿠다면삭') {
-            scrapFg.value = 'BB';
-          }else {
-            scrapFg.value = 'CC';
+    try{
+      if(selectedGubun.value == '지금류') {
+        if( selectedRmNmMap['NAME'] != '선택해주세요' && selectedScLocMap['NAME'] != '선택해주세요'
+            && qtyTextController.text != '' && partWeiTextController.text != ''){
+          isLabelBtn.value = true;
+        }else {
+          isLabelBtn.value = false;
+        }
+      }else if(selectedGubun.value == '스크랩') {
+        if(selectedGold.value == '도금') {
+          selectedGoldCd.value = '1';
+          scrapFg.value = 'F1';
+        }else if(selectedGold.value == '박리'){
+          selectedGoldCd.value = '2';
+          scrapFg.value = 'FF';
+        }else {
+          selectedGoldCd.value = '0';
+          if(selectedScrapType.value == '외주') {
+            scrapFg.value = '${outScrapList[0]['SCRAP_FG']}';
+          }else if(selectedScrapType.value == '매입') {
+            scrapFg.value = 'DD';
+          }else if(selectedScrapType.value == '공정회수') {
+            if(selectedIndustryMap['NAME'] == '미노면삭' || selectedIndustryMap['NAME'] == '이쿠다면삭') {
+              scrapFg.value = 'BB';
+            }else {
+              scrapFg.value = 'CC';
+            }
+          } else {
+            Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
           }
-        } else {
-          Exception('scrapFg 에러!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        }
+
+
+        switch(selectedScrapType.value) {
+          case "매입":
+            selectedScrapTypeCd.value = '1';
+            if(selectedScrapNmMap['NAME'] != '선택해주세요'
+                && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
+            ){
+              isLabelBtn.value = true;
+            }else {
+              isLabelBtn.value = false;
+            }
+            break;
+          case "공정회수":
+            selectedScrapTypeCd.value = '2';
+            if(selectedIndustryMap['NAME'] != '선택해주세요' && selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
+                && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
+            ){
+              isLabelBtn.value = true;
+            }else {
+              isLabelBtn.value = false;
+            }
+            break;
+          case "외주":
+            selectedScrapTypeCd.value = '3';
+            if( selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
+                && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
+                && outScrapList.isNotEmpty){
+              isLabelBtn.value = true;
+            }else {
+              isLabelBtn.value = false;
+              // isLabelBtn.value //
+            }
+            break;
+          default:
+            break;
         }
       }
-
-
-      switch(selectedScrapType.value) {
-        case "매입":
-          selectedScrapTypeCd.value = '1';
-          if(selectedScrapNmMap['NAME'] != '선택해주세요'
-            && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-          ){
-            isLabelBtn.value = true;
-          }else {
-            isLabelBtn.value = false;
-          }
-          break;
-        case "공정회수":
-          selectedScrapTypeCd.value = '2';
-          if(selectedIndustryMap['NAME'] != '선택해주세요' && selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
-              && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-             ){
-            isLabelBtn.value = true;
-          }else {
-            isLabelBtn.value = false;
-          }
-          break;
-        case "외주":
-          selectedScrapTypeCd.value = '3';
-          if( selectedGold.value != '선택해주세요' && selectedScrapNmMap['NAME'] != '선택해주세요'
-              && selectedScLocMap['NAME'] != '선택해주세요' && weighingTextController.text != ''
-            && outScrapList.isNotEmpty){
-            isLabelBtn.value = true;
-          }else {
-            isLabelBtn.value = false;
-            // isLabelBtn.value //
-          }
-          break;
-        default:
-          break;
-      }
+    }catch(err) {
+      Get.log('$err');
+      isFirstDuplication.value = false;
+      Utils.gErrorMessage('네트워크 오류 (0)');
     }
+
   }
   /// 지금류
   /*EXEC USP_SCS0300_S01
@@ -242,32 +249,21 @@ class ScrapLabelController extends GetxController {
   Future<void> saveButton(BuildContext context) async {
     try{
       var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb',
-        '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
+        '@p_SCRAP_FG':'AA', '@p_ITEM_CODE':'${selectedRmNmMap['CODE']}', '@p_CST_ID': weighingInfoTextController.text != '' ? selectedContainer.isNotEmpty ? selectedContainer[0]['CST_ID'] == null ? '' : '${selectedContainer[0]['CST_ID']}' : '${measList[0]['CST_ID']}' : ''
         , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : '', '@p_SCALE_ID' : weighingInfoTextController.text, '@p_WEIGHT' : '${int.parse(qtyTextController.text) * int.parse(partWeiTextController.text)}',
         '@p_QTY' : qtyTextController.text, '@p_UNIT_WEIGHT' : partWeiTextController.text, '@p_WH_NO' : 'WH02',
-        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
+        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : Utils.getStorage.read('userId')}).then((value) =>
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
+        isEndLabel.value = true,
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
-      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
+
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;
     }
- /*   try{
-      var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
-      {
-        Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-        realLabelData.value = value['DATAS'],
-      });
-      isEndLabel.value = true;
-      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
-    }catch(e) {
-      Utils.gErrorMessage('네트워크 오류입니다. (2)');
-      isFirstDuplication.value = false;
-    }*/
   }
 
 
@@ -280,35 +276,23 @@ class ScrapLabelController extends GetxController {
   Future<void> scrapSaveButton(BuildContext context) async {
     try{
       var a = await HomeApi.to.PROC('USP_MBS1200_S01', {'@p_WORK_TYPE':'N_SCR', '@p_MATL_GB': '$matlGb', '@p_SCRAP_TYPE': selectedScrapTypeCd.value, // 1: 매입, 2: 공정, 3:외주
-        '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? '${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
+        '@P_SCRAP_FG': scrapFg.value, '@p_ITEM_CODE':'${selectedScrapNmMap['CODE']}', '@p_PROC_CODE': '${selectedIndustryMap['CODE']}', '@P_CST_ID': selectedContainer.isNotEmpty ? selectedContainer[0]['CST_ID'] == null ? '' :'${selectedContainer[0]['CST_ID']}' : measList.isNotEmpty ? '${measList[0]['CST_ID']}' : ''
         , '@p_CST_NAME' : selectedContainer.isNotEmpty ? '${selectedContainer[0]['NAME']}' : measList.isNotEmpty ? '${measList[0]['CUST_NM']}' : ''
         , '@P_SCALE_ID' : weighingInfoTextController.text, '@p_PLATE_FG' : selectedGoldCd.value, '@p_SLT_ID' : selectedTareMap['NAME'] == '설통번호 선택' ? '' : '${selectedTareMap['CODE']}', '@p_SLT_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? '0' : '${selectedTareMap['WEIGHT']}',
         '@p_WEIGH_WEIGHT' : weighingTextController.text, '@p_WEIGHT' : selectedTareMap['NAME'] == '설통번호 선택' ? weighingTextController.text : '${double.parse(weighingTextController.text) - double.parse(selectedTareMap['WEIGHT'].toString())}', '@p_OUTS_NO' : otherScrapTextController.text, '@P_WH_NO' : 'WH04',
-        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : 'admin'}).then((value) =>
+        '@p_RACK_BARCODE' : '${selectedScLocMap['RACK_BARCODE']}', '@p_USER_ID' : Utils.getStorage.read('userId')}).then((value) =>
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
+        isEndLabel.value = true,
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
-      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
       Get.log('트루 ::: ${isEndLabel.value}');
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;
     }
 
-   /* try{
-      var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PRT', '@p_SCRAP_NO': scrapNo.value}).then((value) =>
-      {
-        Get.log('스크랩 라밸 두번째 성공::::::::::: $value'),
-        realLabelData.value = value['DATAS'],
-        isEndLabel.value = true
-      });
-      await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context); // ex
-    }catch(e) {
-      Utils.gErrorMessage('네트워크 오류입니다. (2)');
-      isFirstDuplication.value = false;
-    }*/
   }
 
 
@@ -362,8 +346,6 @@ class ScrapLabelController extends GetxController {
         }
       }
     });
-
-
   }
 
 

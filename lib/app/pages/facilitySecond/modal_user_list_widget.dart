@@ -71,7 +71,7 @@ class ModalUserListWidget extends StatelessWidget {
     return SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
           return _listItem(index: index, context: context);
-        }, childCount: controller.engineerList.length));
+        }, childCount: controller.engineer2List.length));
   }
   Widget _listItem({required BuildContext context,required int index}) {
 
@@ -112,7 +112,7 @@ class ModalUserListWidget extends StatelessWidget {
                   controller.isEngineerSelectedList[index] == false ?
                   Icon(Icons.check_circle, color: AppTheme.gray_c_gray_300, size: 23,) : Icon(Icons.check_circle, color: AppTheme.black, size: 23),
                   SizedBox(width: 15,),
-                  Text('${controller.engineerList[index]}', style: AppTheme.a16700.copyWith(color: AppTheme.black),),
+                  Text('${controller.engineer2List[index]['USER_NAME']}', style: AppTheme.a16700.copyWith(color: AppTheme.black),),
                 ],
               ),
 

@@ -1,5 +1,6 @@
 
 import 'package:egu_industry/app/common/back_dialog_widget.dart';
+import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,7 @@ import '../routes/app_route.dart';
 import 'app_theme.dart';
 
 class CommonAppbarWidget extends StatelessWidget {
+  HomeController controller = Get.find();
   String title;
   Widget? titleWidget;
   bool isLogo;
@@ -48,7 +50,8 @@ class CommonAppbarWidget extends StatelessWidget {
         ),
         onPressed: () {
           isFirstPage ?
-          Get.offAll(HomePage()) : facilityFlag == true ? _onBackKey(context, 1,) :  _onBackKey(context, 2,);
+          {Get.offAll(HomePage()), controller.reqNoticeList(), controller.reqListAlarm() }
+              : facilityFlag == true ? _onBackKey(context, 1,) :  _onBackKey(context, 2,);
         },
         child: SvgPicture.asset('assets/app/arrow2Left.svg', color: AppTheme.black,),
       ),

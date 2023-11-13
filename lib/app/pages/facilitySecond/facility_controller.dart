@@ -28,8 +28,8 @@ class FacilityController extends GetxController {
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString step1DayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
+  RxString dayEndValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
   RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
@@ -38,7 +38,6 @@ class FacilityController extends GetxController {
   RxList test = [].obs;
   RxBool registButton = false.obs;
   RxList selectedContainer = [].obs;
-  RxList<String> engineerList = [''].obs;
   RxList<String> engineerIdList = [''].obs;
   RxString selectedEnginner = '정비자를 선택해주세요'.obs;
   RxString selectedEnginnerCd = ''.obs;
@@ -52,6 +51,7 @@ class FacilityController extends GetxController {
   RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
+  RxMap<String, String> selectedIrFqMap = {'CODE':'', 'TEXT': ''}.obs;
   RxString resultFgCd = ''.obs;
   RxList<String> noReasonList = [''].obs;
   RxString selectedNoReason = '선택해주세요'.obs;
@@ -66,10 +66,10 @@ class FacilityController extends GetxController {
   RxString selectedIns = '선택해주세요'.obs;
   RxString selectedReadIns = '선택해주세요'.obs;
   RxString insReadCd = ''.obs;
-  RxList<String> engineTeamList = [''].obs;
-  RxString selectedEngineTeam = '선택해주세요'.obs;
+  RxList<dynamic> engineTeamList = [].obs;
+  RxMap<String, String> selectedReadEngineTeamMap = {'CODE':'', 'TEXT': ''}.obs;
   RxString selectedReadEngineTeam = '전체'.obs;
-  RxString engineTeamReadCd = ''.obs;
+
   RxList<bool> isEngineerSelectedList = [false].obs;
   RxList<dynamic> engineerSelectedList = [].obs;
   RxList partList = [].obs; // 부품리스트
@@ -94,27 +94,28 @@ class FacilityController extends GetxController {
   RxBool bSelectedEndDayFlag = false.obs; // 작업 종료일 날짜
 
 
-  /// 정비자랑
+
   Future<void> saveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
       , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':selectedEnginnerCd.value,
       '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
       '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
-      '@p_RP_DEPT':'9999', '@p_USER':'admin',});
-    var b = a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '');
+      '@p_RP_DEPT':'9999', '@p_USER':Utils.getStorage.read('userId')});
+    Get.log('이거 ${a['DATAS']}');
+  //  var b = a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '');
 
-    Get.log('저장 결과값::::: ${a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '')}');
+    Get.log('저장 결과값::::: ${a['DATAS']}');
 
     // 부품 저장 프로시저
     if(partSelectedList.isNotEmpty) {
       for(var i = 0; i < partSelectedList.length; i++) {
-        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
           , '@p_ITEM_NAME':'${partSelectedList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${partSelectedList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${partSelectedQtyList[i]}',});
       }
     }
     if(otherPartList.isNotEmpty) {
       for(var i = 0; i < otherPartList.length; i++) {
-        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':b, '@p_ITEM_CODE':''
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':''
           , '@p_ITEM_NAME':'${otherPartList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${otherPartList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${otherPartList[i]['QTY']}',});
       }
     }
@@ -131,8 +132,8 @@ class FacilityController extends GetxController {
     partSelectedQtyList.clear();
     isPartSelectedList.clear();
     textContentController.clear();
-    dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    dayStartValue.value = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
+    dayEndValue.value =  DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now());
   }
 
   Future<void> partConvert(String machCode) async {
@@ -149,40 +150,42 @@ class FacilityController extends GetxController {
     Get.log('part:  ${part}');
   }
 
+  Future<void> reqEngineer() async{
+    var engineer = await HomeApi.to.BIZ_DATA('P_SYS029').then((value) =>
+    {
+      for(var i = 0; i < value['DATAS'].length; i++) {
+        if(selectedContainer[0]['INS_DEPT'] == value['DATAS'][i]['BASE_DEPT']) {
+          engineer2List.add(value['DATAS'][i]),
+          isEngineerSelectedList.add(false)
+        }
+
+      },
+      // engineer2List.value = value['DATAS'],
+    });
+  }
 
   Future<void> irfgConvert() async{
     irfgList.clear();
     noReasonList.clear();
     engineer2List.clear();
-    engineerList.clear();
     machList.clear();
     engineerSelectedList.clear();
     isEngineerSelectedList.clear();
     engineerIdList.clear();
     engineTeamList.clear();
-    engineTeamList.add('전체');
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
+    selectedReadEngineTeamMap.addAll({'CODE':'', 'TEXT': '전체'});
+    selectedIrFqMap.addAll({'CODE':'', 'TEXT': '선택해주세요'});
 
     try{
-      /// 정비자 리스트
-      var engineer = await HomeApi.to.BIZ_DATA('L_USER_001').then((value) =>
-      {
-        for(var i = 0; i < value['DATAS'].length; i++) {
-
-          engineerList.add(value['DATAS'][i]['USER_NAME'].toString()),
-          engineerIdList.add(value['DATAS'][i]['USER_ID'].toString()),
-          isEngineerSelectedList.add(false)
-        },
-        engineer2List.value = value['DATAS'],
-      });
       /// 설비
-      var engineer2 = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
+      var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
       {
         // Get.log('우웅ㅇ ${value}'),
         machList.value = value['DATAS']
       });
-      Get.log('이거봥 ${engineer2}');
+      Get.log('이거봥 ${mach}');
       var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
         for(var i = 0; i < value['DATAS'].length; i++) {
@@ -199,10 +202,8 @@ class FacilityController extends GetxController {
       /// 점검부서
       var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
       {
-        //Get.log('우웅ㅇ ${value}'),
-        for(var i = 0; i < value['DATAS'].length; i++) {
-          engineTeamList.add(value['DATAS'][i]['TEXT'].toString()),
-        }
+        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        engineTeamList.value = value['DATAS'],
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');
@@ -220,21 +221,6 @@ class FacilityController extends GetxController {
         break;
       default:
         urgencyReadCd.value = '';
-    }
-    switch(selectedReadEngineTeam.value) {
-      case "생산팀":
-        engineTeamReadCd.value = '1110';
-        break;
-      case "공무팀":
-        engineTeamReadCd.value = '1160';
-        break;
-      case "전기팀":
-        engineTeamReadCd.value = '1170';
-        break;
-      case "기타":
-        engineTeamReadCd.value = '9999';
-      default:
-        engineTeamReadCd.value = '';
     }
   }
 
@@ -313,7 +299,6 @@ class FacilityController extends GetxController {
   }
   void showModalPartChoice({required BuildContext context}) {
     Get.log('showModalUserChoice');
-
     Get.bottomSheet(
         backgroundColor: Colors.white,
         isScrollControlled: true,
@@ -332,7 +317,7 @@ class FacilityController extends GetxController {
     readCdConvert();
     datasList.clear();
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
-      , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : irFgCd.value}).then((value) =>
+      , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {

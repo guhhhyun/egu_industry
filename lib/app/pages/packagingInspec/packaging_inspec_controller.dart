@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class PackagingInspecController extends GetxController {
   Future<void> saveButton() async {
     for(var i = 0; i < productSelectedList.length; i++) {
       await HomeApi.to.PROC('USP_MBS1300_S01',
-          {'@p_WORK_TYPE': 'U', '@p_BARCODE_NO': productSelectedList[i]['BARCODE'], '@p_USER': 'admin'});
+          {'@p_WORK_TYPE': 'U', '@p_BARCODE_NO': productSelectedList[i]['BARCODE'], '@p_USER': Utils.getStorage.read('userId')});
       Get.log('검수완료 ::::: $i 번째');
     }
     checkButton();

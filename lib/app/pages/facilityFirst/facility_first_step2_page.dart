@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/back_dialog_widget.dart';
@@ -12,14 +13,18 @@ import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
 as picker;
+import 'package:permission_handler/permission_handler.dart';
 
 class FacilityFirstStep2Page extends StatefulWidget {
   const FacilityFirstStep2Page({Key? key}) : super(key: key);
@@ -31,12 +36,15 @@ class FacilityFirstStep2Page extends StatefulWidget {
 class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   FacilityFirstController controller = Get.find();
   final formKey = GlobalKey<FormState>();
-  FilePickerResult? resultFile1 = null;
-  FilePickerResult? resultFile2 = null;
+  XFile? resultFile1 = null;
+  XFile? resultFile2 = null;
+  XFile?resultFile3 = null;
+  XFile? resultFile4 = null;
 
 
   @override
   Widget build(BuildContext context) {
+    controller.engineTeamList.remove('전체');
     return WillPopScope(
       onWillPop: () {
         return _onBackKey();
@@ -185,7 +193,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   Widget _bodyArea(BuildContext context) {
     controller.errorTime.value = DateFormat('yyyy.MM.dd HH:mm').format(DateTime.now());
     return SliverToBoxAdapter(
-        child: Obx(() => Container(
+        child: Container(
           color: AppTheme.white,
           padding: EdgeInsets.only(left: 18, right: 18, top: 4),
           child: Column(
@@ -193,13 +201,13 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             children: [
              // _basicContainerItem(context, '의뢰번호', '자동생성', 1),
               _basicContainerItem(context, '장애일시', '${controller.errorTime.value}', 2),
-              controller.isErrorDateChoice.value == true ?
+              Obx(() =>  controller.isErrorDateChoice.value == true ?
               Column(
                 children: [
                   SizedBox(height: 16,),
                   _errorDateSelect(),
                 ],
-              ) : Container(),
+              ) : Container(),),
               SizedBox(height: 20,),
               _inspectionGubunItem(context),
               controller.selectedIns.value == '안전점검' ? Container() :
@@ -210,7 +218,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 ],
               ),
               SizedBox(height: 20,),
-              controller.selectedMachMap['MACH_NAME'] == '전체' ? _anotherFacilityItem() : Container(),
+              Obx(() => controller.selectedMachMap['MACH_NAME'] == '전체' ? _anotherFacilityItem() : Container(),),
               SizedBox(height: 20,),
               _engineTeamItem(context),
               SizedBox(height: 20,),
@@ -224,7 +232,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               // _partChoiceBody()
             ],
           ),
-        ),)
+        ),
     );
   }
   /*Widget _streamBuilder() {
@@ -293,7 +301,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         Text('점검/의뢰 구분',
             style: AppTheme.a15700
                 .copyWith(color: AppTheme.black)),
-        Row(
+        Obx(()=> Row(
           children: [
             Expanded(
               child: Container(
@@ -356,7 +364,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       color: AppTheme.light_placeholder,
                     ),
                     dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedReadUrgency.value,
+                    value: controller.selectedUrgency.value,
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.urgencyList.map((value) {
                       return DropdownMenuItem(
@@ -369,7 +377,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.selectedReadUrgency.value = value!;
+                      controller.selectedUrgency.value = value!;
 
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -377,7 +385,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               ),
             ),
           ],
-        )
+        ))
       ],
     );
   }
@@ -390,48 +398,48 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         Text('설비',
             style: AppTheme.a15700
                 .copyWith(color: AppTheme.black)),
-        Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    border: const Border(
-                      bottom: BorderSide(color: AppTheme.gray_gray_200),
-                    )),
-                padding: const EdgeInsets.only( right: 12),
-                child: DropdownButton(
-                    borderRadius: BorderRadius.circular(3),
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/app/arrowBottom.svg',
-                      color: AppTheme.light_placeholder,
-                    ),
-                    dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedMachMap['MACH_NAME'],
-                    //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.machList.map((value) {
-                      return DropdownMenuItem<String>(
-                        value: value['MACH_NAME'],
-                        child: Text(
-                          value['MACH_NAME'],
-                          style: AppTheme.a16400
-                              .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.machList.map((e) {
-                        if(e['MACH_NAME'] == value) {
-                          controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
-                          controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
-                        }
-                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
-                      }).toList();
-                       Get.log('설비 코드 ::::::::: ${controller.selectedMachMap['MACH_CODE']}');
-                    }),
+        Obx(()=>Container(
+          height: 50,
+          decoration: BoxDecoration(
+              border: const Border(
+                bottom: BorderSide(color: AppTheme.gray_gray_200),
+              )),
+          padding: const EdgeInsets.only( right: 12),
+          child: DropdownButton(
+              borderRadius: BorderRadius.circular(3),
+              isExpanded: true,
+              underline: Container(
+                height: 1,
+                color: Colors.white,
               ),
+              icon: SvgPicture.asset(
+                'assets/app/arrowBottom.svg',
+                color: AppTheme.light_placeholder,
+              ),
+              dropdownColor: AppTheme.light_ui_01,
+              value: controller.selectedMachMap['MACH_NAME'],
+              //  flag == 3 ? controller.selectedNoReason.value :
+              items: controller.machList.map((value) {
+                return DropdownMenuItem<String>(
+                  value: value['MACH_NAME'],
+                  child: Text(
+                    value['MACH_NAME'],
+                    style: AppTheme.a16400
+                        .copyWith(color: value['MACH_NAME'] == '전체' ? AppTheme.aBCBCBC : AppTheme.a6c6c6c),
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                controller.machList.map((e) {
+                  if(e['MACH_NAME'] == value) {
+                    controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
+                    controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                  }
+                  //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                }).toList();
+                Get.log('설비 코드 ::::::::: ${controller.selectedMachMap['MACH_CODE']}');
+              }),
+        ),)
 
       ],
     );
@@ -479,107 +487,122 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
   /// 정비 유형 정비부서
   Widget _engineTeamItem(BuildContext context) {
-    return Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('정비유형',
-                      style: AppTheme.a15700
-                          .copyWith(color: AppTheme.black)),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        border: const Border(
-                          bottom: BorderSide(color: AppTheme.gray_gray_200),
-                        )),
-                    padding: const EdgeInsets.only(right: 12),
-                    child: DropdownButton<String>(
-                        dropdownColor: AppTheme.light_ui_01,
-                        borderRadius: BorderRadius.circular(3),
-                        isExpanded: true,
-                        underline: Container(
-                          height: 1,
-                          color: Colors.white,
+    return Obx(()=> Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('정비유형',
+                  style: AppTheme.a15700
+                      .copyWith(color: AppTheme.black)),
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton(
+                    dropdownColor: AppTheme.light_ui_01,
+                    borderRadius: BorderRadius.circular(3),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    value: controller.selectedIrFqMap['TEXT'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.irfgList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['TEXT'],
+                        child: Text(
+                          value['TEXT'],
+                          style: AppTheme.a16400
+                              .copyWith(color:  value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                         ),
-                        icon: SvgPicture.asset(
-                          'assets/app/arrowBottom.svg',
-                          color: AppTheme.light_placeholder,
-                        ),
-                        value: controller.selectedIrFq.value,
-                        //  flag == 3 ? controller.selectedNoReason.value :
-                        items: controller.irfgList.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: AppTheme.a16400
-                                  .copyWith(color:  value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          controller.selectedIrFq.value = value!;
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.irfgList.map((e) {
+                        if(e['TEXT'] == value) {
+                          controller.selectedIrFqMap['TEXT'] = e['TEXT'];
+                          controller.selectedIrFqMap['CODE'] = e['CODE'];
+                        }
 
-                          Get.log('$value 선택!!!!');
-                          // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                        }),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 16,),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('점검부서',
-                      style: AppTheme.a15700
-                          .copyWith(color: AppTheme.black)),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        border: const Border(
-                          bottom: BorderSide(color: AppTheme.gray_gray_200),
-                        )),
-                    padding: const EdgeInsets.only(right: 12),
-                    child: DropdownButton<String>(
-                        borderRadius: BorderRadius.circular(3),
-                        isExpanded: true,
-                        underline: Container(
-                          height: 1,
-                          color: Colors.white,
-                        ),
-                        icon: SvgPicture.asset(
-                          'assets/app/arrowBottom.svg',
-                          color: AppTheme.light_placeholder,
-                        ),
-                        dropdownColor: AppTheme.light_ui_01,
-                        value: controller.selectedReadEngineTeam.value,
-                        //  flag == 3 ? controller.selectedNoReason.value :
-                        items: controller.engineTeamList.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: AppTheme.a16400
-                                  .copyWith(color: AppTheme.a6c6c6c),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          controller.selectedReadEngineTeam.value = value!;
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
+                      controller.selectedIrFq.value = value!;
 
-                          Get.log('$value 선택!!!!');
-                          // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
-                        }),
-                  ),
-                ],
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
               ),
-            ),
-          ],
-        );
+            ],
+          ),
+        ),
+        SizedBox(width: 16,),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('점검부서',
+                  style: AppTheme.a15700
+                      .copyWith(color: AppTheme.black)),
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                    border: const Border(
+                      bottom: BorderSide(color: AppTheme.gray_gray_200),
+                    )),
+                padding: const EdgeInsets.only(right: 12),
+                child: DropdownButton<String>(
+                    borderRadius: BorderRadius.circular(3),
+                    isExpanded: true,
+                    underline: Container(
+                      height: 1,
+                      color: Colors.white,
+                    ),
+                    icon: SvgPicture.asset(
+                      'assets/app/arrowBottom.svg',
+                      color: AppTheme.light_placeholder,
+                    ),
+                    dropdownColor: AppTheme.light_ui_01,
+                    value: controller.selectedEngineTeamMap['TEXT'],
+                    //  flag == 3 ? controller.selectedNoReason.value :
+                    items: controller.engineTeamList.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value['TEXT'],
+                        child: Text(
+                          value['TEXT'],
+                          style: AppTheme.a16400
+                              .copyWith(color: AppTheme.a6c6c6c),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      controller.engineTeamList.map((e) {
+                        if(e['TEXT'] == value) {
+                          controller.selectedEngineTeamMap['TEXT'] = e['TEXT'];
+                          controller.selectedEngineTeamMap['CODE'] = e['CODE'];
+                        }
+
+                          Get.log('${ controller.selectedEngineTeamMap['CODE']} 선택!!!!');
+                      }).toList();
+
+                      Get.log('$value 선택!!!!');
+                      // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ));
   }
 
 
@@ -685,7 +708,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 
 
   Widget _fileAddBtn() {
-    return resultFile1 != null && resultFile2 != null
+    return resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
         ? const SizedBox()
         : TextButton(
       style: ButtonStyle(
@@ -698,19 +721,31 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 borderRadius: BorderRadius.circular(100))),
       ),
       onPressed: () async {
+        _checkPermission(context);
         Get.log('첨부파일 추가');
         if (resultFile1 == null) {
-          resultFile1 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath.value = resultFile1!.files.first.path!;
+          resultFile1 = await ImagePicker().pickImage(source: ImageSource.gallery);
         } else if (resultFile2 == null) {
-          resultFile2 = await FilePicker.platform.pickFiles(
+          resultFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
+         /* resultFile2 = await FilePicker.platform.pickFiles(
             type: FileType.custom,
             allowedExtensions: ['jpg', 'pdf', 'png'],
           );
-          controller.filePath2.value = resultFile1!.files.first.path!;
+          controller.filePath2.value = resultFile1!.files.first.path!;*/
+        }else if (resultFile3 == null) {
+          resultFile3 = await ImagePicker().pickImage(source: ImageSource.gallery);
+         /* resultFile3 = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'pdf', 'png'],
+          );
+          controller.filePath3.value = resultFile1!.files.first.path!;*/
+        }else if (resultFile4 == null) {
+          resultFile4 = await ImagePicker().pickImage(source: ImageSource.gallery);
+         /* resultFile4 = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'pdf', 'png'],
+          );
+          controller.filePath4.value = resultFile1!.files.first.path!;*/
         }
 
         setState(() {});
@@ -730,26 +765,54 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   }
 
   Widget _fileLlistArea() {
-    return Row(
-      children: [
-        resultFile1 == null
-            ? const SizedBox()
-            : _fileContainer(
-          title: resultFile1!.files.first.name,
-          firstSecondFlag: 1,
-          fileExtension: resultFile1!.files.first.extension!,
+    return Container(
+      width: resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
+          ?  MediaQuery.of(context).size.width - 80 : MediaQuery.of(context).size.width - 180,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            resultFile1 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile1!.name,
+              firstSecondFlag: 1,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile2 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile2!.name,
+              firstSecondFlag: 2,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile3 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile3!.name,
+              firstSecondFlag: 3,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile4 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile4!.name,
+              firstSecondFlag: 4,
+              fileExtension: resultFile1!.path,
+            ),
+
+          ],
         ),
-        const SizedBox(
-          width: AppTheme.spacing_m_16,
-        ),
-        resultFile2 == null
-            ? const SizedBox()
-            : _fileContainer(
-          title: resultFile2!.files.first.name,
-          firstSecondFlag: 2,
-          fileExtension: resultFile2!.files.first.extension!,
-        ),
-      ],
+      ),
     );
   }
 
@@ -807,7 +870,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   }) {
     var imageUrl = 'assets/app/pdfImage.png';
 
-    if (fileExtension == 'pdf') {
+    if (fileExtension!.endsWith("png")) {
       imageUrl = 'assets/app/pdfImage.png';
     } else {
       imageUrl = 'assets/app/pngImage.png';
@@ -853,8 +916,12 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                 setState(() {
                   if (firstSecondFlag == 1) {
                     resultFile1 = null;
-                  } else {
+                  } else if(firstSecondFlag == 2){
                     resultFile2 = null;
+                  } else if(firstSecondFlag == 3){
+                    resultFile3 = null;
+                  } else {
+                    resultFile4 = null;
                   }
                 });
               },
@@ -915,9 +982,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               child: Container(
                 child: (() {
                   if(controller.errorTime.value != '' && controller.selectedIns.value != '선택해주세요'
-                      && controller.selectedUrgency.value != '선택해주세요'
+                      && controller.selectedUrgency.value != '전체'
                       && (controller.selectedMachMap['MACH_NAME'] != '전체' || controller.textFacilityController.text != '')
-                      && controller.selectedIrFq.value != '선택해주세요' && controller.selectedEngineTeam.value != '선택해주세요'
+                      && controller.selectedIrFqMap['TEXT'] != '선택해주세요' && controller.selectedEngineTeamMap['TEXT'] != '전체'
                       && controller.textTitleController.text != '' && controller.textContentController.text != '') {
                     controller.isStep2RegistBtn.value = true;
                   }else {
@@ -936,8 +1003,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       onPressed: controller.isStep2RegistBtn.value ? () async {
                         controller.filePathList.clear();
                         controller.cdConvert();
-                        controller.saveButton();
-                        // _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        await controller.saveButton();
+                        _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         SchedulerBinding.instance!.addPostFrameCallback((_) {
                            Get.dialog(_dialog());
                         });
@@ -1012,53 +1079,51 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
 /// 파일 저장쿼리 넘기기
   void _submmit() async {
     try {
-      if (formKey.currentState?.validate() == true) {
-        formKey.currentState?.save();
-
-
-        const maxFileSize = 1024 * 1024 * 10;
-
         if (resultFile1 != null) {
-          var path = resultFile1!.files.first.path ?? '';
+          Uint8List? bytes = await resultFile1?.readAsBytes();
+          String path = await HomeApi.to.FILE_UPLOAD(resultFile1!.path, bytes!);
+          await Utils.getStorage.write('path1', path);
+          var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
+            '@p_FILE_NAME': resultFile1!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
+          Get.log('경로 테스트::: $path');
+          /*var path = resultFile1!.files.first.path ?? '';
 
           if (maxFileSize < resultFile1!.files.first.size) {
-          //  Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
+            Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
           if (path != '') {
             controller.filePathList.add(path);
-        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
-          }
+        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);*/
+
         }
         if (resultFile2 != null) {
-          var path = resultFile2!.files.first.path ?? '';
+          Uint8List? bytes = await resultFile2?.readAsBytes();
+          String path = await HomeApi.to.FILE_UPLOAD(resultFile2!.path, bytes!);
+          await Utils.getStorage.write('path2', path);
+          var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
+            '@p_FILE_NAME': resultFile2!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'1', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
+          Get.log('경로 테스트::: $path');
+        }
+        if (resultFile3 != null) {
+          Uint8List? bytes = await resultFile3?.readAsBytes();
+          String path = await HomeApi.to.FILE_UPLOAD(resultFile3!.path, bytes!);
+          await Utils.getStorage.write('path3', path);
+          var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
+            '@p_FILE_NAME': resultFile3!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'2', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
+          Get.log('경로 테스트::: $path');
 
-          if (maxFileSize < resultFile2!.files.first.size) {
-           // Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
-            return;
-          }
-
-          if (path != '') {
-            controller.filePathList.add(path);
-           // queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
-          }
+        }
+        if (resultFile4 != null) {
+          Uint8List? bytes = await resultFile4?.readAsBytes();
+          String path = await HomeApi.to.FILE_UPLOAD(resultFile4!.path, bytes!);
+          await Utils.getStorage.write('path4', path);
+          var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
+            '@p_FILE_NAME': resultFile4!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'3', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
+          Get.log('경로 테스트::: $path');
         }
 
-        Map<String, dynamic> path = {
-          'PATH': controller.filePathList
-        };
 
-        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
-          '@p_FILE_NAME':resultFile2!.files.first.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0'});
-
-       /* if (retVal.success) {
-          Get.back(result: true);
-          Utils.showToast(msg: '등록이 완료되었습니다.');
-        }
-      } else {
-        Utils.showToast(msg: '필수 입력값이 필요합니다.');
-      }*/
-      }
     } catch (err) {
       Get.log('_submmit err = ${err.toString()} ', isError: true);
     } finally {
@@ -1113,7 +1178,29 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
       ],
     );
   }
+  void _checkPermission(BuildContext context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    Map<Permission, PermissionStatus> statues = await [
+      Permission.camera,
+      Permission.storage,
+      Permission.photos
+    ].request();
+    PermissionStatus? statusCamera = statues[Permission.camera];
+    PermissionStatus? statusStorage = statues[Permission.storage];
+    PermissionStatus? statusPhotos = statues[Permission.photos];
+    bool isGranted = statusCamera == PermissionStatus.granted &&
+        statusStorage == PermissionStatus.granted &&
+        statusPhotos == PermissionStatus.granted;
+    if (isGranted) {
+      //openCameraGallery();
+      //_openDialog(context);
+    }
+    bool isPermanentlyDenied =
+        statusCamera == PermissionStatus.permanentlyDenied ||
+            statusStorage == PermissionStatus.permanentlyDenied ||
+            statusPhotos == PermissionStatus.permanentlyDenied;
 
+  }
 
 }
 

@@ -12,12 +12,15 @@ import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FacilityFirstModifyPage extends StatefulWidget {
   const FacilityFirstModifyPage({Key? key}) : super(key: key);
@@ -29,8 +32,10 @@ class FacilityFirstModifyPage extends StatefulWidget {
 class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   FacilityFirstController controller = Get.find();
   final formKey = GlobalKey<FormState>();
-  FilePickerResult? resultFile1 = null;
-  FilePickerResult? resultFile2 = null;
+  XFile? resultFile1 = null;
+  XFile? resultFile2 = null;
+  XFile?resultFile3 = null;
+  XFile? resultFile4 = null;
 
 
   @override
@@ -368,6 +373,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                     }).toList(),
                     onChanged: (value) {
                       controller.modifySelectedReadUrgency.value = value!;
+                     // value == '긴급' ?  controller.modifyIrCode.value = 'U' :  controller.modifyIrCode.value = 'N';
 
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -493,7 +499,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       bottom: BorderSide(color: AppTheme.gray_gray_200),
                     )),
                 padding: const EdgeInsets.only(right: 12),
-                child: DropdownButton<String>(
+                child: DropdownButton(
                     dropdownColor: AppTheme.light_ui_01,
                     borderRadius: BorderRadius.circular(3),
                     isExpanded: true,
@@ -505,20 +511,27 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       'assets/app/arrowBottom.svg',
                       color: AppTheme.light_placeholder,
                     ),
-                    value: controller.modifySelectedIrFq.value,
+                    value: controller.modifySelectedIrFqMap['TEXT'],
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.modifyIrfgList.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
+                      return DropdownMenuItem<String>(
+                        value: value['TEXT'],
                         child: Text(
-                          value,
+                          value['TEXT'],
                           style: AppTheme.a16400
                               .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.modifySelectedIrFq.value = value!;
+                      controller.modifyIrfgList.map((e) {
+                        if(e['TEXT'] == value) {
+                            controller.modifySelectedIrFqMap['TEXT'] = e['TEXT'];
+                            controller.modifySelectedIrFqMap['CODE'] = e['CODE'];
+                        }
+
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
 
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -542,7 +555,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       bottom: BorderSide(color: AppTheme.gray_gray_200),
                     )),
                 padding: const EdgeInsets.only(right: 12),
-                child: DropdownButton<String>(
+                child: DropdownButton(
                     borderRadius: BorderRadius.circular(3),
                     isExpanded: true,
                     underline: Container(
@@ -554,20 +567,27 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       color: AppTheme.light_placeholder,
                     ),
                     dropdownColor: AppTheme.light_ui_01,
-                    value: controller.modifySelectedReadEngineTeam.value,
+                    value: controller.modifyEngineTeamCdMap['TEXT'],
                     //  flag == 3 ? controller.selectedNoReason.value :
                     items: controller.modifyEngineTeamList.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
+                      return DropdownMenuItem<String>(
+                        value: value['TEXT'],
                         child: Text(
-                          value,
+                          value['TEXT'],
                           style: AppTheme.a16400
                               .copyWith(color: AppTheme.a6c6c6c),
                         ),
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.modifySelectedReadEngineTeam.value = value!;
+                      controller.modifyEngineTeamList.map((e) {
+                        if(e['TEXT'] == value) {
+                            controller.modifyEngineTeamCdMap['TEXT'] = e['TEXT'];
+                            controller.modifyEngineTeamCdMap['CODE'] = e['CODE'];
+                        }
+
+                        //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+                      }).toList();
 
                       Get.log('$value 선택!!!!');
                       // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
@@ -683,7 +703,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
 
 
   Widget _fileAddBtn() {
-    return resultFile1 != null && resultFile2 != null
+    return resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
         ? const SizedBox()
         : TextButton(
       style: ButtonStyle(
@@ -696,19 +716,31 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                 borderRadius: BorderRadius.circular(100))),
       ),
       onPressed: () async {
+        _checkPermission(context);
         Get.log('첨부파일 추가');
         if (resultFile1 == null) {
-          resultFile1 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath.value = resultFile1!.files.first.path!;
+          resultFile1 = await ImagePicker().pickImage(source: ImageSource.gallery);
         } else if (resultFile2 == null) {
-          resultFile2 = await FilePicker.platform.pickFiles(
+          resultFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          /* resultFile2 = await FilePicker.platform.pickFiles(
             type: FileType.custom,
             allowedExtensions: ['jpg', 'pdf', 'png'],
           );
-          controller.filePath2.value = resultFile1!.files.first.path!;
+          controller.filePath2.value = resultFile1!.files.first.path!;*/
+        }else if (resultFile3 == null) {
+          resultFile3 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          /* resultFile3 = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'pdf', 'png'],
+          );
+          controller.filePath3.value = resultFile1!.files.first.path!;*/
+        }else if (resultFile4 == null) {
+          resultFile4 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          /* resultFile4 = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['jpg', 'pdf', 'png'],
+          );
+          controller.filePath4.value = resultFile1!.files.first.path!;*/
         }
 
         setState(() {});
@@ -728,26 +760,54 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   }
 
   Widget _fileLlistArea() {
-    return Row(
-      children: [
-        resultFile1 == null
-            ? const SizedBox()
-            : _fileContainer(
-          title: resultFile1!.files.first.name,
-          firstSecondFlag: 1,
-          fileExtension: resultFile1!.files.first.extension!,
+    return Container(
+      width: resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
+          ?  MediaQuery.of(context).size.width - 80 : MediaQuery.of(context).size.width - 180,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            resultFile1 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile1!.name,
+              firstSecondFlag: 1,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile2 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile2!.name,
+              firstSecondFlag: 2,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile3 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile3!.name,
+              firstSecondFlag: 3,
+              fileExtension: resultFile1!.path,
+            ),
+            const SizedBox(
+              width: AppTheme.spacing_m_16,
+            ),
+            resultFile4 == null
+                ? const SizedBox()
+                : _fileContainer(
+              title: resultFile4!.name,
+              firstSecondFlag: 4,
+              fileExtension: resultFile1!.path,
+            ),
+
+          ],
         ),
-        const SizedBox(
-          width: AppTheme.spacing_m_16,
-        ),
-        resultFile2 == null
-            ? const SizedBox()
-            : _fileContainer(
-          title: resultFile2!.files.first.name,
-          firstSecondFlag: 2,
-          fileExtension: resultFile2!.files.first.extension!,
-        ),
-      ],
+      ),
     );
   }
 
@@ -805,7 +865,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   }) {
     var imageUrl = 'assets/app/pdfImage.png';
 
-    if (fileExtension == 'pdf') {
+    if (fileExtension!.endsWith("png")) {
       imageUrl = 'assets/app/pdfImage.png';
     } else {
       imageUrl = 'assets/app/pngImage.png';
@@ -894,9 +954,8 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       onPressed: () async {
                         controller.filePathList.clear();
                         controller.cdConvert();
-                        controller.modifySaveButton();
-                       // controller.saveButton();
-                        // _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        await controller.modifySaveButton();
+                        _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         SchedulerBinding.instance!.addPostFrameCallback((_) {
                           Get.dialog(_dialog());
                         });
@@ -971,53 +1030,47 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   /// 파일 저장쿼리 넘기기
   void _submmit() async {
     try {
-      if (formKey.currentState?.validate() == true) {
-        formKey.currentState?.save();
-
-
-        const maxFileSize = 1024 * 1024 * 10;
-
-        if (resultFile1 != null) {
-          var path = resultFile1!.files.first.path ?? '';
+      if (resultFile1 != null) {
+        Uint8List? bytes = await resultFile1?.readAsBytes();
+        String path = await HomeApi.to.FILE_UPLOAD(resultFile1!.path, bytes!);
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
+          '@p_FILE_NAME': resultFile1!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0', '@p_USER': Utils.getStorage.read('userId')});
+        Get.log('경로 테스트::: $path');
+        /*var path = resultFile1!.files.first.path ?? '';
 
           if (maxFileSize < resultFile1!.files.first.size) {
-            //  Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
+            Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
           if (path != '') {
             controller.filePathList.add(path);
-            //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
-          }
-        }
-        if (resultFile2 != null) {
-          var path = resultFile2!.files.first.path ?? '';
+        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);*/
 
-          if (maxFileSize < resultFile2!.files.first.size) {
-            // Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
-            return;
-          }
-
-          if (path != '') {
-            controller.filePathList.add(path);
-            // queryParameters['ex_file1'] = await MultipartFile.fromFile(path);
-          }
-        }
-
-        Map<String, dynamic> path = {
-          'PATH': controller.filePathList
-        };
-
-        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
-          '@p_FILE_NAME':resultFile2!.files.first.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0'});
-
-        /* if (retVal.success) {
-          Get.back(result: true);
-          Utils.showToast(msg: '등록이 완료되었습니다.');
-        }
-      } else {
-        Utils.showToast(msg: '필수 입력값이 필요합니다.');
-      }*/
       }
+      if (resultFile2 != null) {
+        Uint8List? bytes = await resultFile2?.readAsBytes();
+        String path = await HomeApi.to.FILE_UPLOAD(resultFile2!.path, bytes!);
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
+          '@p_FILE_NAME': resultFile2!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'1', '@p_USER': Utils.getStorage.read('userId')});
+        Get.log('경로 테스트::: $path');
+      }
+      if (resultFile3 != null) {
+        Uint8List? bytes = await resultFile3?.readAsBytes();
+        String path = await HomeApi.to.FILE_UPLOAD(resultFile3!.path, bytes!);
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
+          '@p_FILE_NAME': resultFile3!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'2', '@p_USER': Utils.getStorage.read('userId')});
+        Get.log('경로 테스트::: $path');
+
+      }
+      if (resultFile4 != null) {
+        Uint8List? bytes = await resultFile4?.readAsBytes();
+        String path = await HomeApi.to.FILE_UPLOAD(resultFile4!.path, bytes!);
+        var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
+          '@p_FILE_NAME': resultFile4!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'3', '@p_USER': Utils.getStorage.read('userId')});
+        Get.log('경로 테스트::: $path');
+      }
+
+
     } catch (err) {
       Get.log('_submmit err = ${err.toString()} ', isError: true);
     } finally {
@@ -1073,6 +1126,116 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
     );
   }
 
+  void _showDialog(BuildContext context, Uint8List data) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Column(
+                children: [
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xs_8,
+                  ),
+                  Container(
+                    child: Image.memory(data),
+                  ),
+                  SizedBox(
+                    height: AppTheme.spacing_xxxs_2,
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
 
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                ],
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Container(
+                  child: (() {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                      const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(15),
+                                              bottomRight: Radius.circular(15)))),
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.all(0))),
+                              onPressed: () {
+                                Get.log('취소 클릭!');
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(color: const Color(0x5c3c3c43),)
+                                    )
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                  top: AppTheme.spacing_s_12,
+                                  bottom: AppTheme.spacing_s_12,
+                                ),
+                                child: Center(
+                                  child: Text('닫기',
+                                      style: AppTheme.titleHeadline.copyWith(
+                                          color: AppTheme.black,
+                                          fontSize: 17)),
+                                ),
+                              ),
+                            ),
+                          )]);
+                  })(),
+                ),
+              ]);
+        });
+  }
+  void _checkPermission(BuildContext context) async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    Map<Permission, PermissionStatus> statues = await [
+      Permission.camera,
+      Permission.storage,
+      Permission.photos
+    ].request();
+    PermissionStatus? statusCamera = statues[Permission.camera];
+    PermissionStatus? statusStorage = statues[Permission.storage];
+    PermissionStatus? statusPhotos = statues[Permission.photos];
+    bool isGranted = statusCamera == PermissionStatus.granted &&
+        statusStorage == PermissionStatus.granted &&
+        statusPhotos == PermissionStatus.granted;
+    if (isGranted) {
+      //openCameraGallery();
+      //_openDialog(context);
+    }
+    bool isPermanentlyDenied =
+        statusCamera == PermissionStatus.permanentlyDenied ||
+            statusStorage == PermissionStatus.permanentlyDenied ||
+            statusPhotos == PermissionStatus.permanentlyDenied;
+
+  }
 }
 

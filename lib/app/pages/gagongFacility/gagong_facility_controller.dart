@@ -59,7 +59,7 @@ class GagongFacilityController extends GetxController {
 
   Future<void> saveButton(int index) async {
     var a = await HomeApi.to.PROC('USP_MBS0600_S01', {'@p_WORK_TYPE':'U', '@p_MOV_ID': movIds[index]
-      , '@p_MOV_YN':'Y', '@p_USER':'admin'});
+      , '@p_MOV_YN':'Y', '@p_USER':Utils.getStorage.read('userId')});
 
     Get.log('가공설 저장: $a');
   }

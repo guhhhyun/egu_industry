@@ -70,6 +70,7 @@ class LoginController extends GetxController {
   @override
   void onInit() async {
     Get.log('LoginController - onInit !!');
+
     super.onInit();
   }
 

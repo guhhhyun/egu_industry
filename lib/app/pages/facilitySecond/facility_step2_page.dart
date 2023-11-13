@@ -8,13 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 
 class FacilityStep2Page extends StatelessWidget {
@@ -303,7 +301,9 @@ class FacilityStep2Page extends StatelessWidget {
               Text('점검부서',
                   style: AppTheme.a16400
                       .copyWith(color: AppTheme.a959595)),
-              Text(_deptText(),
+              Text(controller.selectedContainer[0]['INS_DEPT'] == '20040' ? '전산팀' : controller.selectedContainer[0]['INS_DEPT'] == '30020' ? '생산팀' : controller.selectedContainer[0]['INS_DEPT'] == '30030' ? '공무팀' :
+              controller.selectedContainer[0]['INS_DEPT'] == '30040' ? '전기팀' : controller.selectedContainer[0]['INS_DEPT'] == '30060' ? '품질팀' :
+              controller.selectedContainer[0]['INS_DEPT'] == '99990' ? '기타' : '',
                   style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],
@@ -548,7 +548,7 @@ class FacilityStep2Page extends StatelessWidget {
         SizedBox(height: 12,),
         Row(
           children: [
-            Expanded(
+            /*Expanded(
               child: Container(
                 child: TextButton(
                   style: ButtonStyle(
@@ -602,6 +602,47 @@ class FacilityStep2Page extends StatelessWidget {
                   ),
                 ),
               ),
+            ),*/
+            Expanded(
+              child: Container(
+                child: TextButton(
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                  ),
+                  onPressed: () async{
+                    var datePicked = await DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(2018, 3, 5),
+                        maxTime: DateTime.now(), onChanged: (date) {
+                          print('change $date');
+                        }, onConfirm: (date) {
+                         // controller.isErrorDateChoice.value = false;
+                          var firstIndex = date
+                              .toString().lastIndexOf(':');
+                          var lastIndex = date
+                              .toString().length;
+                          controller.dayStartValue.value = date.toString().replaceRange(firstIndex, lastIndex, '');
+                        }, currentTime: DateTime.now(), locale: LocaleType.ko);
+
+                    Get.log('${datePicked}');
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        border: Border(bottom:  BorderSide(color: AppTheme.light_ui_08),)
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(controller.dayStartValue.value, style: AppTheme.a17400
+                            .copyWith(color: AppTheme.black),),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
             SizedBox(width: 12,),
             Container(height: 50, child: Center(
@@ -614,58 +655,38 @@ class FacilityStep2Page extends StatelessWidget {
                 child: TextButton(
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )),
                   ),
                   onPressed: () async{
-                    var datePicked = await DatePicker.showSimpleDatePicker(
-                      titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
-                      context,
-                      confirmText: '확인',
-                      cancelText: '취소',
-                      textColor: AppTheme.black,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2060),
-                      dateFormat: "yyyy-MM-dd",
-                      locale: DateTimePickerLocale.ko,
-                      looping: true,
-                    );
-                    if(datePicked != null) {
-                      int startIndex = datePicked.toString().indexOf(' ');
-                      int lastIndex = datePicked.toString().length;
-                      controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    }else {
-                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
-                      controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
+                    var datePicked = await DatePicker.showDateTimePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(2018, 3, 5),
+                        maxTime: DateTime.now(), onChanged: (date) {
+                          print('change $date');
+                        }, onConfirm: (date) {
+                          // controller.isErrorDateChoice.value = false;
+                          var firstIndex = date
+                              .toString().lastIndexOf(':');
+                          var lastIndex = date
+                              .toString().length;
+                          controller.dayEndValue.value = date.toString().replaceRange(firstIndex, lastIndex, '');
+                        }, currentTime: DateTime.now(), locale: LocaleType.ko);
 
-                    Get.log("Date Picked ${datePicked.toString()}");
-                  //  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Get.log('${datePicked}');
                   },
                   child: Container(
                     height: 50,
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            bottom:
-                            BorderSide(color: AppTheme.light_ui_08),
-                           )),
+                    decoration: BoxDecoration(
+                        border: Border(bottom:  BorderSide(color: AppTheme.light_ui_08),)
+                    ),
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only( right: 12),
+                    padding: const EdgeInsets.only(right: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('${controller.dayEndValue.value}', style: AppTheme.bodyBody1
-                            .copyWith(color: AppTheme.black
-                            , fontSize: 17),),
+                        Text(controller.dayEndValue.value, style: AppTheme.a17400
+                            .copyWith(color: AppTheme.black),),
                       ],
                     ),
-
                   ),
                 ),
               ),

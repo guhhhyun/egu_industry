@@ -293,54 +293,9 @@ class LoginPage extends StatelessWidget {
       backgroundColor: AppTheme.light_ui_background,
       body: Stack(
           children: [
-            gs.isLogin.value == true ? CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  titleSpacing: 0,
-                  centerTitle: true,
-                  title:
-                  Text(
-                    '로그인',
-                    style: AppTheme.a18700.copyWith(color: Colors.black),
-                  ),
-                  backgroundColor: Colors.white,
-                  iconTheme: const IconThemeData(
-                    color: Colors.black,
-                  ),
-                  floating: true,
-
-                  expandedHeight: 30.0,
-                  //bottom: bottom,
-                ),
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text('로그인 상태입니다'),
-                      ),
-                      SizedBox(height: 50,),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            gs.logout();
-                          },
-                            child: Container(
-                              padding: EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
-                              color: AppTheme.blue_blue_100,
-                                child: Text('로그아웃')
-                            )
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-              ],
-            ) :
             CustomScrollView(
               slivers: [
                 // LoginHeader(strTitle: 'strTitle', appBarType: 1),
-
                 _logoWidget(context),
                 _textFieldArea(),
                 _bannerWidget(),

@@ -55,7 +55,7 @@ class AlarmController extends GetxController with GetSingleTickerProviderStateMi
     isAlarmList.clear();
     try{
       isLoading.value = true;
-      var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":gs.loginId.value,"@p_CHK_YN": chkYn.value/*,"@p_TYPE_MSG":''*/}).then((value) =>
+      var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_CHK_YN": chkYn.value/*,"@p_TYPE_MSG":''*/}).then((value) =>
       {
         chkYn.value == '' ?
         alarmAllList.value = value['DATAS'] :  chkYn.value == 'Y' ? alarmYList.value = value['DATAS'] : alarmNList.value = value['DATAS'],

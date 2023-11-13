@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:egu_industry/app/common/utils.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'network_manager.dart';
 import 'package:http/http.dart' as http;
@@ -215,10 +216,11 @@ class HomeApi {
       exception = ex;
       Utils.gErrorMessage('네트워크 오류');
     }finally{
-      //log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
-      //log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());
+   //  log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
+   //  log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());
     }
   }
+
 
   Future<List> PROCS(String procName, Map? PARAMS) async {
     String res = await EXEC2("PROC", procName, PARAMS) ?? "";
@@ -235,6 +237,28 @@ class HomeApi {
     RESULT["FILE"] = base64Decode(RESULT["FILE"]);
     return RESULT;
   }
+
+  Future<Map> RCV_DATA_PERIOD(String? WorkType, Map? PARAMS) async{
+    String res = await EXEC2("RCV_DATA_PERIOD", "PUSH_NOTIFY", PARAMS, timeoutSec: 20*60) ?? "";
+    Map data = json.decode(res);
+    return data["RESULT"]["DATAS"][0];
+  }
+
+  Future<String> FILE_UPLOAD(String PATH, Uint8List FILE) async {
+    String res = await EXEC2("UPLOAD_FILE", "", {"PATH":PATH,"FILE": base64Encode(FILE)}) ?? "";
+    Map data = json.decode(res);
+    String RET_PATH = data["RESULT"]["PATH"];
+    return RET_PATH;
+  }
+  Future<Uint8List> FILE_DOWNLOAD(String PATH) async {
+    String res = await EXEC2("DOWNLOAD_FILE", "", {"PATH":PATH,}) ?? "";
+    Map data = json.decode(res);
+    Map RESULT = data["RESULT"];
+    RESULT["FILE"] = base64Decode(RESULT["FILE"]);
+    return RESULT["FILE"];
+  }
+
+
 
 
 

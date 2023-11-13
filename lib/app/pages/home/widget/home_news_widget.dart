@@ -1,11 +1,10 @@
 import 'package:egu_industry/app/common/app_theme.dart';
+import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 
 class HomeNewsWidget extends StatelessWidget {
@@ -13,17 +12,19 @@ class HomeNewsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          _alarmItem('알림사항'),
-          _newItem('공지사항'),
-        ],
+      child: Container(
+        color: AppTheme.white,
+        child: Column(
+          children: [
+            _alarmItem('알림사항'),
+            _newItem('공지사항'),
+          ],
+        ),
       ),
     );
   }
   Widget _alarmItem(String title) {
     return Obx(() => Container(
-
         margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 24),
         decoration: BoxDecoration(
@@ -58,7 +59,7 @@ class HomeNewsWidget extends StatelessWidget {
               children: [
                 InkWell(
                   onDoubleTap: () async{
-                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[0]["ID"]});
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[0]["ID"]});
                     controller.reqListAlarm();
                   },
                   child: Row(
@@ -95,7 +96,7 @@ class HomeNewsWidget extends StatelessWidget {
                 const SizedBox(height: 8,),
                 InkWell(
                   onDoubleTap: () async{
-                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[1]["ID"]});
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[1]["ID"]});
                     controller.reqListAlarm();
                   },
                   child: Row(
@@ -103,10 +104,10 @@ class HomeNewsWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(controller.alarmNList[1]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[0]['TYPE_MSG_NM']}] ' : '',
+                          Text(controller.alarmNList[1]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[1]['TYPE_MSG_NM']}] ' : '',
                               style: AppTheme.a14400
                                   .copyWith(color: AppTheme.a6c6c6c)),
-                          Text(controller.alarmNList[1]['TEXT_TG'] != null ? controller.alarmNList[0]['TEXT_TG'] : '',
+                          Text(controller.alarmNList[1]['TEXT_TG'] != null ? controller.alarmNList[1]['TEXT_TG'] : '',
                               style: AppTheme.a14400
                                   .copyWith(color: AppTheme.a6c6c6c)),
                         ],
@@ -132,7 +133,7 @@ class HomeNewsWidget extends StatelessWidget {
                 const SizedBox(height: 8,),
                 InkWell(
                   onDoubleTap: () async{
-                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":controller.gs.loginId.value,"@p_ID":controller.alarmNList[2]["ID"]});
+                    var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[2]["ID"]});
                     controller.reqListAlarm();
                   },
                   child: Row(
@@ -140,10 +141,10 @@ class HomeNewsWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(controller.alarmNList[2]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[0]['TYPE_MSG_NM']}] ' : '',
+                          Text(controller.alarmNList[2]['TYPE_MSG_NM'] != null ? '[${controller.alarmNList[2]['TYPE_MSG_NM']}] ' : '',
                               style: AppTheme.a14400
                                   .copyWith(color: AppTheme.a6c6c6c)),
-                          Text(controller.alarmNList[2]['TEXT_TG'] != null ? controller.alarmNList[0]['TEXT_TG'] : '',
+                          Text(controller.alarmNList[2]['TEXT_TG'] != null ? controller.alarmNList[2]['TEXT_TG'] : '',
                               style: AppTheme.a14400
                                   .copyWith(color: AppTheme.a6c6c6c)),
                         ],
