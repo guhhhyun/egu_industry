@@ -166,6 +166,14 @@ class HomeApi {
     return data;
   }
 
+  Future<Map> BIZ_DATA2(String BizComponentID) async {
+    String res = await EXEC2("PROC", 'P_BizComponentQuery_R', {'BizComponentID':BizComponentID}) ?? "";
+
+    Map data = json.decode(res);
+    return data;
+  }
+
+
   Future<String> LOGIN_MOB(String USER_ID, String PWD) async {
     String res = await EXEC2("LOGIN_MOB", "", {"USER_ID":USER_ID,"PWD":PWD}) ?? "";
     Map data = json.decode(res);

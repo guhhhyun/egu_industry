@@ -1,5 +1,6 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_step2_page.dart';
@@ -25,11 +26,16 @@ class FacilityPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '설비/안전 점검 조회', isLogo: false, isFirstPage: true,),
-            _bodyArea(context),
-            _listArea()
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '설비/안전 점검 조회', isLogo: false, isFirstPage: true,),
+                _bodyArea(context),
+                _listArea()
+              ],
+            ),
+            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
           ],
         ),
       ),
@@ -583,18 +589,11 @@ class FacilityPage extends StatelessWidget {
 
   Widget _listItem({required BuildContext context, required int index}) {
 
-
-    //  var regDttmFirstIndex =
-    //  controller.noticeList[index].regDttm.toString().lastIndexOf(' ');
-
     return Obx(() => TextButton(
         style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(5)))),
-        /*backgroundColor: MaterialStateProperty.all<Color>(
-                AppTheme.light_primary,
-              ),*/
         padding:
         MaterialStateProperty.all(const EdgeInsets.all(0))),
       onPressed: () {
@@ -611,6 +610,7 @@ class FacilityPage extends StatelessWidget {
           if(controller.test[index] == true) {
             controller.registButton.value = true;
             controller.selectedContainer.add(controller.datasList[index]);
+            controller.selectedContainer[0]['RP_CODE'] != null ||  controller.selectedContainer[0]['RP_CODE'] != '' ? controller.isAlreadySave.value = true : controller.isAlreadySave.value = false;
           }
         }
         Get.log('rrr${controller.selectedContainer}');
@@ -815,11 +815,21 @@ class FacilityPage extends StatelessWidget {
               MaterialStateProperty.all<Color>(AppTheme.light_cancel),
               padding: MaterialStateProperty.all<EdgeInsets>(
                   const EdgeInsets.all(0))),
-          onPressed: controller.registButton.value ? () async{
+          onPressed: controller.isLoading.value ? null : controller.registButton.value ? () async{
             Get.log('점검의뢰 등록 클릭!!');
-            await controller.reqEngineer();
-            await controller.partConvert('${controller.selectedContainer[0]['MACH_CODE']}');
-          //  Get.log('ㅁㄴㅁㄴ ${controller.selectedContainer[0]}');
+            try{
+              controller.isLoading.value = true;
+              await controller.reqEngineer();
+              await controller.partConvert('${controller.selectedContainer[0]['MACH_CODE']}');
+            }catch(err) {
+              Get.log('err = ${err.toString()} ', isError: true);
+            }finally {
+              controller.isLoading.value = false;
+            }
+            /*controller.isAlreadySave.value == true ?  HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_RP_CODE':controller.selectedContainer[0]['RP_CODE']}).then((value) =>
+            {
+              controller.alreadyList.value = value['DATAS']
+            }) : null;*/
             Get.to(FacilityStep2Page());
           } : null,
           child: Container(

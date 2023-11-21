@@ -285,12 +285,12 @@ class MyTaskHandler extends TaskHandler {
     try {
       map = value as Map;
       Object ID = map.containsKey("ID") ? map["ID"] : "";
-      String TYPE = map.containsKey("TYPE") ? map["TYPE"] : "";
-      String SUBJECT = map.containsKey("SUBJECT") ? map["SUBJECT"] : "";
-      String CONTENTS = map.containsKey("CONTENTS") ? map["CONTENTS"] : "";
-      Object ACT_DTM = (map.containsKey("ACT_DTM") ? map["ACT_DTM"] : "")??"";
-      Object RCV_USER = (map.containsKey("RCV_USER") ? map["RCV_USER"] : "")??"";
-      Object OPTIONS = (map.containsKey("OPTIONS") ? map["OPTIONS"] : "")??"";
+      String TYPE = map.containsKey("TYPE") ? (map["TYPE"]??"") : "";
+      String SUBJECT = map.containsKey("SUBJECT") ? (map["SUBJECT"]??"") : "";
+      String CONTENTS = map.containsKey("CONTENTS") ? (map["CONTENTS"]??"") : "";
+      Object ACT_DTM = (map.containsKey("ACT_DTM") ? (map["ACT_DTM"]??"") : "")??"";
+      Object RCV_USER = (map.containsKey("RCV_USER") ? (map["RCV_USER"]??"") : "")??"";
+      Object OPTIONS = (map.containsKey("OPTIONS") ? (map["OPTIONS"]??"") : "")??"";
       switch(TYPE){
         case "PUSH_NOTIFY": {
           LocalNotification.notify(SUBJECT, CONTENTS);
@@ -299,7 +299,7 @@ class MyTaskHandler extends TaskHandler {
       await RCV_DATA_PERIOD("PUSH_NOTIFY", { 'RCV_USER':RCV_USER, 'EXC_YN':'Y', 'ID':ID });
     } catch(ex){
       Get.log('workMgrProcedure Exception : ' + ex.toString());
-      sleep(const Duration(milliseconds: 1*1000));
+      sleep(const Duration(milliseconds: 30*1000));
     } finally {
       sleep(const Duration(milliseconds: 1000));
       return map;

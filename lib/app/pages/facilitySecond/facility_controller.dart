@@ -20,7 +20,7 @@ class FacilityController extends GetxController {
   var textItemNameController = TextEditingController();
   var textItemSpecController = TextEditingController();
 
-
+  RxBool isLoading = false.obs;
   RxInt otherPartQty = 1.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
@@ -38,6 +38,8 @@ class FacilityController extends GetxController {
   RxList test = [].obs;
   RxBool registButton = false.obs;
   RxList selectedContainer = [].obs;
+  RxBool isAlreadySave = false.obs; // 정비내역 등록 이미 된 것 판단
+  RxList<dynamic> alreadyList = [].obs; // 이미 등록된 건 조회
   RxList<String> engineerIdList = [''].obs;
   RxString selectedEnginner = '정비자를 선택해주세요'.obs;
   RxString selectedEnginnerCd = ''.obs;
@@ -72,7 +74,8 @@ class FacilityController extends GetxController {
 
   RxList<bool> isEngineerSelectedList = [false].obs;
   RxList<dynamic> engineerSelectedList = [].obs;
-  RxList partList = [].obs; // 부품리스트
+  RxList<dynamic> partAllList = [].obs; // 부품리스트
+  RxList<dynamic> partList = [].obs; // 부품리스트
   RxList<bool> isPartSelectedList = [false].obs;
   RxList partSelectedList = [].obs;
   RxList<int> partQtyList = [1].obs;
@@ -137,24 +140,43 @@ class FacilityController extends GetxController {
   }
 
   Future<void> partConvert(String machCode) async {
-    var part = await HomeApi.to.PROC('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q_PART',  '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}',}).then((value) =>
-    {
-      if(value['DATAS'] != null) {
-        for(var i = 0; i < value['DATAS'].length; i++) {
-          isPartSelectedList.add(false),
-          partQtyList.add(1),
-          partList.addAll(value['DATAS']),
+    try{
+
+      var part = await HomeApi.to.BIZ_DATA('P_MRS001').then((value) =>
+      //  var part = await HomeApi.to.PROC('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q_PART',  '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}',}).then((value) =>
+      {
+        if(value['DATAS'] != null) {
+          partAllList.value = value['DATAS'],
+
+          for(var i = 0; i < partAllList.length; i++) {
+            if(partAllList[i]['DEPT_CODE'] == selectedContainer[0]['INS_DEPT'] && partAllList[i]['CMH_ID_SCH'].toString().contains(',${selectedContainer[0]['MACH_CODE']},')) {
+              isPartSelectedList.add(false),
+              partQtyList.add(1),
+              partList.add(partAllList[i]),
+            }
+
+          },
+
         },
-      },
-    });
-    Get.log('part:  ${part}');
+        Get.log('part111:  ${partList.value}'),
+      Get.log('dept111:  ${selectedContainer[0]['INS_DEPT']}'),
+      Get.log('mach111:  ${selectedContainer[0]['MACH_CODE']}'),
+
+      });
+    }catch(err) {
+      Get.log('P_MRS001 err = ${err.toString()} ', isError: true);
+    }finally {
+
+    }
+
+
   }
 
   Future<void> reqEngineer() async{
     var engineer = await HomeApi.to.BIZ_DATA('P_SYS029').then((value) =>
     {
       for(var i = 0; i < value['DATAS'].length; i++) {
-        if(selectedContainer[0]['INS_DEPT'] == value['DATAS'][i]['BASE_DEPT']) {
+        if(value['DATAS'][i]['DEPT_PATH'].toString().contains(selectedContainer[0]['INS_DEPT'])) {
           engineer2List.add(value['DATAS'][i]),
           isEngineerSelectedList.add(false)
         }
@@ -313,10 +335,10 @@ class FacilityController extends GetxController {
 
 
   @override
-  void onInit() {
+  void onInit() async{
     readCdConvert();
     datasList.clear();
-    HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
+    await HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
       , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),

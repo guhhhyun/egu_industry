@@ -98,15 +98,21 @@ class ModalPartListWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                            children: [
-                              Text('${controller.partList[index]['ITEM_NAME']}', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
-                              SizedBox(width: 12,),
-                              Text('|'),
-                              SizedBox(width: 12,),
-                              Text('${controller.partList[index]['ITEM_SPEC']}', style: AppTheme.a15500.copyWith(color: AppTheme.black)),
-                            ],
-                          ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 150,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                                children: [
+                                  Text('${controller.partList[index]['ITEM_NAME']}', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                                  SizedBox(width: 12,),
+                                  Text('|'),
+                                  SizedBox(width: 12,),
+                                  Text('${controller.partList[index]['ITEM_SPEC']}', style: AppTheme.a15500.copyWith(color: AppTheme.black)),
+                                ],
+                              ),
+                        ),
+                      ),
                       SizedBox(height: 10,),
                       Container(
                         padding: EdgeInsets.only(left: 15, right: 15, top: 4, bottom: 4),

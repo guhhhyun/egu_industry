@@ -1,5 +1,6 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
+import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_modify_page.dart';
@@ -26,11 +27,16 @@ class FacilityFirstStep1Page extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
-            _bodyArea(context),
-            _listArea()
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
+                _bodyArea(context),
+                _listArea()
+              ],
+            ),
+            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
           ],
         ),
       ),
@@ -415,8 +421,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
               if(value == '전체') {
                 controller.choiceButtonVal.value = 1;
                 controller.pResultFg.value = 'A';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.isSelect.length; i++) {
+                  controller.isSelect[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
@@ -439,8 +445,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 Get.log('미조치 클릭');
                 controller.choiceButtonVal.value = 2;
                 controller.pResultFg.value = 'N';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.isSelect.length; i++) {
+                  controller.isSelect[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
@@ -462,8 +468,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 Get.log('정비완료 클릭');
                 controller.choiceButtonVal.value = 3;
                 controller.pResultFg.value = 'Y';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.isSelect.length; i++) {
+                  controller.isSelect[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
@@ -485,8 +491,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 Get.log('조치 진행중 클릭');
                 controller.choiceButtonVal.value = 4;
                 controller.pResultFg.value = 'I';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.isSelect.length; i++) {
+                  controller.isSelect[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
@@ -572,10 +578,10 @@ class FacilityFirstStep1Page extends StatelessWidget {
   }
 
   Widget _listArea() {
-    controller.test.clear();
+    controller.isSelect.clear();
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          controller.test.add(false);
+          controller.isSelect.add(false);
           return _listItem(index: index, context: context);
         }, childCount: controller.datasList.length)));
   }
@@ -592,31 +598,42 @@ class FacilityFirstStep1Page extends StatelessWidget {
               ),*/
           padding:
           MaterialStateProperty.all(const EdgeInsets.all(0))),
-      onPressed: () {
-        if(controller.test[index] == true) {
-          controller.test[index] = false;
+      onPressed: () async{
+        if(controller.isSelect[index] == true) {
+          controller.isSelect[index] = false;
           controller.registButton.value = false;
           controller.selectedContainer.clear();
         }else {
-          for(var i = 0; i < controller.test.length; i++) {
-            controller.test[i] = false;
+          try{
+            controller.isLoading.value = true;
+            for(var i = 0; i < controller.isSelect.length; i++) {
+              controller.isSelect[i] = false;
+            }
+            controller.selectedContainer.clear();
+            controller.isSelect[index] = true;
+            if(controller.isSelect[index] == true) {
+              controller.registButton.value = true;
+              controller.selectedContainer.add(controller.datasList[index]);
+            }
+            controller.modifyCheck();
+            modifyEngineTeam();
+            controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
+            var indexLast = controller.modifyErrorTime.value.lastIndexOf(':');
+            controller.modifyErrorTime.value = controller.modifyErrorTime.value.replaceFirst('T', ' ').replaceRange(indexLast, controller.modifyErrorTime.value.length, '');
+            controller.selectedContainer[0]['INS_FG'] == 'M' ? controller.modifySelectedIns.value = '설비점검' : controller.modifySelectedIns.value = '안전점검';
+            controller.selectedContainer[0]['URGENCY_FG'] == 'N' ? controller.modifySelectedReadUrgency.value = '보통' : controller.modifySelectedReadUrgency.value = '긴급';
+            controller.modifySelectedMachMap['MACH_CODE'] = controller.selectedContainer[0]['MACH_CODE'];
+            controller.selectedContainer[0]['MACH_CODE'] == '' ? controller.modifySelectedMachMap['MACH_NAME'] = '전체' : controller.modifySelectedMachMap['MACH_NAME'] = modifyMach();
+            controller.modifyTextTitleController.text = controller.selectedContainer[0]['IR_TITLE'];
+            await controller.reqFileData();
+            await controller.reqFileDownloadData();
+          }catch(err) {
+            Get.log(err.toString());
+          }finally {
+            controller.isLoading.value = false;
           }
-          controller.selectedContainer.clear();
-          controller.test[index] = true;
-          if(controller.test[index] == true) {
-            controller.registButton.value = true;
-            controller.selectedContainer.add(controller.datasList[index]);
-          }
-          controller.modifyCheck();
-          modifyEngineTeam();
-          controller.modifyErrorTime.value = controller.selectedContainer[0]['IR_DATE'];
-          var indexLast = controller.modifyErrorTime.value.lastIndexOf(':');
-          controller.modifyErrorTime.value = controller.modifyErrorTime.value.replaceFirst('T', ' ').replaceRange(indexLast, controller.modifyErrorTime.value.length, '');
-          controller.selectedContainer[0]['INS_FG'] == 'M' ? controller.modifySelectedIns.value = '설비점검' : controller.modifySelectedIns.value = '안전점검';
-          controller.selectedContainer[0]['URGENCY_FG'] == 'N' ? controller.modifySelectedReadUrgency.value = '보통' : controller.modifySelectedReadUrgency.value = '긴급';
-          controller.modifySelectedMachMap['MACH_CODE'] = controller.selectedContainer[0]['MACH_CODE'];
-          controller.selectedContainer[0]['MACH_CODE'] == '' ? controller.modifySelectedMachMap['MACH_NAME'] = '전체' : controller.modifySelectedMachMap['MACH_NAME'] = modifyMach();
-          controller.modifyTextTitleController.text = controller.selectedContainer[0]['IR_TITLE'];
+
+
 
           Get.to(const FacilityFirstModifyPage());
         }
@@ -626,7 +643,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
         padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: controller.test[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
+            border: controller.isSelect[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
             color: AppTheme.white,
             boxShadow: [
               BoxShadow(
@@ -790,7 +807,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) ,
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(0))),
-            onPressed: () {
+            onPressed: controller.isLoading.value ? null : () {
               Get.log('신규 등록 클릭!!');
               Get.to(const FacilityFirstStep2Page());
             },

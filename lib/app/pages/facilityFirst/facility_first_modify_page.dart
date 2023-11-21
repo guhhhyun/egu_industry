@@ -32,10 +32,7 @@ class FacilityFirstModifyPage extends StatefulWidget {
 class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   FacilityFirstController controller = Get.find();
   final formKey = GlobalKey<FormState>();
-  XFile? resultFile1 = null;
-  XFile? resultFile2 = null;
-  XFile?resultFile3 = null;
-  XFile? resultFile4 = null;
+
 
 
   @override
@@ -221,7 +218,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
               SizedBox(height: 20,),
               _contentTextFieldItem(),
               SizedBox(height: 20,),
-              _fileArea()
+              _fileArea(),
+              SizedBox(height: 20,),
+              _imageArea()
               // _topDataItem(),
               //_inputArea(context),
               // _partChoiceBody()
@@ -703,7 +702,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
 
 
   Widget _fileAddBtn() {
-    return resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
+    return controller.resultFile1 != null && controller.resultFile2 != null && controller.resultFile3 != null && controller.resultFile4 != null
         ? const SizedBox()
         : TextButton(
       style: ButtonStyle(
@@ -718,29 +717,38 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
       onPressed: () async {
         _checkPermission(context);
         Get.log('첨부파일 추가');
-        if (resultFile1 == null) {
-          resultFile1 = await ImagePicker().pickImage(source: ImageSource.gallery);
-        } else if (resultFile2 == null) {
-          resultFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
-          /* resultFile2 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath2.value = resultFile1!.files.first.path!;*/
-        }else if (resultFile3 == null) {
-          resultFile3 = await ImagePicker().pickImage(source: ImageSource.gallery);
-          /* resultFile3 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath3.value = resultFile1!.files.first.path!;*/
-        }else if (resultFile4 == null) {
-          resultFile4 = await ImagePicker().pickImage(source: ImageSource.gallery);
-          /* resultFile4 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath4.value = resultFile1!.files.first.path!;*/
+        if (controller.resultFile1 == null) {
+          controller.resultFile1 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = controller.resultFile1?.readAsBytes();
+          Uint8List list = await unit!;
+          var image = MemoryImage(list);
+          controller.imageList.isNotEmpty ? controller.imageList[0] = image :
+          controller.imageList.add(image);
+        //  controller.reqNewFileDownloadData(controller.resultFile1!.path);
+        } else if (controller.resultFile2 == null) {
+          controller.resultFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = controller.resultFile2?.readAsBytes();
+          Uint8List list = await unit!;
+          var image = MemoryImage(list);
+          controller.imageList.length > 1 ? controller.imageList[1] = image :
+          controller.imageList.add(image);
+        //  controller.reqNewFileDownloadData(controller.resultFile2!.path);
+        }else if (controller.resultFile3 == null) {
+          controller.resultFile3 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = controller.resultFile3?.readAsBytes();
+          Uint8List list = await unit!;
+          var image = MemoryImage(list);
+          controller.imageList.length > 2 ? controller.imageList[2] = image :
+          controller.imageList.add(image);
+         // controller.reqNewFileDownloadData(controller.resultFile3!.path);
+        }else if (controller.resultFile4 == null) {
+          controller.resultFile4 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = controller.resultFile4?.readAsBytes();
+          Uint8List list = await unit!;
+          var image = MemoryImage(list);
+          controller.imageList.length > 3 ? controller.imageList[3] = image :
+          controller.imageList.add(image);
+        //  controller.reqNewFileDownloadData(controller.resultFile4!.path);
         }
 
         setState(() {});
@@ -761,48 +769,48 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
 
   Widget _fileLlistArea() {
     return Container(
-      width: resultFile1 != null && resultFile2 != null && resultFile3 != null && resultFile4 != null
+      width: controller.resultFile1 != null && controller.resultFile2 != null && controller.resultFile3 != null && controller.resultFile4 != null
           ?  MediaQuery.of(context).size.width - 80 : MediaQuery.of(context).size.width - 180,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            resultFile1 == null
+            controller.resultFile1 == null
                 ? const SizedBox()
                 : _fileContainer(
-              title: resultFile1!.name,
+              title: controller.resultFile1!.path != '' ? controller.resultFile1!.name : controller.fileList.isNotEmpty ? controller.fileList[0]['FILE_NAME'] : '',
               firstSecondFlag: 1,
-              fileExtension: resultFile1!.path,
+              fileExtension: controller.resultFile1!.path,
             ),
             const SizedBox(
               width: AppTheme.spacing_m_16,
             ),
-            resultFile2 == null
+            controller.resultFile2 == null
                 ? const SizedBox()
                 : _fileContainer(
-              title: resultFile2!.name,
+              title:  controller.resultFile2!.path != '' ? controller.resultFile2!.name :  controller.fileList.isNotEmpty ? controller.fileList[1]['FILE_NAME']: '',
               firstSecondFlag: 2,
-              fileExtension: resultFile1!.path,
+              fileExtension: controller.resultFile2!.path,
             ),
             const SizedBox(
               width: AppTheme.spacing_m_16,
             ),
-            resultFile3 == null
+            controller.resultFile3 == null
                 ? const SizedBox()
                 : _fileContainer(
-              title: resultFile3!.name,
+              title:  controller.resultFile3!.path != '' ? controller.resultFile3!.name :  controller.fileList.isNotEmpty ? controller.fileList[2]['FILE_NAME']: '',
               firstSecondFlag: 3,
-              fileExtension: resultFile1!.path,
+              fileExtension: controller.resultFile3!.path,
             ),
             const SizedBox(
               width: AppTheme.spacing_m_16,
             ),
-            resultFile4 == null
+            controller.resultFile4 == null
                 ? const SizedBox()
                 : _fileContainer(
-              title: resultFile4!.name,
+              title:  controller.resultFile4!.path != '' ? controller.resultFile4!.name :  controller.fileList.isNotEmpty ? controller.fileList[3]['FILE_NAME']: '',
               firstSecondFlag: 4,
-              fileExtension: resultFile1!.path,
+              fileExtension: controller.resultFile4!.path,
             ),
 
           ],
@@ -840,21 +848,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
             _fileLlistArea(),
           ],
         ),
-        const SizedBox(
-          height: 100,
-        ),
+
 
       ],
-    );
-  }
-
-  Widget _noFileContainer() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacing_s_12),
-      decoration:
-      BoxDecoration(border: Border.all(color: AppTheme.light_ui_03)),
-      height: 99,
-      width: 99,
     );
   }
 
@@ -910,9 +906,58 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
               onPressed: () {
                 setState(() {
                   if (firstSecondFlag == 1) {
-                    resultFile1 = null;
-                  } else {
-                    resultFile2 = null;
+                      if(controller.fileSeqList.isNotEmpty) {
+                        for(var i = 0; i < controller.fileList.length; i++ ) {
+                          controller.fileList[i]['SEQ'] == controller.fileSeqList[0] ?
+                          controller.fileDelList.add(controller.fileList[i]) : null;
+                        }
+                      }
+                      Get.log('fileList0 ::: ${controller.fileList}');
+                      controller.resultFile1 = null;
+                      if(controller.resultFile1 == null && controller.resultFile2 == null && controller.resultFile3 == null && controller.resultFile4 == null) {
+                        controller.imageList.clear();
+                      }
+                    //  controller.imageList.removeAt(0);
+                  } else if(firstSecondFlag == 2){
+                    if(controller.fileSeqList.length > 1) {
+                      for(var i = 0; i < controller.fileList.length; i++ ) {
+                        controller.fileList[i]['SEQ'] == controller.fileSeqList[1] ?
+                        controller.fileDelList.add(controller.fileList[i]) : null;
+                      }
+                    }
+                    Get.log('fileList1 ::: ${controller.fileList}');
+                    controller.resultFile2 = null;
+                    if(controller.resultFile1 == null && controller.resultFile2 == null && controller.resultFile3 == null && controller.resultFile4 == null) {
+                      controller.imageList.clear();
+                    }
+                 //   controller.imageList.removeAt(1);
+                  }else if(firstSecondFlag == 3){
+                    if(controller.fileSeqList.length > 2) {
+                      for(var i = 0; i < controller.fileList.length; i++ ) {
+                        controller.fileList[i]['SEQ'] == controller.fileSeqList[2] ?
+                        controller.fileDelList.add(controller.fileList[i]) : null;
+                      }
+                    }
+                    Get.log('fileList2 ::: ${controller.fileList}');
+                    controller.resultFile3 = null;
+                    if(controller.resultFile1 == null && controller.resultFile2 == null && controller.resultFile3 == null && controller.resultFile4 == null) {
+                      controller.imageList.clear();
+                    }
+                 //   controller.imageList.removeAt(2);
+                  }else {
+                    if(controller.fileSeqList.length > 3) {
+                      for(var i = 0; i < controller.fileList.length; i++ ) {
+                        controller.fileList[i]['SEQ'] == controller.fileSeqList[3] ?
+                        controller.fileDelList.add(controller.fileList[i]) : null;
+                      }
+                    }
+
+                    Get.log('fileList3 ::: ${controller.fileList}');
+                    controller.resultFile4 = null;
+                    if(controller.resultFile1 == null && controller.resultFile2 == null && controller.resultFile3 == null && controller.resultFile4 == null) {
+                      controller.imageList.clear();
+                    }
+                 //   controller.imageList.removeAt(3);
                   }
                 });
               },
@@ -934,6 +979,157 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
     );
   }
 
+  Widget _imageArea() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '이미지',
+          style: AppTheme.a15700
+              .copyWith(color: AppTheme.light_text_primary),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        Row(
+          children: [
+            _imageLlistArea()
+          ],
+        ),
+        const SizedBox(
+          height: 100,
+        ),
+
+      ],
+    );
+  }
+
+
+  Widget _imageLlistArea() {
+    return Container(
+      width:  MediaQuery.of(context).size.width - 80 ,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            controller.resultFile1 == null
+                ? const SizedBox()
+                : controller.resultFile1!.path == null ? Container() : controller.imageList.isNotEmpty ? _imageContainer(
+             index: 0
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            controller.resultFile2 == null
+                ? const SizedBox()
+                : controller.resultFile2!.path == null ? Container() : controller.imageList.isNotEmpty ? _imageContainer(
+                index: 1
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            controller.resultFile3 == null
+                ? const SizedBox()
+                : controller.resultFile3!.path == null ? Container() : controller.imageList.isNotEmpty ? _imageContainer(
+                index: 2
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            controller.resultFile4 == null
+                ? const SizedBox()
+                : controller.resultFile4!.path == null ? Container() : controller.imageList.isNotEmpty ? _imageContainer(
+                index: 3
+            ) : Container()
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _imageContainer({
+    required int index,
+  }) {
+    return controller.imageList.isNotEmpty ?
+        InkWell(
+          onTap: () {
+            _imageShowDialog(context, index);
+          },
+          child: Container(
+              height: 70,
+              width: 50,
+              child: Image(image: controller.imageList[index]!, fit: BoxFit.fill)),
+        ) : Container();
+  }
+
+  void _imageShowDialog(BuildContext context, int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    color: Colors.white,
+                    height: MediaQuery.of(context).size.height - 150,
+                      child: Image(image: controller.imageList[index]!))
+                ],
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Container(
+                  child: (() {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              style: ButtonStyle(
+
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.all(0))),
+                              onPressed: () {
+                                Get.log('닫기 클릭!');
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(color: const Color(0x5c3c3c43),)
+                                    )
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                  top: AppTheme.spacing_s_12,
+                                  bottom: AppTheme.spacing_s_12,
+                                ),
+                                child: Center(
+                                  child: Text('닫기',
+                                      style: AppTheme.titleHeadline.copyWith(
+                                          color: AppTheme.black,
+                                          fontSize: 17)),
+                                ),
+                              ),
+                            ),
+                          )]);
+                  })(),
+                ),
+              ]);
+        });
+  }
+
   Widget _bottomButton(BuildContext context) {
     return BottomAppBar(
         color: AppTheme.white,
@@ -952,10 +1148,14 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                           padding: MaterialStateProperty.all<EdgeInsets>(
                               const EdgeInsets.all(0))),
                       onPressed: () async {
+
                         controller.filePathList.clear();
                         controller.cdConvert();
                         await controller.modifySaveButton();
-                        _submmit(); /// 삭제 할 수 있음 ----!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        _submmit();
+                        for(var i = 0; i < controller.fileDelList.length; i++ ) {
+                          controller.deleteFileData(controller.fileDelList[i]['SEQ']);
+                        }
                         SchedulerBinding.instance!.addPostFrameCallback((_) {
                           Get.dialog(_dialog());
                         });
@@ -1030,43 +1230,53 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
   /// 파일 저장쿼리 넘기기
   void _submmit() async {
     try {
-      if (resultFile1 != null) {
-        Uint8List? bytes = await resultFile1?.readAsBytes();
-        String path = await HomeApi.to.FILE_UPLOAD(resultFile1!.path, bytes!);
+      const maxFileSize = 1024 * 1024 * 10;
+      if (controller.resultFile1 != null && controller.resultFile1!.path != '') {
+        String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
+        Uint8List? bytes = await controller.resultFile1?.readAsBytes();
+        String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(1).jpg', bytes!);
         var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
-          '@p_FILE_NAME': resultFile1!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0', '@p_USER': Utils.getStorage.read('userId')});
+          '@p_FILE_NAME': controller.resultFile1!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.selectedContainer[0]['IR_TITLE']});
         Get.log('경로 테스트::: $path');
-        /*var path = resultFile1!.files.first.path ?? '';
-
-          if (maxFileSize < resultFile1!.files.first.size) {
+        /*
+          if (maxFileSize < bytes) {
             Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
             return;
           }
-          if (path != '') {
-            controller.filePathList.add(path);
-        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);*/
+      */
 
       }
-      if (resultFile2 != null) {
-        Uint8List? bytes = await resultFile2?.readAsBytes();
-        String path = await HomeApi.to.FILE_UPLOAD(resultFile2!.path, bytes!);
+      if (controller.resultFile2 != null && controller.resultFile2!.path != '') {
+        String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
+        Uint8List? bytes = await controller.resultFile2?.readAsBytes();
+
+        String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(2).jpg', bytes!);
         var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
-          '@p_FILE_NAME': resultFile2!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'1', '@p_USER': Utils.getStorage.read('userId')});
+          '@p_FILE_NAME': controller.resultFile2!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'1', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.selectedContainer[0]['IR_TITLE']});
         Get.log('경로 테스트::: $path');
       }
-      if (resultFile3 != null) {
-        Uint8List? bytes = await resultFile3?.readAsBytes();
-        String path = await HomeApi.to.FILE_UPLOAD(resultFile3!.path, bytes!);
+      if (controller.resultFile3 != null && controller.resultFile3!.path != '') {
+        String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
+        Uint8List? bytes = await controller.resultFile3?.readAsBytes();
+
+        String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(3).jpg', bytes!);
         var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
-          '@p_FILE_NAME': resultFile3!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'2', '@p_USER': Utils.getStorage.read('userId')});
+          '@p_FILE_NAME': controller.resultFile3!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'2', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.selectedContainer[0]['IR_TITLE']});
         Get.log('경로 테스트::: $path');
+        Get.log('fileNm:: $fileNm');
 
       }
-      if (resultFile4 != null) {
-        Uint8List? bytes = await resultFile4?.readAsBytes();
-        String path = await HomeApi.to.FILE_UPLOAD(resultFile4!.path, bytes!);
+      if (controller.resultFile4 != null && controller.resultFile4!.path != '') {
+        String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
+        Get.log('fileNm:: ${fileNm}');
+        Uint8List? bytes = await controller.resultFile4?.readAsBytes();
+ /*       if (maxFileSize < bytes!.length) {
+          Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
+          return;
+        }*/
+        String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(4).jpg', bytes!);
         var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.selectedContainer[0]['IR_CODE'],
-          '@p_FILE_NAME': resultFile4!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'3', '@p_USER': Utils.getStorage.read('userId')});
+          '@p_FILE_NAME': controller.resultFile4!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'3', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.selectedContainer[0]['IR_TITLE']});
         Get.log('경로 테스트::: $path');
       }
 

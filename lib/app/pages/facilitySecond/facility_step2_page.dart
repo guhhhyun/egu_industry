@@ -225,13 +225,12 @@ class FacilityStep2Page extends StatelessWidget {
                     padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: controller.selectedReadUrgency.value == '긴급' ? AppTheme.afef1ef :
+                        color: controller.selectedContainer[0]['URGENCY_FG'] == 'U' ? AppTheme.afef1ef :
                         AppTheme.aecf9f2
                     ),
-                    child: Text(controller.selectedReadUrgency.value, /// 긴급 or 보통 으로
+                    child: Text(controller.selectedContainer[0]['URGENCY_FG'] == 'U' ? '긴급' : '보통', /// 긴급 or 보통 으로
                         style: AppTheme.bodyBody1
-                            .copyWith(color: controller.selectedReadUrgency.value == '긴급'
-                            ? AppTheme.af34f39 : AppTheme.a18b858)),
+                            .copyWith(color: controller.selectedContainer[0]['URGENCY_FG'] == 'U' ? AppTheme.af34f39 : AppTheme.a18b858)),
                   ),
                   const SizedBox(width: 6,),
                   Container(
@@ -1146,7 +1145,7 @@ class FacilityStep2Page extends StatelessWidget {
                     const EdgeInsets.all(0))),
             onPressed: controller.isStep2RegistBtn.value ? () async {
               controller.cdConvert();
-              controller.saveButton();
+              await controller.saveButton();
 
               SchedulerBinding.instance!.addPostFrameCallback((_) {
                 Get.dialog(

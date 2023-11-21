@@ -38,7 +38,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   final formKey = GlobalKey<FormState>();
   XFile? resultFile1 = null;
   XFile? resultFile2 = null;
-  XFile?resultFile3 = null;
+  XFile? resultFile3 = null;
   XFile? resultFile4 = null;
 
 
@@ -226,7 +226,9 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
               SizedBox(height: 20,),
               _contentTextFieldItem(),
               SizedBox(height: 20,),
-              _fileArea()
+              _fileArea(),
+              SizedBox(height: 20,),
+              _imageArea()
               // _topDataItem(),
               //_inputArea(context),
               // _partChoiceBody()
@@ -725,22 +727,32 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
         Get.log('첨부파일 추가');
         if (resultFile1 == null) {
           resultFile1 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = resultFile1?.readAsBytes();
+          Uint8List? list = await unit;
+          var image = MemoryImage(list!);
+          controller.newImageList.isNotEmpty ? controller.newImageList[0] = image :
+          controller.newImageList.add(image);
         } else if (resultFile2 == null) {
           resultFile2 = await ImagePicker().pickImage(source: ImageSource.gallery);
-         /* resultFile2 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath2.value = resultFile1!.files.first.path!;*/
+          var unit = resultFile2?.readAsBytes();
+          Uint8List? list = await unit;
+          var image = MemoryImage(list!);
+          controller.newImageList.length > 1 ? controller.newImageList[1] = image :
+          controller.newImageList.add(image);
         }else if (resultFile3 == null) {
           resultFile3 = await ImagePicker().pickImage(source: ImageSource.gallery);
-         /* resultFile3 = await FilePicker.platform.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: ['jpg', 'pdf', 'png'],
-          );
-          controller.filePath3.value = resultFile1!.files.first.path!;*/
+          var unit = resultFile3?.readAsBytes();
+          Uint8List? list = await unit;
+          var image = MemoryImage(list!);
+          controller.newImageList.length > 2 ? controller.newImageList[2] = image :
+          controller.newImageList.add(image);
         }else if (resultFile4 == null) {
           resultFile4 = await ImagePicker().pickImage(source: ImageSource.gallery);
+          var unit = resultFile4?.readAsBytes();
+          Uint8List? list = await unit;
+          var image = MemoryImage(list!);
+          controller.newImageList.length > 3 ? controller.newImageList[3] = image :
+          controller.newImageList.add(image);
          /* resultFile4 = await FilePicker.platform.pickFiles(
             type: FileType.custom,
             allowedExtensions: ['jpg', 'pdf', 'png'],
@@ -853,16 +865,6 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
     );
   }
 
-  Widget _noFileContainer() {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacing_s_12),
-      decoration:
-      BoxDecoration(border: Border.all(color: AppTheme.light_ui_03)),
-      height: 99,
-      width: 99,
-    );
-  }
-
   Widget _fileContainer({
     required String title,
     required int firstSecondFlag,
@@ -941,6 +943,158 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
             )),
       ],
     );
+  }
+
+
+  Widget _imageArea() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '이미지',
+          style: AppTheme.a15700
+              .copyWith(color: AppTheme.light_text_primary),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+        Row(
+          children: [
+            _imageLlistArea()
+          ],
+        ),
+        const SizedBox(
+          height: 100,
+        ),
+
+      ],
+    );
+  }
+
+
+  Widget _imageLlistArea() {
+    return Container(
+      width:  MediaQuery.of(context).size.width - 80 ,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            resultFile1 == null
+                ? const SizedBox()
+                : controller.newImageList.isNotEmpty ? _imageContainer(
+                index: 0
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            resultFile2 == null
+                ? const SizedBox()
+                :controller.newImageList.isNotEmpty ? _imageContainer(
+                index: 1
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            resultFile3 == null
+                ? const SizedBox()
+                : controller.newImageList.isNotEmpty ? _imageContainer(
+                index: 2
+            ) : Container(),
+            const SizedBox(
+              width: 20,
+            ),
+            resultFile4 == null
+                ? const SizedBox()
+                : controller.newImageList.isNotEmpty ? _imageContainer(
+                index: 3
+            ) : Container()
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _imageContainer({
+    required int index,
+  }) {
+    return controller.newImageList.isNotEmpty ?
+    InkWell(
+      onTap: () {
+        _imageShowDialog(context, index);
+      },
+      child: Container(
+          height: 70,
+          width: 50,
+          child: Image(image: controller.newImageList[index]!, fit: BoxFit.fill)),
+    ) : Container();
+  }
+
+  void _imageShowDialog(BuildContext context, int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                      color: Colors.white,
+                      height: MediaQuery.of(context).size.height - 150,
+                      child: Image(image: controller.newImageList[index]!))
+                ],
+              ),
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Container(
+                  child: (() {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              style: ButtonStyle(
+
+                                  padding: MaterialStateProperty.all(
+                                      const EdgeInsets.all(0))),
+                              onPressed: () {
+                                Get.log('닫기 클릭!');
+                                Get.back();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        right: BorderSide(color: const Color(0x5c3c3c43),)
+                                    )
+                                ),
+                                width: MediaQuery.of(context).size.width,
+                                padding: const EdgeInsets.only(
+                                  top: AppTheme.spacing_s_12,
+                                  bottom: AppTheme.spacing_s_12,
+                                ),
+                                child: Center(
+                                  child: Text('닫기',
+                                      style: AppTheme.titleHeadline.copyWith(
+                                          color: AppTheme.black,
+                                          fontSize: 17)),
+                                ),
+                              ),
+                            ),
+                          )]);
+                  })(),
+                ),
+              ]);
+        });
   }
 
   Widget _bottomButton(BuildContext context) {
@@ -1080,44 +1234,35 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
   void _submmit() async {
     try {
         if (resultFile1 != null) {
+          String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
           Uint8List? bytes = await resultFile1?.readAsBytes();
-          String path = await HomeApi.to.FILE_UPLOAD(resultFile1!.path, bytes!);
-          await Utils.getStorage.write('path1', path);
+          String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm.jpg', bytes!);
           var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
             '@p_FILE_NAME': resultFile1!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'0', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
           Get.log('경로 테스트::: $path');
-          /*var path = resultFile1!.files.first.path ?? '';
-
-          if (maxFileSize < resultFile1!.files.first.size) {
-            Utils.showToast(msg: '10M 이하의 파일만 업로드 가능합니다.');
-            return;
-          }
-          if (path != '') {
-            controller.filePathList.add(path);
-        //  queryParameters['ex_file1'] = await MultipartFile.fromFile(path);*/
 
         }
         if (resultFile2 != null) {
+          String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
           Uint8List? bytes = await resultFile2?.readAsBytes();
-          String path = await HomeApi.to.FILE_UPLOAD(resultFile2!.path, bytes!);
-          await Utils.getStorage.write('path2', path);
+          String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(2).jpg', bytes!);
           var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
             '@p_FILE_NAME': resultFile2!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'1', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
           Get.log('경로 테스트::: $path');
         }
         if (resultFile3 != null) {
+          String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
           Uint8List? bytes = await resultFile3?.readAsBytes();
-          String path = await HomeApi.to.FILE_UPLOAD(resultFile3!.path, bytes!);
-          await Utils.getStorage.write('path3', path);
+          String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(3).jpg', bytes!);
           var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
             '@p_FILE_NAME': resultFile3!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'2', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
           Get.log('경로 테스트::: $path');
 
         }
         if (resultFile4 != null) {
+          String fileNm = DateFormat('yyyy-MM-dd_HHmm').format(DateTime.now());
           Uint8List? bytes = await resultFile4?.readAsBytes();
-          String path = await HomeApi.to.FILE_UPLOAD(resultFile4!.path, bytes!);
-          await Utils.getStorage.write('path4', path);
+          String path = await HomeApi.to.FILE_UPLOAD('MBS0200\\$fileNm(4).jpg', bytes!);
           var retVal = await HomeApi.to.PROC('USP_MBS0200_S01', {'p_WORK_TYPE':'FILE_N', '@p_IR_CODE':controller.irFileCode.value,
             '@p_FILE_NAME': resultFile4!.name, '@p_SVR_FILE_PATH': path, '@p_SEQ':'3', '@p_USER': Utils.getStorage.read('userId'), '@p_IR_TITLE': controller.textTitleController.text});
           Get.log('경로 테스트::: $path');

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/common/utils.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -21,6 +24,8 @@ class FacilityFirstController extends GetxController {
   var modifyTextFacilityController = TextEditingController();
   var modifyTextTitleController = TextEditingController();
   var modifyTextContentController = TextEditingController();
+
+  RxBool isLoading = false.obs;
 
   RxString modifyIrCode = ''.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
@@ -74,7 +79,7 @@ class FacilityFirstController extends GetxController {
   RxInt modifyDatasLength = 0.obs;
   RxList datasList = [].obs;
   RxList<dynamic> modifyDatasList = [].obs;
-  RxList test = [].obs;
+  RxList isSelect = [].obs;
   RxBool registButton = false.obs;
   RxList selectedContainer = [].obs;
   RxList<String> engineerList = [''].obs;
@@ -117,8 +122,9 @@ class FacilityFirstController extends GetxController {
   RxBool isModifyErrorDateChoice = false.obs;
   RxList<dynamic> modifyEngineTeamList = [].obs;
   RxMap<String, String> modifyEngineTeamCdMap = {'CODE':'', 'TEXT': ''}.obs;
+  RxList<dynamic> imageList = [].obs;
+
   /// --------------------------------------------------------------------------
-  late MemoryImage image2;
 
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
@@ -127,7 +133,16 @@ class FacilityFirstController extends GetxController {
   RxString path = ''.obs;
 
   RxBool isErrorDateChoice = false.obs;
-  // Future<List> userIdNameList = HomeApi.to.BIZ_DATA('L_USER_001');
+  RxList<dynamic> fileList = [].obs; // 조회된 사진리스트(수정페이지)
+  RxList<dynamic> fileDelList = [].obs;
+  RxList<dynamic> fileSeqList = [].obs; // 조회된 사진 Seq리스트(수정페이지)
+  XFile? resultFile1 = null;
+  XFile? resultFile2 = null;
+  XFile? resultFile3 = null;
+  XFile? resultFile4 = null;
+
+
+  RxList<dynamic> newImageList = [].obs;
 
 
   Future<void> saveButton() async {
@@ -148,12 +163,49 @@ class FacilityFirstController extends GetxController {
       '@p_IR_TITLE':modifyTextTitleController.text, '@p_IR_CONTENT':'${modifyTextContentController.text}', '@p_IR_USER':'admin',
       '@p_FAILURE_DT': modifyErrorTime.value, '@p_IR_FG':modifySelectedIrFqMap['CODE'], '@p_URGENCY_FG': modifyUrgencyCd.value,
       '@p_INS_DEPT': modifyEngineTeamCdMap['CODE'], '@p_USER':Utils.getStorage.read('userId'),});
-    Get.log('수정 :::::::: ${a['DATAS'][0]['IR_CODE']}');
-    irFileCode.value = a['DATAS'][0]['IR_CODE'];
-
 
     /// 사진파일 프로시저 추가해야함
 
+  }
+
+  Future<void> reqFileData() async {
+    fileList.clear();
+    var a = await HomeApi.to.PROC('USP_MBS0200_R01', {'@p_WORK_TYPE':'FILE_Q', '@p_IR_CODE': selectedContainer[0]['IR_CODE']}).then((value) =>
+    {
+      fileList.value = value['DATAS'],
+      for(var i = 0 ; i < fileList.length; i++) {
+        fileSeqList.add(fileList[i]['SEQ']),
+      },
+    });
+    fileList.length == 1 ? resultFile1 = new XFile('') : fileList.length == 2 ? {resultFile1 = new XFile(''), resultFile2 = new XFile('')}
+        : fileList.length == 3 ? {resultFile1 = new XFile(''), resultFile2 = new XFile(''), resultFile3 = new XFile('')}
+        : fileList.length == 4 ? {resultFile1 = new XFile(''), resultFile2 = new XFile(''), resultFile3 = new XFile(''), resultFile4 = new XFile('')} : null;
+    Get.log('fileList.value::: ${fileList.value}');
+  }
+
+  Future<void> reqFileDownloadData() async {
+    for(var i = 0 ; i < fileList.length; i++) {
+      Uint8List data = await HomeApi.to.FILE_DOWNLOAD(fileList[i]['PATH']);
+      var image = MemoryImage(data);
+      imageList.add(image);
+    }
+    Get.log('imageList.value::: ${imageList}');
+  }
+
+  // 수정페이지에서 기존에 등록된 이미지 말고 새로 가져올 시
+  Future<void> reqNewFileDownloadData(String path) async {
+
+    Uint8List data = await HomeApi.to.FILE_DOWNLOAD(path);
+    var image = MemoryImage(data);
+    imageList.add(image);
+
+    Get.log('imageList.value::: ${imageList}');
+  }
+
+
+  Future<void> deleteFileData(int seq) async {
+    var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'FILE_D', '@p_IR_CODE': selectedContainer[0]['IR_CODE'], '@p_USER' : Utils.getStorage.read('userId'),
+      '@p_SEQ' : seq});
   }
 
   void modifyIrfqCdCv() {
