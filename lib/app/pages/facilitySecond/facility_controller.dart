@@ -34,8 +34,8 @@ class FacilityController extends GetxController {
   RxBool isShowCalendar = false.obs;
   RxString pResultFg = 'A'.obs; /// A: 전체, N: 미조치, Y: 조치완료
   RxInt datasLength = 0.obs;
-  RxList datasList = [].obs;
-  RxList test = [].obs;
+  RxList<dynamic> datasList = [].obs;
+  RxList selectedDatas = [].obs;
   RxBool registButton = false.obs;
   RxList selectedContainer = [].obs;
   RxBool isAlreadySave = false.obs; // 정비내역 등록 이미 된 것 판단
@@ -338,14 +338,15 @@ class FacilityController extends GetxController {
   void onInit() async{
     readCdConvert();
     datasList.clear();
+    selectedDatas.clear();
     await HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
       , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {
-        datasLength.value = value['DATAS'].length,
-        for(var i = 0; i < datasLength.value; i++){
-          datasList.add(value['DATAS'][i]),
+        datasList.value = value['DATAS'],
+        for(var i = 0; i < datasList.length; i++){
+          selectedDatas.add(false)
         },
       },
       Get.log('datasList: ${datasList}'),

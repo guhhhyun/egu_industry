@@ -99,14 +99,15 @@ class FacilityPage extends StatelessWidget {
                   controller.step1DayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
+                    controller.selectedDatas.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
-                        controller.datasLength.value = value['DATAS'].length,
-                        for(var i = 0; i < controller.datasLength.value; i++){
-                          controller.datasList.add(value['DATAS'][i]),
+                        controller.datasList.value = value['DATAS'],
+                        for(var i = 0; i < controller.datasList.length; i++){
+                          controller.selectedDatas.add(false)
                         },
                       },
                       Get.log('datasList: ${controller.datasList}'),
@@ -171,14 +172,15 @@ class FacilityPage extends StatelessWidget {
                   controller.step1DayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
+                    controller.selectedDatas.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
-                        controller.datasLength.value = value['DATAS'].length,
-                        for(var i = 0; i < controller.datasLength.value; i++){
-                          controller.datasList.add(value['DATAS'][i]),
+                        controller.datasList.value = value['DATAS'],
+                        for(var i = 0; i < controller.datasList.length; i++){
+                          controller.selectedDatas.add(false)
                         },
                       },
                       Get.log('datasList: ${controller.datasList}'),
@@ -298,14 +300,15 @@ class FacilityPage extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
+                    controller.selectedDatas.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
-                        controller.datasLength.value = value['DATAS'].length,
-                        for(var i = 0; i < controller.datasLength.value; i++){
-                          controller.datasList.add(value['DATAS'][i]),
+                        controller.datasList.value = value['DATAS'],
+                        for(var i = 0; i < controller.datasList.length; i++){
+                          controller.selectedDatas.add(false)
                         },
                       },
                       Get.log('datasList: ${controller.datasList}'),
@@ -362,14 +365,15 @@ class FacilityPage extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.readCdConvert();
                     controller.datasList.clear();
+                    controller.selectedDatas.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
-                        controller.datasLength.value = value['DATAS'].length,
-                        for(var i = 0; i < controller.datasLength.value; i++){
-                          controller.datasList.add(value['DATAS'][i]),
+                        controller.datasList.value = value['DATAS'],
+                        for(var i = 0; i < controller.datasList.length; i++){
+                          controller.selectedDatas.add(false)
                         },
                       },
                       Get.log('datasList: ${controller.datasList}'),
@@ -423,21 +427,22 @@ class FacilityPage extends StatelessWidget {
               if(value == '전체') {
                 controller.choiceButtonVal.value = 1;
                 controller.pResultFg.value = 'A';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.selectedDatas.length; i++) {
+                  controller.selectedDatas[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
+                controller.selectedDatas.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   controller.datasList.clear(),
                   if(value['DATAS'] != null) {
-                    controller.datasLength.value = value['DATAS'].length,
-                    for(var i = 0; i < controller.datasLength.value; i++){
-                      controller.datasList.add(value['DATAS'][i]),
+                    controller.datasList.value = value['DATAS'],
+                    for(var i = 0; i < controller.datasList.length; i++){
+                      controller.selectedDatas.add(false)
                     },
                   },
                   Get.log('datasList: ${controller.datasList}'),
@@ -446,20 +451,21 @@ class FacilityPage extends StatelessWidget {
                 Get.log('미조치 클릭');
                 controller.choiceButtonVal.value = 2;
                 controller.pResultFg.value = 'N';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.selectedDatas.length; i++) {
+                  controller.selectedDatas[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
+                controller.selectedDatas.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
-                    controller.datasLength.value = value['DATAS'].length,
-                    for(var i = 0; i < controller.datasLength.value; i++){
-                      controller.datasList.add(value['DATAS'][i]),
+                    controller.datasList.value = value['DATAS'],
+                    for(var i = 0; i < controller.datasList.length; i++){
+                      controller.selectedDatas.add(false)
                     },
                   },
                   Get.log('datasList: ${controller.datasList}'),
@@ -468,20 +474,21 @@ class FacilityPage extends StatelessWidget {
                 Get.log('조치완료 클릭');
                 controller.choiceButtonVal.value = 3;
                 controller.pResultFg.value = 'Y';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.selectedDatas.length; i++) {
+                  controller.selectedDatas[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
+                controller.selectedDatas.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
-                    controller.datasLength.value = value['DATAS'].length,
-                    for(var i = 0; i < controller.datasLength.value; i++){
-                      controller.datasList.add(value['DATAS'][i]),
+                    controller.datasList.value = value['DATAS'],
+                    for(var i = 0; i < controller.datasList.length; i++){
+                      controller.selectedDatas.add(false)
                     },
                   },
                   Get.log('datasList: ${controller.datasList}'),
@@ -490,20 +497,21 @@ class FacilityPage extends StatelessWidget {
                 Get.log('정비 진행중 클릭');
                 controller.choiceButtonVal.value = 4;
                 controller.pResultFg.value = 'I';
-                for(var i = 0; i < controller.test.length; i++) {
-                  controller.test[i] = false;
+                for(var i = 0; i < controller.selectedDatas.length; i++) {
+                  controller.selectedDatas[i] = false;
                 }
                 controller.registButton.value = false;
                 controller.readCdConvert();
                 controller.datasList.clear();
+                controller.selectedDatas.clear();
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.irFgCd.value}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
-                    controller.datasLength.value = value['DATAS'].length,
-                    for(var i = 0; i < controller.datasLength.value; i++){
-                      controller.datasList.add(value['DATAS'][i]),
+                    controller.datasList.value = value['DATAS'],
+                    for(var i = 0; i < controller.datasList.length; i++){
+                      controller.selectedDatas.add(false)
                     },
                   },
                   Get.log('datasList: ${controller.datasList}'),
@@ -558,14 +566,15 @@ class FacilityPage extends StatelessWidget {
                 controller.irFgCd.value = '';
               }
               controller.datasList.clear();
+              controller.selectedDatas.clear();
               HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                 , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.irFgCd.value}).then((value) =>
               {
                 Get.log('value[DATAS]: ${value['DATAS']}'),
                 if(value['DATAS'] != null) {
-                  controller.datasLength.value = value['DATAS'].length,
-                  for(var i = 0; i < controller.datasLength.value; i++){
-                    controller.datasList.add(value['DATAS'][i]),
+                  controller.datasList.value = value['DATAS'],
+                  for(var i = 0; i < controller.datasList.length; i++){
+                      controller.selectedDatas.add(false)
                   },
                 },
                 Get.log('datasList: ${controller.datasList}'),
@@ -578,10 +587,9 @@ class FacilityPage extends StatelessWidget {
 
 
   Widget _listArea() {
-    controller.test.clear();
+
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          controller.test.add(false);
           return _listItem(index: index, context: context);
         }, childCount: controller.datasList.length)));
   }
@@ -597,17 +605,17 @@ class FacilityPage extends StatelessWidget {
         padding:
         MaterialStateProperty.all(const EdgeInsets.all(0))),
       onPressed: () {
-        if(controller.test[index] == true) {
-          controller.test[index] = false;
+        if(controller.selectedDatas[index] == true) {
+          controller.selectedDatas[index] = false;
           controller.registButton.value = false;
           controller.selectedContainer.clear();
         }else {
-          for(var i = 0; i < controller.test.length; i++) {
-            controller.test[i] = false;
+          for(var i = 0; i < controller.selectedDatas.length; i++) {
+            controller.selectedDatas[i] = false;
           }
           controller.selectedContainer.clear();
-          controller.test[index] = true;
-          if(controller.test[index] == true) {
+          controller.selectedDatas[index] = true;
+          if(controller.selectedDatas[index] == true) {
             controller.registButton.value = true;
             controller.selectedContainer.add(controller.datasList[index]);
             controller.selectedContainer[0]['RP_CODE'] != null ||  controller.selectedContainer[0]['RP_CODE'] != '' ? controller.isAlreadySave.value = true : controller.isAlreadySave.value = false;
@@ -629,7 +637,7 @@ class FacilityPage extends StatelessWidget {
             ),
           ],
           borderRadius: BorderRadius.circular(10),
-          border: controller.test[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
+          border: controller.selectedDatas[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
           color: AppTheme.white,
         ),
         child: Center(
