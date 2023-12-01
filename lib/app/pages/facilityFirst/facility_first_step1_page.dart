@@ -758,6 +758,9 @@ class FacilityFirstStep1Page extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    Text('의뢰자: ',
+                        style: AppTheme.a14700
+                            .copyWith(color: AppTheme.a959595)),
                     Text(controller.datasList[index]['IR_USER'].toString(),
                         style: AppTheme.a14400
                             .copyWith(color: AppTheme.a959595)),
@@ -789,6 +792,29 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 )
               ],
             ) : Container(),
+            SizedBox(height: 4,),
+            controller.datasList.isNotEmpty ?
+            controller.datasList[index]['RE_USER'] != null ?
+            Row(
+              children: [
+                Text('확인자: ',
+                    style: AppTheme.a14700
+                        .copyWith(color: AppTheme.a959595)),
+                Text(controller.datasList[index]['RE_USER'].toString(),
+                    style: AppTheme.a14400
+                        .copyWith(color: AppTheme.a959595)),
+                const SizedBox(width: 12,),
+                Container(
+                    child: (() {
+                      return Text(
+                          controller.datasList[index]['RE_CRT_DATE']
+                              .toString(),
+                          style: AppTheme.a14400
+                              .copyWith(color: AppTheme.a959595));
+                    })()
+                ),
+              ],
+            ) : Container() : Container()
           ],
         ),
       ),)

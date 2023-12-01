@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
@@ -421,107 +421,7 @@ class ScrapLabelPage extends StatelessWidget {
     );
   }
 
-  /// 계량정보
-  Widget _scanBc() {
-    return  Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () async{
-                  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                      '#ff6666', '취소', false, ScanMode.BARCODE);
-                  controller.barcodeScanResult2.value = barcodeScanRes;
-                  if(controller.barcodeScanResult2.value != '-1') {
-                    var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE', '@p_SCALE_ID': controller.barcodeScanResult2.value}).then((value) =>
-                    {
-                      if(value['DATAS'] != null) {
-                        controller.measList.value = value['DATAS'],
-                        Get.log('계량정보 스캔결과:::::: ${controller.measList.value}')
-                      }
-                    });
-                    Get.log('계량정보 스캔결과:::::: ${a}');
-                  }
-                },
-                child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: AppTheme.gray_gray_200),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('계량정보',
-                            style: AppTheme.a15700
-                                .copyWith(color: AppTheme.black)),
-                        const SizedBox(height: 10,),
-                        Container(
-                          padding: const EdgeInsets.only(right: 12, top: 12, bottom: 12),
-                          child: Text(controller.barcodeScanResult2.value == '-1' ? '바코드를 재스캔해주세요' : controller.barcodeScanResult2.value, style: AppTheme.a16400.copyWith(
-                              color: controller.barcodeScanResult2.value == '바코드를 스캔해주세요' ? AppTheme.aBCBCBC : AppTheme.black),),
-                        ),
-                      ],
-                    )
-                ),
-              ),
-            ),
-          ],
-        ),
-        controller.measList.isNotEmpty ?
-        Column(
-          children: [
-            const SizedBox(height: 12,),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: AppTheme.gray_c_gray_200),
-                          borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('차량번호', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text('${controller.measList[0]['CAR_NO']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                            ],
-                          ),
-                          const SizedBox(height: 4,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('거래처명', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text(' ${controller.measList[0]['CUST_NM']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                            ],
-                          ),
-                          const SizedBox(height: 4,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('거래처 ID', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                              Text('${controller.measList[0]['CST_ID']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                            ],
-                          ),
 
-                        ],
-                      ),
-                    )
-                ),
-              ],
-            ),
-          ],
-        ) : Container()
-      ],
-    );
-  }
 
   Widget _industryItem(String text, int flag) {
     return Column(
@@ -702,21 +602,6 @@ class ScrapLabelPage extends StatelessWidget {
                 ),
               ),
             ),
-            InkWell(
-                onTap: () async {
-                  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                      '#ff6666', '취소', false, ScanMode.BARCODE);
-                  controller.otherScrapTextController.text = barcodeScanRes;
-                  var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_OUTS_NO', '@p_SCRAP_NO':  controller.otherScrapTextController.text}).then((value) =>
-                  {
-                    if(value['DATAS'] != null) {
-                      controller.outScrapList.value = value['DATAS']
-                    }
-                  });
-                  Get.log('외주스크랩 스캔결과:::::: $a');
-                },
-                child: const Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
-            )
           ],
         ),
         controller.outScrapList.isNotEmpty ?

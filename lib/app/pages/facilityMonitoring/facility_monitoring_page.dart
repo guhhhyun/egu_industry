@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 
 class FacilityMonitoringPage extends StatelessWidget {
@@ -27,9 +28,7 @@ class FacilityMonitoringPage extends StatelessWidget {
               slivers: [
                 CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
                 _bodyArea(context),
-                 Obx(() => controller.monitoringList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-                _topTitle(context)),
-                _listArea2()
+                Obx(() => _list(context))
                 //   _listArea()
               ],
             ),
@@ -107,85 +106,192 @@ class FacilityMonitoringPage extends StatelessWidget {
     );
   }
 
-  Widget _cmpAndSttItem() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('공정라인',
-            style: AppTheme.a15700
-                .copyWith(color: AppTheme.black)),
-        const SizedBox(height: 8,),
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppTheme.ae2e2e2
-                    )),
-                padding: const EdgeInsets.only(left: 16, right: 12),
-                child: DropdownButton<String>(
-                    borderRadius: BorderRadius.circular(10),
-                    isExpanded: true,
-                    underline: Container(
-                      height: 1,
-                      color: Colors.white,
-                    ),
-                    icon: SvgPicture.asset(
-                      'assets/app/arrowBottom.svg',
-                      color: AppTheme.light_placeholder,
-                    ),
-                    dropdownColor: AppTheme.light_ui_01,
-                    value: controller.selectedLine.value,
-                    items: controller.gubun.map((value) {
-                      return DropdownMenuItem(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: AppTheme.a14500
-                              .copyWith(color: value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      controller.selectedLine.value = value!;
-                      Get.log('$value 선택!!!!');
-                    }),
+  Widget _list(BuildContext context) {
+    final double height = 59*(double.parse((controller.monitoringList.length + 1).toString()));
+
+    return SliverToBoxAdapter(
+      child: Column(children: [
+        Container(
+          width: MediaQuery.of(context).size.width-32,
+          height: height,
+          child: PlutoGrid(
+            columns: gridCols,
+            rows: controller.rowDatas,
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+              controller.gridStateMgr = event.stateManager;
+              controller.gridStateMgr?.setSelectingMode(PlutoGridSelectingMode.cell);
+              //gridStateMgr.setShowColumnFilter(true);
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              print(event);
+            },
+            configuration: PlutoGridConfiguration(
+              style: PlutoGridStyleConfig(
+                defaultCellPadding: EdgeInsets.all(0),
+                //gridBorderColor: Colors.transparent,
+                 // rowColor: controller.rowDatas..cells.values.toString() == '가열로' ? Colors.red : Colors.white,
+                  activatedColor: Colors.transparent,
+                  cellColorInReadOnlyState: Colors.white,
+                  columnTextStyle: AppTheme.a14500.copyWith(color: AppTheme.black),
+                  rowHeight: 40,
               ),
             ),
-          ],
+          ),
         ),
-      ],
+      ],),
     );
   }
 
+  final List<PlutoColumn> gridCols = <PlutoColumn>[
+    PlutoColumn(
+      title: '설비',
+      field: 'CMH_NM',
+      type: PlutoColumnType.text(),
+      width: 100,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '상태',
+      field: 'STATUS_NM',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+      renderer: (rendererContext) {
+        Color textColor = Colors.black;
 
+        if (rendererContext.cell.value == '가동') {
+          textColor = AppTheme.a18b858;
+        } else if (rendererContext.cell.value == '비가동') {
+          textColor = AppTheme.affd15b;
+        } else if (rendererContext.cell.value == '설비이상') {
+          textColor = AppTheme.af34f39;
+        } else {
+          textColor = AppTheme.white;
+        }
 
-  Widget _checkButton() {
-    return TextButton(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10))),
-            backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.all(0))),
-        onPressed: () async{
-          controller.checkButton();
-        },
-        child: SizedBox(
-          height: 56,
+        return Container(
+          margin: EdgeInsets.all(0),
+          width: 80,
+          color: textColor,
           child: Center(
-              child: Text(
-                '검색',
-                style: AppTheme.bodyBody2.copyWith(
-                  color: const Color(0xfffbfbfb),
-                ),
-              )),
-        ));
-  }
+            child: Text(
+              rendererContext.cell.value.toString(),
+              style: AppTheme.a14500.copyWith(color: Colors.black)
+            ),
+          ),
+        );
+      },
+    ),
+    PlutoColumn(
+      title: '전일',
+      field: 'P_EVE',
+      type: PlutoColumnType.text(),
+      width: 50,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '금일',
+      field: 'P_TODAY',
+      type: PlutoColumnType.text(),
+      width: 50,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업자',
+      field: 'USR',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '시간',
+      field: 'LEAD_TIME',
+      type: PlutoColumnType.text(),
+      width: 60,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '작업 종료시간',
+      field: 'DT',
+      type: PlutoColumnType.text(),
+      width: 100,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '알람코드',
+      field: 'ALARM_VAL',
+      type: PlutoColumnType.text(),
+      width: 140,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+  ];
+
+
+
 
   Widget _topTitle(BuildContext context) {
     return SliverToBoxAdapter(
@@ -211,6 +317,40 @@ class FacilityMonitoringPage extends StatelessWidget {
                       style: AppTheme.titleSubhead1
                           .copyWith(color: AppTheme.light_text_primary),
                       textAlign: TextAlign.left),
+                ),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                  color: AppTheme.blue_blue_300,
+                  border: Border(
+                      top: BorderSide(color: AppTheme.ae2e2e2),
+                      right: BorderSide(
+                          color: AppTheme.ae2e2e2))),
+              height: 34,
+              width: 40,
+              child: Center(
+                child: Text(
+                  '전일',
+                  style: AppTheme.titleSubhead1
+                      .copyWith(color: AppTheme.light_text_primary),
+                ),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                  color: AppTheme.blue_blue_300,
+                  border: Border(
+                      top: BorderSide(color: AppTheme.ae2e2e2),
+                      right: BorderSide(
+                          color: AppTheme.ae2e2e2))),
+              height: 34,
+              width: 40,
+              child: Center(
+                child: Text(
+                  '금일',
+                  style: AppTheme.titleSubhead1
+                      .copyWith(color: AppTheme.light_text_primary),
                 ),
               ),
             ),
@@ -383,106 +523,6 @@ class FacilityMonitoringPage extends StatelessWidget {
   }
 
 
- /* Widget _listArea() {
-    return Obx(() => SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          return _listItem(index: index, context: context);
-        }, childCount: controller.monitoringList.length)
-    )
 
-    );
-  }
-
-  /// obx 추가
-  Widget _listItem({required BuildContext context, required int index}) {
-    return Container(
-      margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
-      padding: const EdgeInsets.only(top: 20, bottom: 18, left: 24, right: 24),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.aE2E2E2),
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            stops: const [0.025, 0],
-            colors: [controller.monitoringList[index]['STATUS_NM'] == '가동'
-                ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
-                ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
-                ? AppTheme.af34f39 : AppTheme.a18b858, AppTheme.white], // List of colors
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.gray_c_gray_100.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ]
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: controller.monitoringList[index]['STATUS_NM'] == '가동'
-                    ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
-                    ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
-                    ? AppTheme.af34f39 : AppTheme.a18b858
-            ),
-            child: Text(controller.monitoringList[index]['STATUS_NM'], /// 가동, 비가동, 설비이상
-                style: AppTheme.a12700
-                    .copyWith(color: AppTheme.white)),
-          ),
-          const SizedBox(height: 8,),
-          controller.monitoringList.isNotEmpty ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(controller.monitoringList[index]['CMH_NM'],
-                  style: AppTheme.a16700
-                      .copyWith(color: AppTheme.black)),
-            ],
-          )
-              : Container(),
-          const SizedBox(height: 12,),
-          controller.monitoringList.isNotEmpty ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(controller.monitoringList[index]['ALARM_VAL'] != '' ? '알람코드: ${controller.monitoringList[index]['ALARM_VAL']}' : '',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a959595)),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(controller.monitoringList[index]['LEAD_TIME'].toString(),
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a959595)),
-                ],
-              ),
-
-              *//*Container(
-                  child: (() {
-                    return Text(
-                        controller.monitoringList[index]['IST_DT']
-                            .toString(),
-                        style: AppTheme.a14400
-                            .copyWith(color: AppTheme.a959595));
-                  })()
-              ),*//*
-            ],
-          ) : Container(),
-        ],
-      ),
-
-
-    );
-  }
-*/
 
 }

@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             MainSlideWidget(),
             MainIconWidget(),
             const SliverToBoxAdapter(
-              child: SizedBox(height: AppTheme.spacing_xxxl_40),
+              child: SizedBox(height: 24),
             ),
             HomeNewsWidget(),
             const SliverToBoxAdapter(

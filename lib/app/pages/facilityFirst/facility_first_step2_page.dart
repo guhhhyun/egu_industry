@@ -1139,7 +1139,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       && controller.selectedUrgency.value != '전체'
                       && (controller.selectedMachMap['MACH_NAME'] != '전체' || controller.textFacilityController.text != '')
                       && controller.selectedIrFqMap['TEXT'] != '선택해주세요' && controller.selectedEngineTeamMap['TEXT'] != '전체'
-                      && controller.textTitleController.text != '' && controller.textContentController.text != '') {
+                      && controller.textTitleController.text != '') {
                     controller.isStep2RegistBtn.value = true;
                   }else {
                     controller.isStep2RegistBtn.value = false;

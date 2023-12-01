@@ -30,19 +30,9 @@ class GlobalService extends GetxService {
           loginId.value = Utils.getStorage.read('userId');
           loginPassword.value = Utils.getStorage.read('userPw');
          String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
-          try{
-            var a = await HomeApi.to.PROC22('USP_MBR0000_R01', {'@p_WORK_TYPE':'MENU', '@p_USER_ID': Utils.getStorage.read('userId')}).then((value) =>
-            {
-
-            });
-            Get.log('엥:: ${a}');
-          }catch(e) {
-            Utils.gErrorMessage('네트워크 오류');
-            print(e);
-          }
 
          Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
-         Get.toNamed(Routes.MAIN);
+
 
        }else {
         isLogin.value = false;
@@ -78,6 +68,32 @@ class GlobalService extends GetxService {
     Utils.gErrorMessage('로그아웃');
 
   }
+  RxList<dynamic> allList = [].obs;
+  RxList<int> datasList = [0].obs;
+  RxBool isLoading = false.obs;
+  Future<void> req() async {
+    try{
+      allList.clear();
+      datasList.clear();
+      isLoading.value = true;
+      var a = await HomeApi.to.PROC("USP_MBR0000_R01", {"@p_WORK_TYPE":"MENU","@p_USER_ID":Utils.getStorage.read('userId')}).then((value) =>
+      {
+        allList.value = value['DATAS'],
+        for(var i = 0; i < allList.length; i++) {
+          datasList.add(value['DATAS'][i]['SORT_SEQ']),
+        }
+      });
+      Get.log('권한 조회::::::::: ${datasList.value}');
+      Get.log('권한 조회::::::::: ${datasList.contains(300)}');
+    }catch(err) {
+      Get.log('USP_MBR0000_R01 err = ${err.toString()} ', isError: true);
+      //  Utils.gErrorMessage('네트워크 오류');
+    }finally{
+      isLoading.value = false;
+      Get.toNamed(Routes.MAIN);
+    }
+
+  }
 
   @override
   void onClose() {
@@ -90,6 +106,7 @@ class GlobalService extends GetxService {
   void onInit() async {
     Get.log('GlobalService - onInit !!');
     loadLoginInfo();
+    req();
     super.onInit();
   }
 

@@ -46,7 +46,7 @@ class HomeApi {
       return result;
     } catch (ex) {
       exception = ex;
-      Utils.gErrorMessage('네트워크 오류');
+     // Utils.gErrorMessage('네트워크 오류');
     } finally {
       log({
         'url': url,
@@ -76,7 +76,7 @@ class HomeApi {
       //if (url == null) url = '121.133.99.66:3000';
       //if (url == null) url = '10.0.2.2:3000';
       //if (url == null) url = '10.0.2.2:8090';
-      if (url == null) url = 'mes1.leeku.co.kr';
+      if (url == null) url = 'mes1.leeku.co.kr:7000';
       if (service_name == null) service_name = 'WebAPI/';
 
       var RequestUri = Uri.http(url, service_name);
@@ -120,7 +120,7 @@ class HomeApi {
       //if (url == null) url = '121.133.99.66:3000';
       //if (url == null) url = '10.0.2.2:3000';
       //if (url == null) url = '10.0.2.2:8090';
-      if (url == null) url = 'mes1.leeku.co.kr';
+      if (url == null) url = 'mes1.leeku.co.kr:7000';
       if (service_name == null) service_name = 'WebAPI/';
 
       var RequestUri = Uri.http(url, service_name);
@@ -147,7 +147,7 @@ class HomeApi {
     }
   }
   Future<Map> PROC22(String procName, Map? PARAMS) async {
-    String res = await EXEC4("PROC", procName, PARAMS) ?? "";
+    String res = await EXEC2("PROC", procName, PARAMS) ?? "";
     Map data = json.decode(res);
     return data;
   }
@@ -197,7 +197,7 @@ class HomeApi {
     String result = "";
     Object? exception = null;
     try {
-      if (url == null) url = 'mes1.leeku.co.kr';
+      if (url == null) url = 'mes1.leeku.co.kr:7000';
       if (service_name == null) service_name = 'WebAPI/';
 
       var RequestUri = Uri.http(url, service_name);
@@ -224,8 +224,8 @@ class HomeApi {
       exception = ex;
       Utils.gErrorMessage('네트워크 오류');
     }finally{
-   //  log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
-   //  log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());
+     log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
+     log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());
     }
   }
 

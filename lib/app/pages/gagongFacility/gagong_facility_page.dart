@@ -11,11 +11,17 @@ import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 
-class GagongFacilityPage extends StatelessWidget {
+class GagongFacilityPage extends StatefulWidget {
   GagongFacilityPage({Key? key}) : super(key: key);
 
+  @override
+  State<GagongFacilityPage> createState() => _GagongFacilityPageState();
+}
+
+class _GagongFacilityPageState extends State<GagongFacilityPage> {
   GagongFacilityController controller = Get.find();
 
   @override
@@ -30,8 +36,7 @@ class GagongFacilityPage extends StatelessWidget {
                 CommonAppbarWidget(title: '가공설 검수', isLogo: false, isFirstPage: true,),
                 _bodyArea(context),
                 Obx(() => controller.datasList.length == 0 ? SliverToBoxAdapter(child: Container()) :
-                _topTitle(context)),
-                _listArea2()
+                _list(context))
                 //   _listArea()
               ],
             ),
@@ -96,11 +101,14 @@ class GagongFacilityPage extends StatelessWidget {
                         int startIndex = datePicked.toString().indexOf(' ');
                         int lastIndex = datePicked.toString().length;
                         controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                        controller.checkButton();
                       }else {
                         controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        controller.checkButton();
                       }
                       if(datePicked.toString() == '1994-01-01 00:00:00.000') {
                         controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        controller.checkButton();
                       }
                     },
                     child: Container(
@@ -156,11 +164,14 @@ class GagongFacilityPage extends StatelessWidget {
                         int startIndex = datePicked.toString().indexOf(' ');
                         int lastIndex = datePicked.toString().length;
                         controller.dayEndValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                        controller.checkButton();
                       }else {
                         controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        controller.checkButton();
                       }
                       if(datePicked.toString() == '1994-01-01 00:00:00.000') {
                         controller.dayEndValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                        controller.checkButton();
                       }
 
                       Get.log("Date Picked ${datePicked.toString()}");
@@ -211,12 +222,13 @@ class GagongFacilityPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
-            onPressed: () {
+            onPressed: () async{
               Get.log('검수자 미확인 클릭');
               controller.choiceButtonVal.value = 1;
-              controller.movCd.value = 'A';
-
+              controller.callCar.value = '';
+              controller.inspCh.value = 'Y';
               controller.datasList.clear();
+              await controller.checkButton();
 
             },
             child: Container(
@@ -247,13 +259,13 @@ class GagongFacilityPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
-            onPressed: () {
+            onPressed: () async {
               Get.log('지게차 미호출 클릭');
               controller.choiceButtonVal.value = 2;
-              controller.movCd.value = 'N';
-
+              controller.inspCh.value = '';
+              controller.callCar.value = 'Y';
               controller.datasList.clear();
-
+              await controller.checkButton();
 
             },
             child: Container(
@@ -284,11 +296,13 @@ class GagongFacilityPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)
                   )),
             ),
-            onPressed: () {
+            onPressed: () async{
               Get.log('전체 클릭');
               controller.choiceButtonVal.value = 3;
-              controller.movCd.value = 'Y';
+              controller.callCar.value = '';
+              controller.inspCh.value = '';
               controller.datasList.clear();
+              await controller.checkButton();
             },
             child: Container(
               padding: const EdgeInsets.only(top: 14, bottom: 14, left: 12, right: 12),
@@ -310,10 +324,8 @@ class GagongFacilityPage extends StatelessWidget {
     );
   }
 
-
-
   Widget _bottomButton(BuildContext context) {
-    return Obx(() => BottomAppBar(
+    return BottomAppBar(
       color: AppTheme.white,
       surfaceTintColor: AppTheme.white,
       child: Row(
@@ -324,21 +336,22 @@ class GagongFacilityPage extends StatelessWidget {
                     shape: MaterialStateProperty.all<OutlinedBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    backgroundColor: controller.registButton.value ?
-                    MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) :
-                    MaterialStateProperty.all<Color>(AppTheme.light_cancel),
+                    backgroundColor:
+                    MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
                     padding: MaterialStateProperty.all<EdgeInsets>(
                         const EdgeInsets.all(0))),
-                onPressed: controller.registButton.value ?  () async{
+                onPressed: () async{
                   Get.log('저장 클릭!!');
-                  for(var i = 0; i < controller.processSelectedList.length; i++) {
-                    await controller.saveButton(i);
+                  for(var i = 0; i < controller.datasList.length; i++) {
+                    if(controller.inspChList[i] == 'Y' || controller.callCarList[i] == 'Y') {
+                      await controller.saveButton(i);
+                    }
                   }
                   SchedulerBinding.instance!.addPostFrameCallback((_) {
-                    Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 5,));
-                    controller.processSelectedList.clear();
+                    Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 6,));
+                    controller.checkButton();
                   });
-                } : null,
+                },
                 child: Container(
                   height: 56,
                   child: Center(
@@ -352,17 +365,268 @@ class GagongFacilityPage extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 
+  Widget _list(BuildContext context) {
+    final double height = 49*(double.parse((controller.datasList.length + 1).toString()));
+    return SliverToBoxAdapter(
+      child: Column(children: [
+        Container(
+          width: MediaQuery.of(context).size.width-32,
+          height: height,
+          child: PlutoGrid(
+              mode: PlutoGridMode.selectWithOneTap,
+            columns: gridCols,
+            rows: controller.rowDatas,
+            onSelected: (PlutoGridOnSelectedEvent event) {
+              Get.log('asdasd');
+              setState(() {
+                Get.log('${event.cell?.column.field}');
+                Get.log('${event.cell?.value}');
+                event.cell?.column.field == 'INSP_CHK' && event.cell?.value == '' && controller.datasList[event.cell!.row.sortIdx]['INSP_CHKDT'] == null
+                    ? (event.cell?.value = 'V', controller.inspChList[event.cell!.row.sortIdx] = 'Y')
+                    :  event.cell?.column.field == 'INSP_CHK' && event.cell?.value == 'V' && controller.datasList[event.cell!.row.sortIdx]['INSP_CHKDT'] == null
+                    ? (event.cell?.value = '', controller.inspChList[event.cell!.row.sortIdx] = '') : null;
+                event.cell?.column.field == 'CALL_CAR' && event.cell?.value == ''   && controller.datasList[event.cell!.row.sortIdx]['CARLL_CARDT'] == null
+                    ? (event.cell?.value = 'V', controller.callCarList[event.cell!.row.sortIdx] = 'Y')
+                    :  event.cell?.column.field == 'CALL_CAR' && event.cell?.value == 'V'  && controller.datasList[event.cell!.row.sortIdx]['CARLL_CARDT'] == null
+                    ? (event.cell?.value = '', controller.callCarList[event.cell!.row.sortIdx] = '') : null;
+                Get.log('${ controller.inspChList[event.cell!.row.sortIdx]}');
+                Get.log('${controller.callCarList[event.cell!.row.sortIdx]}');
+              });
+            },
+            onRowChecked: (PlutoGridOnRowCheckedEvent event) => { controller.isCheck.value = true},
+           /* onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
+              setState(() {
+                Get.log('${event.cell.column.field}');
+                Get.log('${event.cell.value}');
+                event.cell.column.field == 'INSP_CHK' && event.cell.value == '' && controller.datasList[event.cell.row.sortIdx]['INSP_CHKDT'] == null
+                    ? (event.cell.value = 'V', controller.inspChList[event.cell.row.sortIdx] = 'Y')
+                    :  event.cell.column.field == 'INSP_CHK' && event.cell.value == 'V' && controller.datasList[event.cell.row.sortIdx]['INSP_CHKDT'] == null
+                    ? (event.cell.value = '', controller.inspChList[event.cell.row.sortIdx] = '') : null;
+                event.cell.column.field == 'CALL_CAR' && event.cell.value == ''   && controller.datasList[event.cell.row.sortIdx]['CARLL_CARDT'] == null
+                    ? (event.cell.value = 'V', controller.callCarList[event.cell.row.sortIdx] = 'Y')
+                    :  event.cell.column.field == 'CALL_CAR' && event.cell.value == 'V'  && controller.datasList[event.cell.row.sortIdx]['CARLL_CARDT'] == null
+                    ? (event.cell.value = '', controller.callCarList[event.cell.row.sortIdx] = '') : null;
+                Get.log('${ controller.inspChList[event.cell.row.sortIdx]}');
+                Get.log('${controller.callCarList[event.cell.row.sortIdx]}');
+              });
+            },*/
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+              controller.gridStateMgr = event.stateManager;
+              controller.gridStateMgr?.setSelectingMode(PlutoGridSelectingMode.cell);
+              //gridStateMgr.setShowColumnFilter(true);
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              Get.log('sadsdasdasda');
+              print(event);
+            },
+            configuration: PlutoGridConfiguration(
+              style: PlutoGridStyleConfig(
+                //gridBorderColor: Colors.transparent,
+                  activatedColor: Colors.transparent,
+                  cellColorInReadOnlyState: Colors.white,
+                  columnTextStyle: AppTheme.a14500.copyWith(color: AppTheme.black)
+              ),
+            ),
+          ),
+        ),
+      ],),
+    );
+  }
 
-  Widget _listArea2() {
+  final List<PlutoColumn> gridCols = <PlutoColumn>[
+    PlutoColumn(
+      title: 'NO',
+      field: 'NO',
+      type: PlutoColumnType.text(),
+      width: 50,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '계량순번',
+      field: 'C_WGT_NO',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '차량번호',
+      field: 'C_CAR_NO',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '품목',
+      field: 'C_ITEM_NAME',
+      type: PlutoColumnType.text(),
+      width: 130,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '거래처',
+      field: 'C_CUST_NAME',
+      type: PlutoColumnType.text(),
+      width: 170,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '중량',
+      field: 'C_ACT_QTY',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '입차 계량 시간',
+      field: 'C_WGT_DATE',
+      type: PlutoColumnType.text(),
+      width: 130,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '검수자 확인',
+      field: 'INSP_CHK',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '지게차 호출',
+      field: 'CALL_CAR',
+      type: PlutoColumnType.text(),
+      width: 90,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '검수자',
+      field: 'INSP_USER',
+      type: PlutoColumnType.text(),
+      width: 80,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '검수자확인 일시',
+      field: 'INSP_CHKDT',
+      type: PlutoColumnType.text(),
+      width: 140,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+    PlutoColumn(
+      title: '지게차호출 일시',
+      field: 'CARLL_CARDT',
+      type: PlutoColumnType.text(),
+      width: 140,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+  ];
+
+  /*Widget _listArea2() {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
 
           return _listItem2(index: index, context: context);
         }, childCount: controller.datasList.length,)));
   }
+
   Widget _listItem2({required BuildContext context,required int index}) {
 
     return Obx(() => Container(
@@ -406,34 +670,10 @@ class GagongFacilityPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(0, 10),
+                      Text(controller.datasList[index]['C_WGT_NO'].toString(),
                         style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(11, 16),
-                        style: AppTheme.a16500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2),
-                          bottom: index == controller.datasList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
-                  height: 80,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(0, 10),
-                        style: AppTheme.a16500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(11, 16),
+                      Text(controller.datasList[index]['C_WGT_NO'].toString(),
                         style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                     ],
@@ -454,10 +694,34 @@ class GagongFacilityPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(0, 10),
+                      Text(controller.datasList[index]['C_CAR_NO'].toString(),
                         style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                      Text(controller.datasList[index]['FROM_DATE'].toString().substring(11, 16),
+                      Text(controller.datasList[index]['C_CAR_NO'].toString(),
+                        style: AppTheme.a16500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: AppTheme.white,
+                      border: Border(
+
+                          top: BorderSide(color: AppTheme.ae2e2e2),
+                          right: BorderSide(
+                              color: AppTheme.ae2e2e2),
+                          bottom: index == controller.datasList.length -1 ? BorderSide(color: AppTheme.ae2e2e2) :  BorderSide(color: Colors.transparent))),
+                  height: 80,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(controller.datasList[index]['C_ITEM_NAME'].toString(),
+                        style: AppTheme.a16500
+                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
+                      Text(controller.datasList[index]['C_ITEM_NAME'].toString(),
                         style: AppTheme.a16500
                             .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
                     ],
@@ -642,9 +906,7 @@ class GagongFacilityPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-
+  }*/
 
   Widget _topTitle(BuildContext context) {
     return SliverToBoxAdapter(

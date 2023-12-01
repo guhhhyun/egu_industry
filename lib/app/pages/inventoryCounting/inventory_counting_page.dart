@@ -7,7 +7,7 @@ import 'package:egu_industry/app/pages/productLocation/product_location_controll
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -441,7 +441,7 @@ class InventoryCountingPage extends StatelessWidget {
               ),
             ),
           ),
-          InkWell(
+         /* InkWell(
               onTap: () async {
                 String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
                     '#ff6666', '취소', false, ScanMode.BARCODE);
@@ -477,7 +477,7 @@ class InventoryCountingPage extends StatelessWidget {
                 }
               },
               child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
-          )
+          )*/
         ],
       ),
     );

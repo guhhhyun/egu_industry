@@ -1,18 +1,20 @@
 
 import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 
 
 class GagongFacilityController extends GetxController {
+  PlutoGridStateManager? gridStateMgr = null;
   RxList test = [].obs;
   RxList<String> movIds = [''].obs;
   RxList<dynamic> datasList = [].obs;
-  RxList<bool> isDatasSelectedList = [false].obs;
-  RxList<bool> isDatasSelectedList2 = [false].obs;
-  RxList<dynamic> processSelectedList = [].obs;
-  RxList<dynamic> processSelectedList2 = [].obs;
+  RxList<dynamic> inspChList = [].obs;
+  RxList<dynamic> callCarList = [].obs;
   RxString dayValue = '날짜를 선택해주세요'.obs;
   RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
@@ -21,66 +23,67 @@ class GagongFacilityController extends GetxController {
   RxString selectedMach = '선택해주세요'.obs;
   RxBool registButton = false.obs;
   RxBool isLoading = false.obs;
-  RxInt choiceButtonVal = 1.obs;
+  RxBool isCheck = false.obs;
+  RxInt choiceButtonVal = 3.obs;
   RxString movCd = ''.obs;
+  RxString inspCh = ''.obs;
+  RxString callCar = ''.obs;
+  List<PlutoRow> rowDatas = [];
 
-  Future<void> convert() async {
 
-  }
+
 
   Future<void> checkButton() async {
-    movIds.clear();
-    isDatasSelectedList.clear();
-    isDatasSelectedList2.clear();
-    datasList.clear();
-
+    inspChList.clear();
+    callCarList.clear();
     try {
       isLoading.value = true;
-      var a = await HomeApi.to.PROC('USP_MBS0600_R01', {'@p_WORK_TYPE':'Q', '@p_DATE_FR': '$dayStartValue'
-        , '@p_DATE_TO': '$dayEndValue'}).then((value) =>
+      var a = await HomeApi.to.PROC('USP_MBS1700_R01', {'@P_WORK_TYPE':'Q', '@P_ST_DT': '$dayStartValue'
+        , '@P_END_DT': '$dayEndValue', '@P_INSP_CHK': inspCh.value, '@P_CALL_CAR': callCar.value}).then((value) =>
       {
-        for(var i = 0; i < value['DATAS'].length; i++) {
-          isDatasSelectedList.add(false),
-          isDatasSelectedList2.add(false)
-        },
         datasList.value = value['DATAS'],
-        Get.log('aa ${datasList.value}')
-
+        for(var i = 0; i < datasList.length; i++) {
+          inspChList.add(''),
+          callCarList.add(''),
+        }
       });
     }catch(err) {
       Get.log('USP_MBS0600_R01 err = ${err.toString()} ', isError: true);
       Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;
+      plutoRow();
     }
   }
 
 
 
   Future<void> saveButton(int index) async {
-    var a = await HomeApi.to.PROC('USP_MBS0600_S01', {'@p_WORK_TYPE':'U', '@p_MOV_ID': movIds[index]
-      , '@p_MOV_YN':'Y', '@p_USER':Utils.getStorage.read('userId')});
+    var a = await HomeApi.to.PROC('USP_MBS1700_S01', {'@p_WORK_TYPE':'U', '@P_SCALE_ID': '${datasList[index]['C_SCALE_ID']}', '@P_INSP_CHK': inspChList[index], '@P_CALL_CAR': callCarList[index], '@p_USER':Utils.getStorage.read('userId')});
 
     Get.log('가공설 저장: $a');
   }
 
+
+  Future<void> plutoRow() async {
+    rowDatas = List<PlutoRow>.generate(datasList.length, (index) =>
+        PlutoRow(cells:
+        Map.from((datasList[index]).map((key, value) =>
+            MapEntry(key, PlutoCell(value: value ==  null || value == 'N' ? '' : key == 'INSP_CHK' ? 'V' :  key == 'CALL_CAR' ? 'V' : value )),
+        )))
+    );
+    gridStateMgr?.removeAllRows();
+    gridStateMgr?.appendRows(rowDatas);
+    gridStateMgr?.scroll.vertical?.animateTo(25, curve: Curves.bounceIn, duration: Duration(milliseconds: 100));
+  }
 
 
 
 
   @override
   void onInit() async {
+    checkButton();
 
-   /* await HomeApi.to.PROC('USP_MBS0600_R01', {'@p_WORK_TYPE':'Q'}).then((value) =>
-    {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        isDatasSelectedList.add(false),
-        isDatasSelectedList2.add(false)
-      },
-      datasList.value = value['DATAS'],
-      Get.log('aa ${datasList.value}')
-
-    });*/
   }
 
   @override

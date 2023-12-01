@@ -1128,7 +1128,7 @@ class FacilityStep2Page extends StatelessWidget {
         if(controller.selectedResultFg.value != '전체'
             && controller.selectedNoReason.value != '전체'
         && controller.selectedEnginner.value != '정비자를 선택해주세요' &&  controller.dayStartValue.value != '선택해주세요' &&
-            controller.dayEndValue.value != '선택해주세요' && controller.textContentController.text != '') {
+            controller.dayEndValue.value != '선택해주세요') {
           controller.isStep2RegistBtn.value = true;
         }else {
           controller.isStep2RegistBtn.value = false;
@@ -1188,19 +1188,5 @@ class FacilityStep2Page extends StatelessWidget {
     return times.inHours.toString();
   }
 
-  String _deptText() {
-    switch(controller.selectedContainer[0]['INS_DEPT'].toString()) {
-      case "1110":
-        return '생산팀';
-      case "1160":
-        return '공무팀';
-      case "1170":
-        return '전기팀';
-      case "9999":
-        return '기타';
-      default:
-        return '';
-    }
-  }
 
 }

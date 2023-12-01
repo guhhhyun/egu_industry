@@ -7,7 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 
 class ProductLocationPage extends StatelessWidget {
@@ -175,7 +175,7 @@ class ProductLocationPage extends StatelessWidget {
                 ),
               ),
           ),
-          Container(
+        /*  Container(
             padding: const EdgeInsets.only( right: 20, top: 4),
             child: InkWell(
                 onTap: () async {
@@ -210,39 +210,13 @@ class ProductLocationPage extends StatelessWidget {
                 },
                 child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
             ),
-          )
+          )*/
         ],
       ),
     );
   }
 
-  Widget _topArea() {
-    return SliverToBoxAdapter(
-      child: Obx(() =>Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 24),
-        child: Center(
-          child: InkWell(
-            onTap: () async{
-              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                  '#ff6666', '취소', false, ScanMode.BARCODE);
-              controller.barcodeScanResult.value = barcodeScanRes;
-              controller.checkButton();
-            },
-            child: Container(
-                padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
-                decoration: BoxDecoration(
-                    border: Border.all(color: AppTheme.ae2e2e2),
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                width: double.infinity,
-                child: Text(controller.barcodeScanResult.value == '-1' ? '바코드를 재스캔해주세요' : controller.barcodeScanResult.value, style: AppTheme.a16400.copyWith(
-                    color: controller.barcodeScanResult.value == '바코드를 스캔해주세요' ? AppTheme.aBCBCBC : AppTheme.black),)
-            ),
-          ),
-        ),
-      ),)
-    );
-  }
+
   Widget _bodyArea() {
     return SliverToBoxAdapter(
       child: Container(
