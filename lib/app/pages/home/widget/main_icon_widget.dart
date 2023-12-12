@@ -198,7 +198,7 @@ class MainIconWidget extends StatelessWidget {
                         Get.toNamed(Routes.PACKAGING_INSPEC);
                       }, context: context
                   ),
-                  gs.datasList.contains(1200) == false ? SizedBox(width: 0, height: 0,) :
+                //  gs.datasList.contains(1200) == false ? SizedBox(width: 0, height: 0,) :
                   _buttonArea(
                       imgUrl: 'assets/app/product-development-2.png',
                       title: '스크랩',
@@ -218,6 +218,16 @@ class MainIconWidget extends StatelessWidget {
                         Get.toNamed(Routes.FACILITY_MONITORING);
                       }, context: context
                   ),
+                  gs.datasList.contains(1700) == false ? SizedBox(width: 0, height: 0,) :
+                  _buttonArea(
+                      imgUrl: 'assets/app/Group-5.png',
+                      title: '가공설',
+                      subTitle: '검수',
+                      onPressed: () {
+                        Get.log('가공설');
+                        Get.toNamed(Routes.GAGONG_FACILITY);
+                      }, context: context
+                  ),
                   Utils.getStorage.hasData('userId') &&
                       Utils.getStorage.hasData('userPw') == false ? SizedBox(width: 0, height: 0,) :
                   _buttonArea(
@@ -227,16 +237,6 @@ class MainIconWidget extends StatelessWidget {
                       onPressed: () {
                         Get.log('로그아웃');
                         gs.logout();
-                      }, context: context
-                  ),
-                  gs.datasList.contains(1700) == false ? SizedBox(width: 0, height: 0,) :
-                  _buttonArea(
-                      imgUrl: 'assets/app/Group-5.png',
-                      title: '가공설',
-                      subTitle: '검수',
-                      onPressed: () {
-                        Get.log('가공설');
-                        Get.toNamed(Routes.GAGONG_FACILITY);
                       }, context: context
                   ),
                 ],

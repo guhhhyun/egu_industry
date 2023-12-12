@@ -41,7 +41,8 @@ class GlobalService extends GetxService {
      } catch (err) {
        Get.log('GlobalService - onInit Err ', isError: true);
        Get.log(err.toString(), isError: true);
-     }
+     } finally {
+    }
    }
 
   void setLoginInfo({required String id, required String password}) async {
@@ -51,9 +52,12 @@ class GlobalService extends GetxService {
 
       await Utils.getStorage.write('userId', loginId.value);
       await Utils.getStorage.write('userPw', loginPassword.value);
+
     } catch (err) {
       Get.log('GlobalService - setLoginInfo Err ', isError: true);
       Get.log(err.toString(), isError: true);
+    }finally{
+      await req();
     }
   }
 

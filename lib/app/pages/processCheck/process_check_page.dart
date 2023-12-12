@@ -6,6 +6,7 @@ import 'package:egu_industry/app/pages/processCheck/process_check_controller.dar
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -27,6 +28,7 @@ class ProcessCheckPage extends StatelessWidget {
                 slivers: [
                   CommonAppbarWidget(title: '작업조회', isLogo: false, isFirstPage: true,),
                   _bodyArea(context),
+                  Obx(() => _monthSelect(context)),
                   Obx(() => _list(context),),
                   SliverToBoxAdapter(child: SizedBox(height: 100,))
                 ],
@@ -37,6 +39,103 @@ class ProcessCheckPage extends StatelessWidget {
       ),
       //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
+  }
+
+  Widget _monthSelect(BuildContext context) {
+    return  controller.selectedNoWork.value == true ? SliverToBoxAdapter(
+      child: Column(
+        children: [
+          SizedBox(height: 12,),
+          Container(
+            padding: EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () {
+                    controller.monthCheckBox.value == false ?
+                      controller.monthCheckBox.value = true : controller.monthCheckBox.value = false;
+                  },
+                  child: controller.monthCheckBox.value == false ? Icon(Icons.check_box_outline_blank, size: 20,) :
+                  Icon(Icons.check_box, size: 20,),
+                ),
+                SizedBox(width: 4,),
+                Text('월별', style: AppTheme.a14500.copyWith(color: AppTheme.black),),
+                SizedBox(width: 12,),
+                Container(
+                  child: InkWell(
+                    onTap: () async{
+                      var datePicked = await DatePicker.showSimpleDatePicker(
+                        titleText: '날짜 선택',
+                        itemTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black),
+                        context,
+                        confirmText: '확인',
+                        cancelText: '취소',
+                        textColor: AppTheme.black,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2060),
+                        dateFormat: "yyyy-MM-dd",
+                        locale: DateTimePickerLocale.ko,
+                        looping: true,
+                      );
+
+                      if(datePicked != null) {
+                        int startIndex = datePicked.toString().indexOf(' ');
+                        int lastIndex = datePicked.toString().length;
+                        controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
+                        controller.noWorkButton();
+                  /*      if(controller.choiceButtonVal.value != 0) {
+                          controller.datasList.clear();
+                          HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                            , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                          {
+                            Get.log('value[DATAS]: ${value['DATAS']}'),
+                            if(value['DATAS'] != null) {
+                              controller.datasLength.value = value['DATAS'].length,
+                              for(var i = 0; i < controller.datasLength.value; i++){
+                                controller.datasList.add(value['DATAS'][i]),
+                              },
+                            },
+                            Get.log('datasList: ${controller.datasList}'),
+                          });
+                        }*/
+
+
+
+                      }else {
+                        controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                      }
+                      if(datePicked.toString() == '1994-01-01 00:00:00.000') {
+                        controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                      }
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all( color: AppTheme.ae2e2e2)),
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(controller.dayStartValue.value, style: AppTheme.a12500
+                              .copyWith(color: AppTheme.a6c6c6c
+                              , fontSize: 17),),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          SizedBox(height: 24,),
+        ],
+      ),
+    ) : SliverToBoxAdapter(child:  SizedBox(height: 24,),);
   }
 
   Widget _list(BuildContext context) {
@@ -84,7 +183,7 @@ class ProcessCheckPage extends StatelessWidget {
                   const SizedBox(width: 12,),
                 ],
               ),
-              const SizedBox(height: 24,),
+             // const SizedBox(height: 24,),
             ],
           ),
         ),

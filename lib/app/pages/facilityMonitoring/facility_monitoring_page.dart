@@ -259,7 +259,7 @@ class FacilityMonitoringPage extends StatelessWidget {
       backgroundColor: AppTheme.blue_blue_300,
     ),
     PlutoColumn(
-      title: '작업 종료시간',
+      title: '등록시간',
       field: 'DT',
       type: PlutoColumnType.text(),
       width: 100,

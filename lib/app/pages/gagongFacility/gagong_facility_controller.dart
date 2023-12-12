@@ -69,7 +69,7 @@ class GagongFacilityController extends GetxController {
     rowDatas = List<PlutoRow>.generate(datasList.length, (index) =>
         PlutoRow(cells:
         Map.from((datasList[index]).map((key, value) =>
-            MapEntry(key, PlutoCell(value: value ==  null || value == 'N' ? '' : key == 'INSP_CHK' ? 'V' :  key == 'CALL_CAR' ? 'V' : value )),
+            MapEntry(key, PlutoCell(value: value ==  null || value == 'N' ? '' : key == 'C_WGT_DATE' ? value.toString().substring(0, 4) + '-' + value.toString().substring(4, 6) + '-' + value.toString().substring(6, 8):key == 'INSP_CHK' ? 'V' :  key == 'CALL_CAR' ? 'V' : value )),
         )))
     );
     gridStateMgr?.removeAllRows();

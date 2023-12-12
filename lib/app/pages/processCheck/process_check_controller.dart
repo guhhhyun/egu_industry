@@ -17,12 +17,14 @@ class ProcessCheckController extends GetxController {
   RxString selectedGubun = '선택해주세요'.obs;
   RxString selectedGubunCd = '400'.obs;
   RxBool selectedNoWork = false.obs;
+  RxBool monthCheckBox = false.obs;
   RxList<dynamic> processList = [].obs;
   RxList<dynamic> lastList = [].obs;
   RxList<dynamic> currentList = [].obs;
   RxList<dynamic> noProcessList = [].obs;
   List<PlutoRow> rowDatas = [];
   List<PlutoRow> rowDatas2 = [];
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   PlutoGridStateManager? gridStateMgr = null;
   PlutoGridStateManager? gridStateMgr2 = null;
   List<PlutoColumn>? gridCols = <PlutoColumn>[
@@ -301,21 +303,6 @@ class ProcessCheckController extends GetxController {
       backgroundColor: AppTheme.blue_blue_300,
     ),
     PlutoColumn(
-      title: '내역',
-      field: 'PROC_NAME',
-      type: PlutoColumnType.text(),
-      width: 130,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-    PlutoColumn(
       title: '세부내역',
       field: 'NWRK_ETR',
       type: PlutoColumnType.text(),
@@ -330,6 +317,22 @@ class ProcessCheckController extends GetxController {
       textAlign: PlutoColumnTextAlign.center,
       backgroundColor: AppTheme.blue_blue_300,
     ),
+    PlutoColumn(
+      title: '내역',
+      field: 'PROC_NAME',
+      type: PlutoColumnType.text(),
+      width: 130,
+      enableSorting: false,
+      enableEditingMode: false,
+      enableContextMenu: false,
+      enableRowDrag: false,
+      enableDropToResize: false,
+      enableColumnDrag: false,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      textAlign: PlutoColumnTextAlign.center,
+      backgroundColor: AppTheme.blue_blue_300,
+    ),
+
     PlutoColumn(
       title: '시작시간',
       field: 'START_DT',
@@ -485,7 +488,7 @@ class ProcessCheckController extends GetxController {
   Future<void> noWorkButton() async {
     try {
       isLoading.value = true;
-      var a = await HomeApi.to.PROC('USP_MBR1600_R03', {'@p_WORK_TYPE':'Q', '@p_CHECK':'Y', '@p_DATE':'2023-11-08'}).then((value) =>
+      var a = await HomeApi.to.PROC('USP_MBR1600_R03', {'@p_WORK_TYPE':'Q', '@p_CHECK':monthCheckBox.value ? 'Y' : 'N', '@p_DATE': dayStartValue.value}).then((value) =>
       {
         if(value['DATAS'] != null) {
           noProcessList.value = value['DATAS'],

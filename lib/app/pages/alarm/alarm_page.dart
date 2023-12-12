@@ -202,18 +202,24 @@ class AlarmPage extends GetView<AlarmController> {
                   Text(controller.alarmAllList[index]['TYPE_MSG_NM'] != null ? '[${controller.alarmAllList[index]['TYPE_MSG_NM']}] ' : '',
                       style: AppTheme.a16700
                           .copyWith(color: AppTheme.black)),
-                  Text(controller.alarmAllList[index]['TEXT_TG'] != null ? controller.alarmAllList[index]['TEXT_TG'] : '',
+                  Text(controller.alarmAllList[index]['TEXT_TG'] ?? '',
                       style: AppTheme.a16700
                           .copyWith(color: AppTheme.black)),
                 ],
               ),
-              Row(
-                children: [
-                  Text('알림: ', style: AppTheme.a14700.copyWith(color: AppTheme.a6c6c6c),),
-                  Text(controller.alarmAllList[index]['ACT_DTM'] != null ? '${controller.alarmAllList[index]['ACT_DTM'].toString().substring(0, 10)} ${controller.alarmAllList[index]['ACT_DTM'].toString().substring(11, 16)}' : '',
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black)),
-                ],
+              Container(
+                width: 160,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Text('알림: ', style: AppTheme.a14700.copyWith(color: AppTheme.a6c6c6c),),
+                      Text(controller.alarmAllList[index]['ACT_DTM'] != null ? '${controller.alarmAllList[index]['ACT_DTM'].toString().substring(0, 10)} ${controller.alarmAllList[index]['ACT_DTM'].toString().substring(11, 16)}' : '',
+                          style: AppTheme.a14500
+                              .copyWith(color: AppTheme.black)),
+                    ],
+                  ),
+                ),
               ),
             ],
           )

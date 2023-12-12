@@ -760,6 +760,7 @@ class ProcessTransferPage extends StatelessWidget {
               controller.registButton.value = true;
             }
           }
+          Get.log('movId: ${controller.processSelectedList.value}');
           Get.log('movId: ${controller.movIds}');
 
         },
@@ -920,10 +921,13 @@ class ProcessTransferPage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(controller.processList[index]['TO_DATE'].toString().substring(0, 10),
+
+                        Text( controller.processList[index]['TO_DATE'] != null ?
+                        controller.processList[index]['TO_DATE'].toString().substring(0, 10) : '',
                             style: AppTheme.a16500
                                 .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
-                        Text(controller.processList[index]['TO_DATE'].toString().substring(11, 16),
+                        Text(controller.processList[index]['TO_DATE'] != null ?
+                        controller.processList[index]['TO_DATE'].toString().substring(11, 16) : '',
                           style: AppTheme.a16500
                               .copyWith(color: AppTheme.light_text_primary), textAlign: TextAlign.center,),
                       ],

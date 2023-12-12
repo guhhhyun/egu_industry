@@ -898,7 +898,6 @@ class ScrapLabelPage extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 12),
                 child: DropdownButton2(
                   dropdownStyleData: DropdownStyleData(
-
                       maxHeight: 300,
                       width: 200,
                       offset: Offset(25, 25),
