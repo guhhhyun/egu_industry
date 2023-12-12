@@ -129,7 +129,7 @@ class AlarmPage extends GetView<AlarmController> {
           ),
           SizedBox(height: 12,),
           Obx(() => SizedBox(
-            height: MediaQuery.of(context).size.height - 172,
+            height: MediaQuery.of(context).size.height - 200,
             child:TabBarView(
               physics: NeverScrollableScrollPhysics(),
                 controller: controller.tabController,

@@ -54,6 +54,8 @@ class GlobalService extends GetxService {
     } catch (err) {
       Get.log('GlobalService - setLoginInfo Err ', isError: true);
       Get.log(err.toString(), isError: true);
+    } finally {
+      await req();
     }
   }
 
