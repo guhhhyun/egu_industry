@@ -158,7 +158,7 @@ class MainIconWidget extends StatelessWidget {
                         Get.toNamed(Routes.PROCESS_TRANSFER);
                       }, context: context
                   ),
-                //  gs.datasList.contains(1600) == false ? SizedBox(width: 0, height: 0,) :
+                  gs.datasList.contains(1600) == false ? SizedBox(width: 0, height: 0,) :
                   _buttonArea(
                       imgUrl: 'assets/app/Group-2.png',
                       title: '작업조회',
