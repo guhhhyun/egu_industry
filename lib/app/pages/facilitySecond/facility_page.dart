@@ -741,16 +741,19 @@ class FacilityPage extends StatelessWidget {
                 ],
               ) : Container(),
 
-              SizedBox(height: 12,),
+              const SizedBox(height: 12,),
               controller.datasList.isNotEmpty ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
+                      Text('의뢰자: ',
+                          style: AppTheme.a14700
+                              .copyWith(color: AppTheme.a959595)),
                       Text(controller.datasList[index]['IR_USER'].toString(),
                           style: AppTheme.a14400
                               .copyWith(color: AppTheme.a959595)),
-                      SizedBox(width: 12,),
+                      const SizedBox(width: 12,),
                       Container(
                           child: (() {
                             var firstIndex = controller.datasList[index]['IR_DATE']
@@ -768,8 +771,8 @@ class FacilityPage extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.watch_later_outlined, color: AppTheme.ac7c7c7, size: 17,),
-                      SizedBox(width: 4,),
+                      const Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
+                      const SizedBox(width: 4,),
                       Text(
                           '${_dateDifference(index)}h 경과',
                           style: AppTheme.a14700
@@ -778,6 +781,29 @@ class FacilityPage extends StatelessWidget {
                   )
                 ],
               ) : Container(),
+              SizedBox(height: 4,),
+              controller.datasList.isNotEmpty ?
+              controller.datasList[index]['RE_USER'] != null ?
+              Row(
+                children: [
+                  Text('확인자: ',
+                      style: AppTheme.a14700
+                          .copyWith(color: AppTheme.a959595)),
+                  Text(controller.datasList[index]['RE_USER'].toString(),
+                      style: AppTheme.a14400
+                          .copyWith(color: AppTheme.a959595)),
+                  const SizedBox(width: 12,),
+                  Container(
+                      child: (() {
+                        return Text(
+                            controller.datasList[index]['RE_CRT_DATE']
+                                .toString(),
+                            style: AppTheme.a14400
+                                .copyWith(color: AppTheme.a959595));
+                      })()
+                  ),
+                ],
+              ) : Container() : Container()
             ],
           ),
         ),
@@ -829,6 +855,12 @@ class FacilityPage extends StatelessWidget {
               controller.isLoading.value = true;
               await controller.reqEngineer();
               await controller.partConvert('${controller.selectedContainer[0]['MACH_CODE']}');
+              await controller.reqAlreadyCpList();
+              /// 정비내역이 있을 시
+              if(controller.isAlreadyListData.value) {
+                controller.insertAlreadyData();
+                controller.isAlreadyListData.value = false;
+              }
             }catch(err) {
               Get.log('err = ${err.toString()} ', isError: true);
             }finally {

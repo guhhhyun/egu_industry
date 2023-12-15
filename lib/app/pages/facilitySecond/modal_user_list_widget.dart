@@ -85,14 +85,14 @@ class ModalUserListWidget extends StatelessWidget {
             ? controller.engineerSelectedList.add(controller.engineer2List[index])
             : controller.engineerSelectedList.remove(controller.engineer2List[index]);
 
-        for(var i = 0; i < controller.engineerSelectedList.length; i++ ) {
-          controller.selectedEnginner.value == '' ?  controller.selectedEnginner.value = controller.engineerSelectedList[i]['USER_NAME'] :
-          controller.selectedEnginner.value = '${controller.selectedEnginner.value}' + ', ${controller.engineerSelectedList[i]['USER_NAME']}';
+          for(var i = 0; i < controller.engineerSelectedList.length; i++ ) {
+            controller.selectedEnginner.value == '' ?  controller.selectedEnginner.value = controller.engineerSelectedList[i]['USER_NAME'] :
+            controller.selectedEnginner.value = '${controller.selectedEnginner.value}' + ', ${controller.engineerSelectedList[i]['USER_NAME']}';
 
-          controller.selectedEnginnerCd.value == '' ? controller.selectedEnginnerCd.value = controller.engineerSelectedList[i]['USER_ID'].toString() :
-          controller.selectedEnginnerCd.value = '${controller.selectedEnginnerCd.value}' + ',${controller.engineerSelectedList[i]['USER_ID'].toString()}';
+            controller.selectedEnginnerCd.value == '' ? controller.selectedEnginnerCd.value = controller.engineerSelectedList[i]['USER_ID'].toString() :
+            controller.selectedEnginnerCd.value = '${controller.selectedEnginnerCd.value}' + ',${controller.engineerSelectedList[i]['USER_ID'].toString()}';
+          }
 
-        }
         Get.log('정비자 코드 ::: ${controller.selectedEnginnerCd.value}');
 
 

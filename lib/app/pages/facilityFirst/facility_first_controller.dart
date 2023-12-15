@@ -71,7 +71,7 @@ class FacilityFirstController extends GetxController {
 
 
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 3))).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
@@ -148,7 +148,7 @@ class FacilityFirstController extends GetxController {
   Future<void> saveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'N', '@p_IR_CODE':''
       , '@p_INS_FG':insCd.value, '@p_MACH_CODE':selectedMachMap['MACH_CODE'], '@p_MACH_ETC':selectedMachMap['MACH_NAME'] == '전체' ? textFacilityController.text : '',
-      '@p_IR_TITLE':textTitleController.text, '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':'admin',
+      '@p_IR_TITLE':textTitleController.text, '@p_IR_CONTENT':'${textContentController.text}', '@p_IR_USER':Utils.getStorage.read('userId'),
       '@p_FAILURE_DT':errorTime.value, '@p_IR_FG':selectedIrFqMap['CODE'], '@p_URGENCY_FG':urgencyCd.value,
       '@p_INS_DEPT':selectedEngineTeamMap['CODE'], '@p_USER':Utils.getStorage.read('userId')});
     Get.log('신규등록 :::::::: ${a['DATAS'][0]['IR_CODE']}');
@@ -160,7 +160,7 @@ class FacilityFirstController extends GetxController {
   Future<void> modifySaveButton() async {
     var a = await HomeApi.to.PROC('USP_MBS0200_S01', {'@p_WORK_TYPE':'U', '@p_IR_CODE': modifyIrCode.value
       , '@p_INS_FG':modifyInsCd.value, '@p_MACH_CODE':modifySelectedMachMap['MACH_CODE'], '@p_MACH_ETC': modifySelectedMachMap['MACH_NAME'] == '전체' ? modifyTextFacilityController.text : '',
-      '@p_IR_TITLE':modifyTextTitleController.text, '@p_IR_CONTENT':'${modifyTextContentController.text}', '@p_IR_USER':'admin',
+      '@p_IR_TITLE':modifyTextTitleController.text, '@p_IR_CONTENT':'${modifyTextContentController.text}', '@p_IR_USER':Utils.getStorage.read('userId'),
       '@p_FAILURE_DT': modifyErrorTime.value, '@p_IR_FG':modifySelectedIrFqMap['CODE'], '@p_URGENCY_FG': modifyUrgencyCd.value,
       '@p_INS_DEPT': modifyEngineTeamCdMap['CODE'], '@p_USER':Utils.getStorage.read('userId'),});
 

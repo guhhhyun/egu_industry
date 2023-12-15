@@ -77,7 +77,6 @@ flutter:
 flutter_icons:
   ios: true
   android: true
-  ios: true
   image_path: "assets/app/29-2.png"
   remove_alpha_ios: true
 

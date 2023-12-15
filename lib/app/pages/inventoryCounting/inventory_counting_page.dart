@@ -369,8 +369,7 @@ class InventoryCountingPage extends StatelessWidget {
                       controller.saveButton();
                       controller.textController.text = '';
                       var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                        , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                            : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                        , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
                         , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                       {
                         if(value['DATAS'] != null) {
@@ -400,8 +399,7 @@ class InventoryCountingPage extends StatelessWidget {
                             controller.textController.text = '';
                             FocusScope.of(context).autofocus(focusNode);
                             var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                              , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                                  : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                              , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
                               , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                             {
                               if(value['DATAS'] != null) {

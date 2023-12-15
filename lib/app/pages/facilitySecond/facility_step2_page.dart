@@ -530,6 +530,7 @@ class FacilityStep2Page extends StatelessWidget {
 
 
                     Get.log('$value 선택!!!!');
+                    Get.log('$value 선택!!!!');
                    // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
                   }),
 
@@ -547,61 +548,6 @@ class FacilityStep2Page extends StatelessWidget {
         SizedBox(height: 12,),
         Row(
           children: [
-            /*Expanded(
-              child: Container(
-                child: TextButton(
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-                  ),
-                  onPressed: () async{
-                    var datePicked = await DatePicker.showSimpleDatePicker(
-                      titleText: '날짜 선택',
-                      itemTextStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
-                      context,
-                      confirmText: '확인',
-                      cancelText: '취소',
-                      textColor: AppTheme.black,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2060),
-                      dateFormat: "yyyy-MM-dd",
-                      locale: DateTimePickerLocale.ko,
-                      looping: true,
-                    );
-
-                    if(datePicked != null) {
-                      int startIndex = datePicked.toString().indexOf(' ');
-                      int lastIndex = datePicked.toString().length;
-                      controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                    }else {
-                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                    if(datePicked.toString() == '1994-01-01 00:00:00.000') {
-                      controller.dayStartValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    }
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        border: const Border(
-
-                            bottom:
-                            BorderSide(color: AppTheme.light_ui_08),
-                           )),
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('${controller.dayStartValue.value}', style: AppTheme.bodyBody1
-                            .copyWith(color: AppTheme.black
-                            , fontSize: 17),),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),*/
             Expanded(
               child: Container(
                 child: TextButton(

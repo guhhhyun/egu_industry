@@ -26,7 +26,7 @@ class FacilityController extends GetxController {
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 3))).obs;
   RxString step1DayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString dayStartValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
@@ -40,6 +40,7 @@ class FacilityController extends GetxController {
   RxList selectedContainer = [].obs;
   RxBool isAlreadySave = false.obs; // 정비내역 등록 이미 된 것 판단
   RxList<dynamic> alreadyList = [].obs; // 이미 등록된 건 조회
+  RxList<dynamic> alreadyPartList = [].obs; // 이미 등록된 건 부품 조회
   RxList<String> engineerIdList = [''].obs;
   RxString selectedEnginner = '정비자를 선택해주세요'.obs;
   RxString selectedEnginnerCd = ''.obs;
@@ -90,7 +91,6 @@ class FacilityController extends GetxController {
   RxString selectedMachCd = ''.obs;
   RxList<dynamic> engineer2List = [].obs;
 
-
   // 날짜를 선택했는지 확인
   RxBool bSelectedDayFlag = false.obs;
   RxBool bSelectedStartDayFlag = false.obs; // 작업 시작일 날짜
@@ -99,11 +99,11 @@ class FacilityController extends GetxController {
 
 
   Future<void> saveButton() async {
-    var a = await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE':'', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
-      , '@p_IR_FG':'$irfqCd', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':selectedEnginnerCd.value,
-      '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'$dayStartValue', '@p_END_DT':'$dayEndValue',
-      '@p_RESULT_FG':'$resultFgCd', '@p_NO_REASON':'$noReasonCd',
-      '@p_RP_DEPT':'9999', '@p_USER':Utils.getStorage.read('userId')});
+    var a = await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'N', '@p_RP_CODE': alreadyList.isNotEmpty ? alreadyList[0]['RP_CODE'] : '', '@p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'
+      , '@p_IR_FG':'${irfqCd.value}', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':selectedEnginnerCd.value,
+      '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'${dayStartValue.value}', '@p_END_DT':'${dayEndValue.value}',
+      '@p_RESULT_FG':'${resultFgCd.value}', '@p_NO_REASON':'${noReasonCd.value}',
+      '@p_RP_DEPT':'', '@p_USER':Utils.getStorage.read('userId')});
     Get.log('이거 ${a['DATAS']}');
   //  var b = a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '');
 
@@ -112,13 +112,13 @@ class FacilityController extends GetxController {
     // 부품 저장 프로시저
     if(partSelectedList.isNotEmpty) {
       for(var i = 0; i < partSelectedList.length; i++) {
-        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':alreadyList.isNotEmpty ? alreadyList[0]['RP_CODE'] : '', '@p_ITEM_CODE':'${partSelectedList[i]['ITEM_CODE']}'
           , '@p_ITEM_NAME':'${partSelectedList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${partSelectedList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${partSelectedQtyList[i]}',});
       }
     }
     if(otherPartList.isNotEmpty) {
       for(var i = 0; i < otherPartList.length; i++) {
-        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':'', '@p_ITEM_CODE':''
+        await HomeApi.to.PROC('USP_MBS0300_S01', {'@p_WORK_TYPE':'PART_N', '@p_RP_CODE':alreadyList.isNotEmpty ? alreadyList[0]['RP_CODE'] : '', '@p_ITEM_CODE':''
           , '@p_ITEM_NAME':'${otherPartList[i]['ITEM_NAME']}', '@p_ITEM_SPEC':'${otherPartList[i]['ITEM_SPEC']}', '@p_USE_QTY':'${otherPartList[i]['QTY']}',});
       }
     }
@@ -170,6 +170,75 @@ class FacilityController extends GetxController {
     }
 
 
+  }
+  RxBool isAlreadyListData = false.obs;
+
+  Future<void> reqAlreadyCpList() async {
+    alreadyList.clear();
+    alreadyPartList.clear();
+    var list = await HomeApi.to.PROC22('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q', '@p_RP_CODE': selectedContainer[0]['RP_CODE']}).then((value) =>
+    {
+
+        alreadyList.value = value['RESULT']['DATAS'][0]['DATAS'],
+        alreadyPartList.value = value['RESULT']['DATAS'][1]['DATAS'],
+        Get.log('자자자3 ${value['RESULT']['DATAS'][1]['NAMES']}'),
+      if(alreadyList.isEmpty) {
+        isAlreadyListData.value = false
+      }else {
+        isAlreadyListData.value = true
+      },
+
+      Get.log('자자자1 ${value}'),
+      Get.log('자자자2 ${alreadyList.value}'),
+      Get.log('자자자3 ${alreadyPartList.value}'),
+
+    });
+  }
+
+  void insertAlreadyData() {
+    var firstIndex = alreadyList[0]['START_DT']
+        .toString().lastIndexOf(':');
+    var lastIndex = alreadyList[0]['START_DT']
+        .toString().length;
+    dayStartValue.value = alreadyList[0]['START_DT'].toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, '');
+    dayEndValue.value = alreadyList[0]['END_DT'].toString().replaceAll('T', ' ').replaceRange(firstIndex, lastIndex, '');
+    alreadyList[0]['RP_CONTENT'].toString() != null || alreadyList[0]['RP_CONTENT'].toString() != '' ? textContentController.text = alreadyList[0]['RP_CONTENT'].toString() : '';
+    selectedEnginnerCd.value = alreadyList[0]['RP_USER'];
+    selectedEnginner.value = '';
+    for(var i = 0; i < engineer2List.length; i++ ) {
+      if(alreadyList[0]['RP_USER'].toString().contains(engineer2List[i]['USER_ID'].toString())) {
+        selectedEnginner.value == '' ?  selectedEnginner.value = engineer2List[i]['USER_NAME'] :
+        selectedEnginner.value = '${selectedEnginner.value}' + ', ${engineer2List[i]['USER_NAME']}';
+        isEngineerSelectedList[i] = true;
+        engineerSelectedList.add(engineer2List[i]);
+      }
+    }
+    switch(alreadyList[0]['RESULT_FG']) {
+      case "I":
+        selectedResultFg.value  = '정비 진행중';
+        resultFgCd.value = 'I';
+        break;
+      case "Y":
+        selectedResultFg.value  = '정비완료';
+        resultFgCd.value = 'Y';
+        break;
+      case "N":
+        selectedResultFg.value  = '미조치';
+        resultFgCd.value = 'N';
+        break;
+      default:
+        selectedResultFg.value  = '';
+        resultFgCd.value = '';
+    }
+    /// 확인 필요
+    for(var i = 0; i < alreadyPartList.length; i++) {
+      for(var k = 0; k < partList.length; k++) {
+        if(alreadyPartList[i]['ITEM_CODE'].toString().contains(partList[k]['ITEM_CODE'])) {
+          isPartSelectedList[k] = true;
+          partSelectedList.add(partList[k]);
+        }
+      }
+    }
   }
 
   Future<void> reqEngineer() async{
