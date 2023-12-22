@@ -103,7 +103,7 @@ class MainIconWidget extends StatelessWidget {
             ),
             const SizedBox(height: 27,),
             Obx(()=> Container(
-              width: MediaQuery.of(context).size.width-32,
+              width: MediaQuery.of(context).size.width-30,
               child: Wrap(
                 children: [
                   gs.datasList.contains(200) == false ? SizedBox(width: 0, height: 0,) :
@@ -198,7 +198,7 @@ class MainIconWidget extends StatelessWidget {
                         Get.toNamed(Routes.PACKAGING_INSPEC);
                       }, context: context
                   ),
-                //  gs.datasList.contains(1200) == false ? SizedBox(width: 0, height: 0,) :
+                  gs.datasList.contains(1200) == false ? SizedBox(width: 0, height: 0,) :
                   _buttonArea(
                       imgUrl: 'assets/app/product-development-2.png',
                       title: '스크랩',

@@ -47,6 +47,7 @@ class FacilityFirstController extends GetxController {
   RxString selectedMachCd = ''.obs;
   RxList<dynamic> irfgList = [].obs;
   RxMap<String, String> selectedIrFqMap = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
+  RxMap<String, String> checkSelectedIrFqMap = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
   RxString selectedIrFq = '선택해주세요'.obs;
   RxString selectedReadIrFq = '선택해주세요'.obs;
   RxList<dynamic> engineTeamList = [].obs;
@@ -359,7 +360,7 @@ class FacilityFirstController extends GetxController {
 
   void check() {
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
-      , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : irFgCd.value}).then((value) =>
+      , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : checkSelectedIrFqMap['CODE']}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['DATAS']}'),
       if(value['DATAS'] != null) {

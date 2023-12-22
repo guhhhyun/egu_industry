@@ -19,6 +19,7 @@ class ProductLocationController extends GetxController {
   RxBool isBcCode = false.obs;
   RxString barcodeScanResult = '바코드를 스캔해주세요'.obs;
   RxBool isAreaScan = false.obs;
+  RxList bcList = [].obs;
 
 
   Future<void> checkButton() async {
@@ -28,6 +29,10 @@ class ProductLocationController extends GetxController {
       {
         if(value['DATAS'] != null) {
           productList.value = value['DATAS'],
+          for(var i = 0; i < productList.length; i++ ) {
+            bcList.add(productList[i]['BARCODE_NO'])
+          },
+          Get.log('ku ${bcList}')
           /*if(value['DATAS']['BARCODE_NO'] != null) {
             isBcCode.value = true
           }else {
@@ -48,8 +53,8 @@ class ProductLocationController extends GetxController {
   }
 
   /// 수정 필요 user 고정값 빼고 p_RACK_BARCODE도 여쭤보고 수정
-  Future<void> saveButton() async {
-    var a = await HomeApi.to.PROC('USP_MBS0400_S01', {'@p_WORK_TYPE':'U', '@p_BARCODE_NO': textBc.value
+  Future<void> saveButton(int index) async {
+    var a = await HomeApi.to.PROC('USP_MBS0400_S01', {'@p_WORK_TYPE':'U', '@p_BARCODE_NO': bcList[index]
       , '@p_RACK_BARCODE':selectedLocationMap['RACK_BARCODE'], '@p_USER':Utils.getStorage.read('userId')});
     Get.log('이동 결과: ${a}');
   }

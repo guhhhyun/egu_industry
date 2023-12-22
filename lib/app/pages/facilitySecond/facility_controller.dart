@@ -46,6 +46,8 @@ class FacilityController extends GetxController {
   RxString selectedEnginnerCd = ''.obs;
   RxInt selectedEnginnerIndex = 0.obs;
   RxList<String> irfgList = [''].obs;
+  RxList<dynamic> irfgList2 = [].obs;
+  RxMap<String, String> selectedIrFqMap2 = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
   RxString selectedIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
   RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
@@ -54,7 +56,7 @@ class FacilityController extends GetxController {
   RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
-  RxMap<String, String> selectedIrFqMap = {'CODE':'', 'TEXT': ''}.obs;
+  RxMap<String, String> selectedIrFqMap1 = {'CODE':'', 'TEXT': ''}.obs;
   RxString resultFgCd = ''.obs;
   RxList<String> noReasonList = [''].obs;
   RxString selectedNoReason = '선택해주세요'.obs;
@@ -257,6 +259,7 @@ class FacilityController extends GetxController {
 
   Future<void> irfgConvert() async{
     irfgList.clear();
+    irfgList2.clear();
     noReasonList.clear();
     engineer2List.clear();
     machList.clear();
@@ -267,7 +270,7 @@ class FacilityController extends GetxController {
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
     selectedReadEngineTeamMap.addAll({'CODE':'', 'TEXT': '전체'});
-    selectedIrFqMap.addAll({'CODE':'', 'TEXT': '선택해주세요'});
+ //   selectedIrFqMap2.addAll({'CODE':'', 'TEXT': '선택해주세요'});
 
     try{
       /// 설비
@@ -295,6 +298,12 @@ class FacilityController extends GetxController {
       {
         value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
         engineTeamList.value = value['DATAS'],
+      });
+
+      /// 정비유형
+      var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+      {
+        irfgList2.value = value['DATAS'],
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');

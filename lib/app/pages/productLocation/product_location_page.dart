@@ -35,7 +35,7 @@ class ProductLocationPage extends StatelessWidget {
               _topAreaTest(context),
             //  _topArea(),
               _locationItem(context),
-              _bodyArea(),
+              _listArea()
 
 
             ],
@@ -215,50 +215,59 @@ class ProductLocationPage extends StatelessWidget {
       ),
     );
   }
+  Widget _listArea() {
+    return Obx(() => SliverList(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return _bodyArea(index: index, context: context);
+        }, childCount: controller.productList.length)));
+  }
 
 
-  Widget _bodyArea() {
-    return SliverToBoxAdapter(
-      child: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            border: Border.all(color: AppTheme.ae2e2e2),
-            borderRadius: BorderRadius.circular(10),
-            color: AppTheme.white
+  Widget _bodyArea({required BuildContext context, required int index}) {
+    return Column(
+      children: [
+        Container(
+            margin: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                border: Border.all(color: AppTheme.ae2e2e2),
+                borderRadius: BorderRadius.circular(10),
+                color: AppTheme.white
+            ),
+            child: Obx(() => Column(
+              children: [
+                _bodyItem('BC No.', controller.productList.isEmpty ? '' : controller.productList[index]['BARCODE_NO'].toString()),
+                const SizedBox(height: 12,),
+                _bodyItem('거래처', controller.productList.isEmpty ? '' : controller.productList[index]['CST_NM'].toString()),
+                const SizedBox(height: 12,),
+                Row(
+                  children: [
+                    _bodyItem('품종', controller.productList.isEmpty ? '' : controller.productList[index]['CMP_NM'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('R/P', controller.productList.isEmpty ? '' : controller.productList[index]['SHP_NM'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('질별', controller.productList.isEmpty ? '' : controller.productList[index]['STT_NM'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('두께', controller.productList.isEmpty ? '' : controller.productList[index]['THIC'].toString()),
+                  ],
+                ),
+                const SizedBox(height: 12,),
+                Row(
+                  children: [
+                    _bodyItem('폭', controller.productList.isEmpty ? '' : controller.productList[index]['WIDTH'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('합불', controller.productList.isEmpty ? '' : controller.productList[index]['PASS'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('위치', controller.productList.isEmpty ? '' : controller.productList[index]['LOC_AREA'].toString()),
+                    const SizedBox(width: 12,),
+                    _bodyItem('무게', controller.productList.isEmpty ? '' : controller.productList[index]['WEIGHT'].toString()),
+                  ],
+                ),
+              ],
+            ),)
         ),
-        child: Obx(() =>Column(
-          children: [
-            _bodyItem('BC No.', controller.productList.isEmpty ? '' : controller.productList[0]['BARCODE_NO'].toString()),
-            const SizedBox(height: 12,),
-            _bodyItem('거래처', controller.productList.isEmpty ? '' : controller.productList[0]['CST_NM'].toString()),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
-                _bodyItem('품종', controller.productList.isEmpty ? '' : controller.productList[0]['CMP_NM'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('R/P', controller.productList.isEmpty ? '' : controller.productList[0]['SHP_NM'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('질별', controller.productList.isEmpty ? '' : controller.productList[0]['STT_NM'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('두께', controller.productList.isEmpty ? '' : controller.productList[0]['THIC'].toString()),
-              ],
-            ),
-            const SizedBox(height: 12,),
-            Row(
-              children: [
-                _bodyItem('폭', controller.productList.isEmpty ? '' : controller.productList[0]['WIDTH'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('합불', controller.productList.isEmpty ? '' : controller.productList[0]['PASS'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('위치', controller.productList.isEmpty ? '' : controller.productList[0]['LOC_AREA'].toString()),
-                const SizedBox(width: 12,),
-                _bodyItem('무게', controller.productList.isEmpty ? '' : controller.productList[0]['WEIGHT'].toString()),
-              ],
-            ),
-          ],
-        ),)
-      ),
+        SizedBox(height: 12,)
+      ],
     );
   }
 
@@ -363,7 +372,11 @@ class ProductLocationPage extends StatelessWidget {
                   padding: MaterialStateProperty.all<EdgeInsets>(
                       const EdgeInsets.all(0))),
               onPressed: controller.isButton.value ? () {
-                controller.saveButton();
+                // 바코드 여러개 이동저장 처리
+                for(var i = 0; i < controller.bcList.length; i++ ) {
+                  controller.saveButton(i);
+                }
+               // controller.saveButton();
                 Get.log('저장 버튼 클릭');
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Get.dialog(

@@ -99,7 +99,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -171,7 +171,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   if(controller.choiceButtonVal.value != 0) {
                     controller.datasList.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -297,7 +297,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     controller.readCdConvert();
                     controller.datasList.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -361,7 +361,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     controller.readCdConvert();
                     controller.datasList.clear();
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                      , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                     {
                       Get.log('value[DATAS]: ${value['DATAS']}'),
                       if(value['DATAS'] != null) {
@@ -428,7 +428,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.readCdConvert();
                 controller.datasList.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   controller.datasList.clear(),
@@ -452,7 +452,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.readCdConvert();
                 controller.datasList.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -475,7 +475,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.readCdConvert();
                 controller.datasList.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -498,7 +498,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 controller.readCdConvert();
                 controller.datasList.clear();
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
-                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>
+                  , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.checkSelectedIrFqMap['CODE']}).then((value) =>
                 {
                   Get.log('value[DATAS]: ${value['DATAS']}'),
                   if(value['DATAS'] != null) {
@@ -526,7 +526,58 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 color: AppTheme.ae2e2e2
             )),
         padding: const EdgeInsets.only(left: 16, right: 12),
-        child: DropdownButton<String>(
+        child: DropdownButton(
+            dropdownColor: AppTheme.light_ui_01,
+            borderRadius: BorderRadius.circular(3),
+            isExpanded: true,
+            underline: Container(
+              height: 1,
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/app/arrowBottom.svg',
+              color: AppTheme.light_placeholder,
+            ),
+            value: controller.checkSelectedIrFqMap['TEXT'],
+            //  flag == 3 ? controller.selectedNoReason.value :
+            items: controller.irfgList.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['TEXT'],
+                child: Text(
+                  value['TEXT'],
+                  style: AppTheme.a16400
+                      .copyWith(color:  value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              controller.irfgList.map((e) {
+                if(e['TEXT'] == value) {
+                  controller.checkSelectedIrFqMap['TEXT'] = e['TEXT'];
+                  controller.checkSelectedIrFqMap['CODE'] = e['CODE'];
+                }
+
+                //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
+              }).toList();
+              controller.selectedCheckIrFg.value = value!;
+              controller.datasList.clear();
+              HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
+                , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.checkSelectedIrFqMap['CODE']}).then((value) =>
+              {
+                Get.log('value[DATAS]: ${value['DATAS']}'),
+                if(value['DATAS'] != null) {
+                  controller.datasLength.value = value['DATAS'].length,
+                  for(var i = 0; i < controller.datasLength.value; i++){
+                    controller.datasList.add(value['DATAS'][i]),
+                  },
+                },
+                Get.log('datasList: ${controller.datasList}'),
+              });
+              Get.log('$value 선택!!!!');
+              // Get.log('${HomeApi.to.BIZ_DATA('L_USER_001')}');
+            }),
+
+        /*DropdownButton<String>(
             isExpanded: true,
             underline: Container(
               height: 1,
@@ -571,7 +622,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                 },
                 Get.log('datasList: ${controller.datasList}'),
               });
-            }),
+            }),*/
 
       ),
     ));
@@ -711,7 +762,9 @@ class FacilityFirstStep1Page extends StatelessWidget {
                       ),
 
                       child: Text( controller.datasList[index]['IR_FG'].toString() == '010' ? '돌발정비'
-                          : controller.datasList[index]['IR_FG'].toString() == '020' ? '예방정비' : '기타',
+                          : controller.datasList[index]['IR_FG'].toString() == '020' ? '예방정비' : controller.datasList[index]['IR_FG'].toString() == '030' ? '개조/개선' :
+                      controller.datasList[index]['IR_FG'].toString() == '040' ? '공사성(신설)' :
+                      controller.datasList[index]['IR_FG'].toString() == '060' ? '안전/환경' : '기타',
                           style: AppTheme.a12500
                               .copyWith(color: AppTheme.a969696)),
                     )
@@ -746,7 +799,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
                     .copyWith(color: AppTheme.a6c6c6c)),
                 const SizedBox(width: 4,),
                 Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
-                controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
+                controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30050' ? '안전환경팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
                     controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
                     style: AppTheme.a16400
                         .copyWith(color: AppTheme.a6c6c6c)),
