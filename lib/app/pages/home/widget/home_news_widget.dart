@@ -94,6 +94,7 @@ class HomeNewsWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8,),
+                controller.alarmNList.length > 1 ?
                 InkWell(
                   onDoubleTap: () async{
                     var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[1]["ID"]});
@@ -129,9 +130,10 @@ class HomeNewsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ) : Container(), 
                 const SizedBox(height: 8,),
-                InkWell(
+                controller.alarmNList.length > 2 ?
+                 InkWell(
                   onDoubleTap: () async{
                     var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[2]["ID"]});
                     controller.reqListAlarm();
@@ -166,7 +168,7 @@ class HomeNewsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ): Container()
               ],
             ) : Container()
 

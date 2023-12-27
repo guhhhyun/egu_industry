@@ -321,7 +321,7 @@ class MyTaskHandler extends TaskHandler {
     String result = "";
     Object? exception = null;
     try {
-      if (url == null) url = 'mes1.leeku.co.kr';
+      if (url == null) url = 'mes1.leeku.co.kr:7000';
       if (service_name == null) service_name = 'WebAPI/';
 
       var RequestUri = Uri.http(url, service_name);
