@@ -77,21 +77,6 @@ class InventoryCheckPage extends StatelessWidget {
 
   final List<PlutoColumn> gridCols = <PlutoColumn>[
     PlutoColumn(
-      title: 'NO',
-      field: 'ROW_NO',
-      type: PlutoColumnType.text(),
-      width: 50,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-    PlutoColumn(
       title: '중량',
       field: 'STOCK_QTY',
       type: PlutoColumnType.text(),
@@ -257,7 +242,7 @@ class InventoryCheckPage extends StatelessWidget {
                 children: [
                   _thicField(),
                   SizedBox(width: 16,),
-                  _checkButton()
+                  _checkButton(context)
                 ],
               ),
               // _fromMachItem(),
@@ -425,7 +410,7 @@ class InventoryCheckPage extends StatelessWidget {
                   controller: controller.textController2,
                   //   textAlignVertical: TextAlignVertical.center,
                   textInputAction: TextInputAction.none,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(0),
                     fillColor: Colors.white,
@@ -443,7 +428,7 @@ class InventoryCheckPage extends StatelessWidget {
     );
   }
 
-  Widget _checkButton() {
+  Widget _checkButton(BuildContext context) {
     return Expanded(
       child: Container(
         child: TextButton(
@@ -454,8 +439,10 @@ class InventoryCheckPage extends StatelessWidget {
                 backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
                 padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.all(0))),
-            onPressed: () async{
-              controller.checkButton();
+            onPressed: () async {
+              controller.checkCondition();
+              controller.isCheckCondition.value ? 
+              controller.checkButton() : _onBackKey(context); // 다이얼로그 띄우기
             },
             child: SizedBox(
               height: 50,
@@ -470,560 +457,93 @@ class InventoryCheckPage extends StatelessWidget {
       ),
     );
   }
-
-
-
-  Widget _listArea() {
-
-    return Obx(() => SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          return _listItem(index: index, context: context);
-        }, childCount: controller.productSearchList.length)));
-  }
-
-
-  Widget _listItem({required BuildContext context, required int index}) {
-    return Obx(() => Container(
-      margin: EdgeInsets.only(left: 18, right: 18, bottom: 18),
-      padding: EdgeInsets.only(top: 24, bottom: 18, left: 18, right: 18),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.aE2E2E2),
-          color: AppTheme.white,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.gray_c_gray_100.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
-            ),
-          ]
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// 마노압연기 뭐시기뭐시기
-          controller.productSearchList.isNotEmpty ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(controller.productSearchList[index]['CST_NM'],
-                  style: AppTheme.a16700
-                      .copyWith(color: AppTheme.black)),
-            ],
-          )
-              : Container(),
-          SizedBox(height: 4,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(controller.productSearchList[index]['CMP_NM'].toString(),
-                  style: AppTheme.a14500
-                      .copyWith(color: AppTheme.a6c6c6c)),
-            ],
-          ),
-          SizedBox(height: 12,),
-
-          controller.productSearchList.isNotEmpty ?
-           Wrap(
-                alignment: WrapAlignment.start,
+  Future<bool> _onBackKey(BuildContext context) async{
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: AppTheme.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0)),
+              title: Column(
                 children: [
-                  Text(controller.productSearchList[index]['STT_NM'].toString(),
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                  const SizedBox(width: 4,),
-                  Text('|', style: AppTheme.a16400
-                      .copyWith(color: AppTheme.light_ui_05)),
-                  const SizedBox(width: 4,),
-                  Text('${controller.productSearchList[index]['THIC'].toString()} (두께)',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                  const SizedBox(width: 4,),
-                  Text('|', style: AppTheme.a14400
-                      .copyWith(color: AppTheme.light_ui_05)),
-                  const SizedBox(width: 4,),
-                  Text('${controller.productSearchList[index]['THIC_ACT'].toString()} (실두께)',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                  const SizedBox(width: 4,),
-                  Text('|', style: AppTheme.a14400
-                      .copyWith(color: AppTheme.light_ui_05)),
-                  const SizedBox(width: 4,),
-                  Text('${controller.productSearchList[index]['WIDTH'].toString()} (폭)',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                  const SizedBox(width: 4,),
-                  Text('|', style: AppTheme.a14400
-                      .copyWith(color: AppTheme.light_ui_05)),
-                  const SizedBox(width: 4,),
-                  Text('${controller.productSearchList[index]['HARDNESS_ACT'].toString()} (경도)',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-                  const SizedBox(width: 4,),
-                  Text('|', style: AppTheme.a14400
-                      .copyWith(color: AppTheme.light_ui_05)),
-                  const SizedBox(width: 4,),
-                  Text('${controller.productSearchList[index]['STOCK_QTY'].toString()} (중량)',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a6c6c6c)),
-
-            ],
-          ) : Container(),
-          SizedBox(height: 12,),
-          controller.productSearchList.isNotEmpty ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text('QC메모: ${controller.productSearchList[index]['PP_REMARK'].toString()}',
-                      style: AppTheme.a14400
-                          .copyWith(color: AppTheme.a959595)),
+                  const SizedBox(
+                    height: AppTheme.spacing_l_20,
+                  ),
+                  Text(
+                    '',
+                    style: AppTheme.a18700
+                        .copyWith(color: AppTheme.black),
+                  ),
+                  const SizedBox(
+                    height: AppTheme.spacing_xxxs_2,
+                  ),
                 ],
               ),
-              Container(
-                  child: (() {
-                    return Text(
-                        controller.productSearchList[index]['IN_DATE']
-                            .toString(),
-                        style: AppTheme.a14400
-                            .copyWith(color: AppTheme.a959595));
-                  })()
+              content: SizedBox(
+                height: 50,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('검색 조건을 1개 이상', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                    Text('입력해주세요.', style: AppTheme.a15800.copyWith(color: AppTheme.black),),
+                  ],
+                ),
               ),
-            ],
-          ) : Container(),
-        ],
-      ),
-    ),
-    );
+              buttonPadding: const EdgeInsets.all(0),
+              // insetPadding 이게 전체크기 조정
+              insetPadding: const EdgeInsets.only(left: 45, right: 45),
+              contentPadding: const EdgeInsets.all(0),
+              actionsPadding: const EdgeInsets.all(0),
+              titlePadding: const EdgeInsets.all(0),
+              //
+              actions: [
+                Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 1,
+                      color: const Color(0x5c3c3c43),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                              child: TextButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                        const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(15),
+                                                bottomRight: Radius.circular(15)))),
+                                    padding: MaterialStateProperty.all(
+                                        const EdgeInsets.all(0))),
+                                onPressed: () {
+                                  Get.log('확인 클릭!');
+                                  Get.back();
+                                },
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: const EdgeInsets.only(
+                                    top: AppTheme.spacing_s_12,
+                                    bottom: AppTheme.spacing_s_12,
+                                  ),
+                                  child: Center(
+                                    child: Text('확인',
+                                        style: AppTheme.titleHeadline.copyWith(
+                                            color: AppTheme.black,
+                                            fontSize: 17)),
+                                  ),
+                                ),
+                              ),
+                            ),
+                      ],
+                    )
+                  ],
+                )
+              ]);
+        });
+    return false;
   }
 
-  Widget _topTitle(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        margin: EdgeInsets.only(left: 4, right: 4),
-        padding: EdgeInsets.only(left: 18, right: 18),
-        child: Row(
-          children: [
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-          Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-                        left:
-                        BorderSide(color: AppTheme.ae2e2e2),
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                width: 60,
-                child: Center(
-                  child: Text('번호',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-            ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text(
-                    '중량',
-                    style: AppTheme.a16700
-                        .copyWith(color: AppTheme.light_text_primary),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-                        left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.ae2e2e2) : BorderSide(color: Colors.transparent),
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('품명',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('강종',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('두께',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('실두께',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('폭',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('거래처명',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('경도',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            MediaQuery.of(context).size.width <= 450 ? Container() :
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('QC메모',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: AppTheme.blue_blue_300,
-                    border: Border(
-
-                        top: BorderSide(color: AppTheme.ae2e2e2),
-                        right: BorderSide(
-                            color: AppTheme.ae2e2e2))),
-                height: 40,
-                child: Center(
-                  child: Text('입고일',
-                      style: AppTheme.a16700
-                          .copyWith(color: AppTheme.light_text_primary),
-                      textAlign: TextAlign.left),
-                ),
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _listArea2() {
-    return Obx(() => SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          return _listItem2(index: index, context: context);
-        }, childCount: controller.productSearchList.length)));
-  }
-  Widget _listItem2({required BuildContext context,required int index}) {
-
-    return Obx(() => Container(
-      margin: EdgeInsets.only(left: 4, right: 4),
-      padding: EdgeInsets.only( left: 18, right: 18),
-      child: InkWell(
-        child: Container(
-          decoration: BoxDecoration(
-              color: AppTheme.white,
-          ),
-          child: Row(
-            children: [
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          left:
-                          BorderSide(color: AppTheme.ae2e2e2),
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  width: 60,
-                  child: Center(
-                    child: Text('${index + 1}',
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-              ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                      child: Text(
-                        controller.productSearchList[index]['STOCK_QTY'].toString(),
-                        style: AppTheme.a14500
-                            .copyWith(color: AppTheme.black), textAlign: TextAlign.center,)
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          left: MediaQuery.of(context).size.width <= 450 ? BorderSide(color: AppTheme.ae2e2e2) : BorderSide(color: Colors.transparent),
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['CMP_NM'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['STT_NM'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['THIC'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['THICK_ACT'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['WIDTH'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['CST_NM'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['HANDNESS_ACT'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              MediaQuery.of(context).size.width <= 450 ? Container() :
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['PP_REMARK'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      color: AppTheme.white,
-                      border: Border(
-                          top: BorderSide(color: AppTheme.ae2e2e2),
-                          right: BorderSide(
-                              color: AppTheme.ae2e2e2))),
-                  height: 60,
-                  child: Center(
-                    child: Text(controller.productSearchList[index]['IN_DATE'].toString(),
-                      style: AppTheme.a14500
-                          .copyWith(color: AppTheme.black), textAlign: TextAlign.center,),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ));
-  }
 }

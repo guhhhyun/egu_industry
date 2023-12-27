@@ -22,16 +22,20 @@ class InventoryCheckController extends GetxController {
   RxList<dynamic> sttList = [].obs;
   RxList<dynamic> productSearchList = [].obs;
   RxBool isLoading = false.obs;
+  RxBool isCheckCondition = false.obs;
   List<PlutoRow> rowDatas = [];
   late final PlutoGridStateManager gridStateMgr;
 
-
+  void checkCondition() {
+    textController.text == '' && selectedCmpMap['FG_NAME'] == '품명 선택'
+        && selectedSttMap['STT_NM'] == '강종 선택' && textController2.text == '' ? null : isCheckCondition.value = true;
+  }
 
   Future<void> checkButton() async {
     try {
       isLoading.value = true;
       var a = await HomeApi.to.PROC('USP_MBR0900_R01', {'@p_WORK_TYPE':'Q', '@p_CST_NM': textController.text
-        , '@p_CMP_ID': selectedCmpMap['FG_NAME'] == '품명 선택' ? '' : '${selectedCmpMap['FG_CODE']}', '@p_STT_ID': selectedCmpMap['STT_NM'] == '품명 선택' ? '' : '${selectedSttMap['STT_ID']}', '@p_THIC': textController2.text == '' ? null : textController2.text}).then((value) =>
+        , '@p_CMP_ID': selectedCmpMap['FG_NAME'] == '품명 선택' ? '' : '${selectedCmpMap['FG_CODE']}', '@p_STT_ID': selectedSttMap['STT_NM'] == '강종 선택' ? '' : '${selectedSttMap['STT_ID']}', '@p_THIC': textController2.text == '' ? null : textController2.text}).then((value) =>
       {
         if(value['DATAS'] != null) {
           productSearchList.value = value['DATAS'],

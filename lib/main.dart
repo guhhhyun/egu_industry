@@ -271,9 +271,9 @@ class MyTaskHandler extends TaskHandler {
       if(nData != null && nData.containsKey("TYPE") && nData["TYPE"] == "ERROR") {
         const Duration(milliseconds: 1000);
       }
-      PN_DATA = nData;
-      await workPn(PN_DATA);
-      //break;
+      await workPn(nData);
+      PN_DATA = { "ACT_DTM" : nData!["ACT_DTM"], "ID" : nData!["ID"], "RCV_USER" : RCV_USER, };
+
     }catch(ex){
       sleep(const Duration(milliseconds: 1*1000));
     }finally {
@@ -359,11 +359,10 @@ class MyTaskHandler extends TaskHandler {
     }
   }
 
-  Future<Map> RCV_DATA_PERIOD(String? WorkType, Map? PARAMS) async{
-    String res = await EXEC2("RCV_DATA_PERIOD", "PUSH_NOTIFY", PARAMS, timeoutSec: 30) ?? "";
+  Future<Map?> RCV_DATA_PERIOD(String? WorkType, Map? PARAMS) async{
+    String res = await EXEC2("RCV_DATA_PERIOD", "PUSH_NOTIFY", PARAMS, timeoutSec: 20*60) ?? "";
     Map data = json.decode(res);
-    log('rr ${data["RESULT"]['DATAS'][0]}');
-    return data["RESULT"]['DATAS'][0];
+    return data["RESULT"] == null || data["RESULT"]["DATAS"] == null ? null : data["RESULT"]["DATAS"][0];
   }
 }
 
