@@ -105,7 +105,7 @@ class FacilityController extends GetxController {
       , '@p_IR_FG':'${irfqCd.value}', '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}', '@p_RP_USER':selectedEnginnerCd.value,
       '@p_RP_CONTENT':textContentController.text, '@p_START_DT':'${dayStartValue.value}', '@p_END_DT':'${dayEndValue.value}',
       '@p_RESULT_FG':'${resultFgCd.value}', '@p_NO_REASON':'${noReasonCd.value}',
-      '@p_RP_DEPT':'', '@p_USER':Utils.getStorage.read('userId')});
+      '@p_RP_DEPT': null, '@p_USER':Utils.getStorage.read('userId')});
     Get.log('이거 ${a['DATAS']}');
   //  var b = a['DATAS'][0].toString().replaceFirst('{: ', '').replaceFirst('}', '');
 
