@@ -259,7 +259,6 @@ class ScrapLabelController extends GetxController {
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
-
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;
@@ -269,7 +268,7 @@ class ScrapLabelController extends GetxController {
 
   /// 재발행
   Future<void> reButton(BuildContext context) async {
-    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": realLabelData.isNotEmpty ? '${realLabelData[0]['SCRAP_NO']}' : scrapNo.value}, context);
+    await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": scrapNo.value}, context);
   }
 
   // 스크랩 라벨발행
@@ -287,7 +286,7 @@ class ScrapLabelController extends GetxController {
         scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
-      Get.log('트루 ::: ${isEndLabel.value}');
+  //    Get.log('트루 ::: ${isEndLabel.value}');
     }catch(e) {
       Utils.gErrorMessage('네트워크 오류입니다. (1)');
       isFirstDuplication.value = false;

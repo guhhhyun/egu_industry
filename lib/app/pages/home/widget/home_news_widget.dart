@@ -232,6 +232,7 @@ class HomeNewsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8,),
+            controller.noticeList.length > 1 ?
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -247,8 +248,9 @@ class HomeNewsWidget extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ) : Container(),
             const SizedBox(height: 8,),
+            controller.noticeList.length > 2 ?
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -263,7 +265,7 @@ class HomeNewsWidget extends StatelessWidget {
                  ),
                ),
               ],
-            ),
+            ) : Container()
             /// ---------------------------------------------------
           ],
         ) : Container()
