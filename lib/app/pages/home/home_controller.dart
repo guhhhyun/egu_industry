@@ -35,7 +35,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     alarmNList.clear();
     try{
       isLoading.value = true;
-      var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_CHK_YN": 'N'/*,"@p_TYPE_MSG":''*/}).then((value) =>
+      var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_CHK_YN": ''/*,"@p_TYPE_MSG":''*/}).then((value) =>
       {
         alarmNList.value = value['DATAS'],
 

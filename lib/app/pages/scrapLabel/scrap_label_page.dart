@@ -1133,7 +1133,6 @@ class ScrapLabelPage extends StatelessWidget {
                     if (controller.isClearDuplication.value == false){
                       controller.isClearDuplication.value = true;
                       Get.offAllNamed(Routes.SCRAP_LABEL);
-
                     }
                   },
                   child: Container(
