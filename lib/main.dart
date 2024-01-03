@@ -27,6 +27,8 @@ import 'app/common/logger_utils.dart';
 import 'app/net/http_util.dart';
 import 'app/routes/app_route.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -256,54 +258,58 @@ class MyTaskHandler extends TaskHandler {
   Map? PN_DATA = null;
 
   Future<void> doPn() async {
-
+  //  final SharedPreferences pref = await SharedPreferences.getInstance();
     if(isWorkPn == true) return;
     isWorkPn = true;
     try {
       String? RCV_USER = Utils.getStorage.read('userId');
       if(RCV_USER == null || RCV_USER!.isEmpty || (PN_DATA != null && PN_DATA!["RCV_USER"] != RCV_USER)){
         PN_DATA = null;
-        return;
+        throw Exception("User Dismiss");
       }
       if(PN_DATA == null)
         PN_DATA = {"ACT_DTM" : null, "RCV_USER" : RCV_USER};
       Map? nData = await RCV_DATA_PERIOD("PUSH_NOTIFY", PN_DATA);
-      if(nData != null && nData.containsKey("TYPE") && nData["TYPE"] == "ERROR") {
-        const Duration(milliseconds: 1000);
+      if(nData!.isNotEmpty) {
+        if(nData.containsKey("TYPE") && nData["TYPE"] == "ERROR")
+          const Duration(milliseconds: 1000);
+        await workPn(nData);
+        log(nData.toString());
       }
-      await workPn(nData);
-      PN_DATA = { "ACT_DTM" : nData!["ACT_DTM"], "ID" : nData!["ID"], "RCV_USER" : RCV_USER, };
+      PN_DATA = {
+        "ACT_DTM": nData!["ACT_DTM"],
+        "ID": nData!["ID"],
+        "RCV_USER": RCV_USER,
+      };
+
 
     }catch(ex){
-      sleep(const Duration(milliseconds: 1*1000));
+      log(time:DateTime.now(), '['+DateTime.now().toString()+']LocalNotification Exception : ' + ex.toString());
+      log(time:DateTime.now(), '['+DateTime.now().toString()+']LocalNotification Exception : ' + ex.toString());
+      sleep(const Duration(milliseconds: 20*1000));
     }finally {
       isWorkPn = false;
     }
   }
   Future<Map?> workPn(dynamic value) async {
     Map? map = null;
-    try {
-      map = value as Map;
-      Object ID = map.containsKey("ID") ? map["ID"] : "";
-      String TYPE = map.containsKey("TYPE") ? (map["TYPE"]??"") : "";
-      String SUBJECT = map.containsKey("SUBJECT") ? (map["SUBJECT"]??"") : "";
-      String CONTENTS = map.containsKey("CONTENTS") ? (map["CONTENTS"]??"") : "";
-      Object ACT_DTM = (map.containsKey("ACT_DTM") ? (map["ACT_DTM"]??"") : "")??"";
-      Object RCV_USER = (map.containsKey("RCV_USER") ? (map["RCV_USER"]??"") : "")??"";
-      Object OPTIONS = (map.containsKey("OPTIONS") ? (map["OPTIONS"]??"") : "")??"";
-      switch(TYPE){
-        case "PUSH_NOTIFY": {
+    map = value as Map;
+    Object ID = map.containsKey("ID") ? map["ID"] : "";
+    String TYPE = map.containsKey("TYPE") ? (map["TYPE"]??"") : "";
+    String SUBJECT = map.containsKey("SUBJECT") ? (map["SUBJECT"]??"") : "";
+    String CONTENTS = map.containsKey("CONTENTS") ? (map["CONTENTS"]??"") : "";
+    Object ACT_DTM = (map.containsKey("ACT_DTM") ? (map["ACT_DTM"]??"") : "")??"";
+    Object RCV_USER = (map.containsKey("RCV_USER") ? (map["RCV_USER"]??"") : "")??"";
+    Object OPTIONS = (map.containsKey("OPTIONS") ? (map["OPTIONS"]??"") : "")??"";
+    switch(TYPE){
+      case "PUSH_NOTIFY": {
+        if(SUBJECT.isNotEmpty || CONTENTS.isNotEmpty)
           LocalNotification.notify(SUBJECT, CONTENTS);
-        } break;
-      }
-      await RCV_DATA_PERIOD("PUSH_NOTIFY", { 'RCV_USER':RCV_USER, 'EXC_YN':'Y', 'ID':ID });
-    } catch(ex){
-      Get.log('workMgrProcedure Exception : ' + ex.toString());
-      sleep(const Duration(milliseconds: 30*1000));
-    } finally {
-      sleep(const Duration(milliseconds: 1000));
-      return map;
+      } break;
     }
+    await RCV_DATA_PERIOD("PUSH_NOTIFY", { 'RCV_USER':RCV_USER, 'EXC_YN':'Y', 'ID':ID });
+    sleep(const Duration(milliseconds: 1000));
+    return map;
   }
 
   Future<String?> EXEC2(
