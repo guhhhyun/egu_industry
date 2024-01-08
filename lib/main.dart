@@ -4,8 +4,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:egu_industry/app/common/global_service.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:egu_industry/app/common/utils.dart';
@@ -256,13 +258,12 @@ class MyTaskHandler extends TaskHandler {
 
   bool isWorkPn = false;
   Map? PN_DATA = null;
-
   Future<void> doPn() async {
-  //  final SharedPreferences pref = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if(isWorkPn == true) return;
     isWorkPn = true;
     try {
-      String? RCV_USER = Utils.getStorage.read('userId');
+      String? RCV_USER = prefs.getString('userId');
       if(RCV_USER == null || RCV_USER!.isEmpty || (PN_DATA != null && PN_DATA!["RCV_USER"] != RCV_USER)){
         PN_DATA = null;
         throw Exception("User Dismiss");
@@ -305,6 +306,15 @@ class MyTaskHandler extends TaskHandler {
       case "PUSH_NOTIFY": {
         if(SUBJECT.isNotEmpty || CONTENTS.isNotEmpty)
           LocalNotification.notify(SUBJECT, CONTENTS);
+        Platform.isIOS ?  Fluttertoast.showToast(
+            msg: "${SUBJECT}",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.TOP,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0
+        ) : null;
       } break;
     }
     await RCV_DATA_PERIOD("PUSH_NOTIFY", { 'RCV_USER':RCV_USER, 'EXC_YN':'Y', 'ID':ID });

@@ -540,18 +540,18 @@ class FacilityFirstStep1Page extends StatelessWidget {
             ),
             value: controller.checkSelectedIrFqMap['TEXT'],
             //  flag == 3 ? controller.selectedNoReason.value :
-            items: controller.irfgList.map((value) {
+            items: controller.step1IrfgList.map((value) {
               return DropdownMenuItem<String>(
                 value: value['TEXT'],
                 child: Text(
                   value['TEXT'],
                   style: AppTheme.a16400
-                      .copyWith(color:  value == '선택해주세요' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                      .copyWith(color:  AppTheme.a6c6c6c),
                 ),
               );
             }).toList(),
             onChanged: (value) {
-              controller.irfgList.map((e) {
+              controller.step1IrfgList.map((e) {
                 if(e['TEXT'] == value) {
                   controller.checkSelectedIrFqMap['TEXT'] = e['TEXT'];
                   controller.checkSelectedIrFqMap['CODE'] = e['CODE'];
@@ -559,7 +559,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
                 //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
               }).toList();
-              controller.selectedCheckIrFg.value = value!;
+            //  controller.selectedCheckIrFg.value = value!;
               controller.datasList.clear();
               HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                 , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.checkSelectedIrFqMap['CODE']}).then((value) =>
@@ -790,19 +790,33 @@ class FacilityFirstStep1Page extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-
-                Text(controller.datasList[index]['IR_TITLE'].toString(),
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a6c6c6c)),
-                const SizedBox(width: 4,),
-                Text('|', style: AppTheme.a16400
-                    .copyWith(color: AppTheme.a6c6c6c)),
-                const SizedBox(width: 4,),
-                Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
-                controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30050' ? '안전환경팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
-                    controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
-                    style: AppTheme.a16400
-                        .copyWith(color: AppTheme.a6c6c6c)),
+                Container(
+                  width: MediaQuery.of(context).size.width - 100,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: Text(controller.datasList[index]['IR_TITLE'].toString(),
+                                style: AppTheme.a16400
+                                    .copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis),
+                        ),
+                        const SizedBox(width: 4,),
+                        Text('|', style: AppTheme.a16400
+                            .copyWith(color: AppTheme.a6c6c6c)),
+                        const SizedBox(width: 4,),
+                        Container(
+                          child: Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
+                          controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30050' ? '안전환경팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
+                              controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
+                              style: AppTheme.a16400
+                                  .copyWith(color: AppTheme.a6c6c6c), overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ) : Container(),
             const SizedBox(height: 12,),
@@ -837,8 +851,8 @@ class FacilityFirstStep1Page extends StatelessWidget {
                   children: [
                     const Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
                     const SizedBox(width: 4,),
-                    Text(
-                        '${_dateDifference(index)}h 경과',
+                    Text(controller.datasList[index]['RE_CRT_DATE'] == null ?
+                        '${_dateDifference(index)}h 경과' : '${_dateDifference2(index)}h 경과',
                         style: AppTheme.a14700
                             .copyWith(color: AppTheme.a969696)),
                   ],
@@ -910,6 +924,16 @@ class FacilityFirstStep1Page extends StatelessWidget {
     var start = controller.datasList[index]['IR_DATE'].toString().indexOf('.');
     var end = controller.datasList[index]['IR_DATE'].toString().length;
     var time = controller.datasList[index]['IR_DATE'].toString().replaceRange(start, end, '');
+    var realDate = DateTime.parse(time);
+    var times = DateTime.now().difference(realDate);
+    Get.log('realDate $realDate');
+    Get.log('times ${times.inHours.toString()}');
+    Get.log('now ${DateTime.now()}');
+    return times.inHours.toString();
+  }
+
+  String _dateDifference2(int index) {
+    var time = controller.datasList[index]['RE_CRT_DATE'].toString();
     var realDate = DateTime.parse(time);
     var times = DateTime.now().difference(realDate);
     Get.log('realDate $realDate');

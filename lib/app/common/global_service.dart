@@ -4,6 +4,7 @@ import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../net/home_api.dart';
@@ -23,12 +24,14 @@ class GlobalService extends GetxService {
 
    /// 로그인 정보 불러오기
    void loadLoginInfo() async {
+     final SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       if (Utils.getStorage.hasData('userId') &&
            Utils.getStorage.hasData('userPw')) {
           isLogin.value = true;
           loginId.value = Utils.getStorage.read('userId');
           loginPassword.value = Utils.getStorage.read('userPw');
+          await prefs.setString('userId', Utils.getStorage.read('userId'));
          String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
 
          Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');

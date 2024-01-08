@@ -85,7 +85,7 @@ class ProcessCheckPage extends StatelessWidget {
                         int lastIndex = datePicked.toString().length;
                         controller.dayStartValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                         controller.noWorkButton();
-                  /*      if(controller.choiceButtonVal.value != 0) {
+                        /*if(controller.choiceButtonVal.value != 0) {
                           controller.datasList.clear();
                           HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.dayStartValue.value}','@p_IR_DATE_TO':'${controller.dayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                             , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':controller.irFgCd.value}).then((value) =>

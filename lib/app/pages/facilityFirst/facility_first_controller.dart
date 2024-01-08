@@ -35,6 +35,7 @@ class FacilityFirstController extends GetxController {
   RxString insCd = ''.obs;
   RxString insReadCd = ''.obs;
   RxList<String> urgencyList = ['전체','보통', '긴급'].obs;
+  RxList<String> step2UrgencyList = ['보통', '긴급'].obs;
   RxString selectedUrgency = '보통'.obs;
   RxString selectedReadUrgency = '전체'.obs;
   RxString urgencyCd = ''.obs;
@@ -45,12 +46,14 @@ class FacilityFirstController extends GetxController {
   RxInt selectedMachIndex = 0.obs;
   RxList<String> machCdList = [''].obs;
   RxString selectedMachCd = ''.obs;
+  RxList<dynamic> step1IrfgList = [].obs;
   RxList<dynamic> irfgList = [].obs;
   RxMap<String, String> selectedIrFqMap = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
   RxMap<String, String> checkSelectedIrFqMap = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
   RxString selectedIrFq = '선택해주세요'.obs;
   RxString selectedReadIrFq = '선택해주세요'.obs;
   RxList<dynamic> engineTeamList = [].obs;
+  RxList<dynamic> step2EngineTeamList = [].obs;
   RxMap<String, String> selectedEngineTeamMap = {'CODE':'', 'TEXT': '전기팀'}.obs;
 
   RxMap<String, String> selectedReadEngineTeamMap = {'CODE':'', 'TEXT': ''}.obs;
@@ -118,7 +121,6 @@ class FacilityFirstController extends GetxController {
   RxString modifySelectedResultFg = '전체'.obs;
   RxString selectedCheckResultFg = '전체'.obs;
   RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
-  RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxBool isModifyErrorDateChoice = false.obs;
   RxList<dynamic> modifyEngineTeamList = [].obs;
@@ -236,8 +238,10 @@ class FacilityFirstController extends GetxController {
     machList.clear();
     modifyMachList.clear();
     irfgList.clear();
+    step1IrfgList.clear();
     modifyIrfgList.clear();
     engineTeamList.clear();
+    step2EngineTeamList.clear();
     modifyEngineTeamList.clear();
     machCdList.clear();
     selectedMachMap.clear();
@@ -263,19 +267,25 @@ class FacilityFirstController extends GetxController {
       /// 점검부서
       var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
       {
-        modifyEngineTeamList.value = value['DATAS'],
         value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
         engineTeamList.value = value['DATAS'],
-        engineTeamList.map((e) {
-          if(e['TEXT'] == selectedEngineTeamMap['TEXT']) {
-            selectedEngineTeamMap['CODE'] = e['CODE'];
-            selectedEngineTeamMap['TEXT'] = e['TEXT'];
-          }
-        }).toList(),
+
+      });
+      var engineTeam2 = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
+      {
+        step2EngineTeamList.value = value['DATAS'],
+        modifyEngineTeamList.value = value['DATAS'],
+
       });
 
       /// 정비유형
       var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
+      {
+        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        step1IrfgList.value = value['DATAS'],
+        Get.log('aaaaa ${step1IrfgList.value}')
+      });
+      var engineCategory2 = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
         irfgList.value = value['DATAS'],
         modifyIrfgList.value = value['DATAS'],

@@ -47,6 +47,7 @@ class FacilityController extends GetxController {
   RxInt selectedEnginnerIndex = 0.obs;
   RxList<String> irfgList = [''].obs;
   RxList<dynamic> irfgList2 = [].obs;
+  RxList<dynamic> step1IrfgList = [].obs;
   RxMap<String, String> selectedIrFqMap2 = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
   RxString selectedIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
@@ -54,7 +55,6 @@ class FacilityController extends GetxController {
   RxString selectedResultFg = '전체'.obs;
   RxString selectedCheckResultFg = '전체'.obs;
   RxList<String> resultIrFqList = ['돌발정비', '예방정비'].obs; /// ////////////////////////////////////// //////////////////////////////////////
-  RxString selectedCheckIrFg = '돌발정비'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxString irFgCd = '010'.obs; /// ////////////////////////////////////// //////////////////////////////////////
   RxMap<String, String> selectedIrFqMap1 = {'CODE':'', 'TEXT': ''}.obs;
   RxString resultFgCd = ''.obs;
@@ -260,6 +260,7 @@ class FacilityController extends GetxController {
   Future<void> irfgConvert() async{
     irfgList.clear();
     irfgList2.clear();
+    step1IrfgList.clear();
     noReasonList.clear();
     engineer2List.clear();
     machList.clear();
@@ -304,6 +305,8 @@ class FacilityController extends GetxController {
       var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
         irfgList2.value = value['DATAS'],
+        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        step1IrfgList.value = value['DATAS']
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');

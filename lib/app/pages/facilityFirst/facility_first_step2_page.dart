@@ -368,7 +368,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                     dropdownColor: AppTheme.light_ui_01,
                     value: controller.selectedUrgency.value,
                     //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.urgencyList.map((value) {
+                    items: controller.step2UrgencyList.map((value) {
                       return DropdownMenuItem(
                         value: value,
                         child: Text(
@@ -576,7 +576,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                     dropdownColor: AppTheme.light_ui_01,
                     value: controller.selectedEngineTeamMap['TEXT'],
                     //  flag == 3 ? controller.selectedNoReason.value :
-                    items: controller.engineTeamList.map((value) {
+                    items: controller.step2EngineTeamList.map((value) {
                       return DropdownMenuItem<String>(
                         value: value['TEXT'],
                         child: Text(
@@ -587,7 +587,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstStep2Page> {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      controller.engineTeamList.map((e) {
+                      controller.step2EngineTeamList.map((e) {
                         if(e['TEXT'] == value) {
                           controller.selectedEngineTeamMap['TEXT'] = e['TEXT'];
                           controller.selectedEngineTeamMap['CODE'] = e['CODE'];
