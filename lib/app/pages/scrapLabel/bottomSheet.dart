@@ -79,7 +79,7 @@ class BottomSheetModal extends StatelessWidget {
                       int lastIndex = datePicked.toString().length;
                       controller.startValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
                       controller.popUpDataList.clear();
-                      HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
+                      HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
                         {
                           Get.log('value[DATAS]: ${value['DATAS']}'),
                           if(value['DATAS'] != null) {
@@ -150,7 +150,7 @@ class BottomSheetModal extends StatelessWidget {
                       controller.endValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
 
                       controller.popUpDataList.clear();
-                        HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
+                        HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
                         {
                           Get.log('value[DATAS]: ${value['DATAS']}'),
                           if(value['DATAS'] != null) {
