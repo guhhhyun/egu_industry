@@ -78,8 +78,8 @@ class BottomSheetModal extends StatelessWidget {
                       int startIndex = datePicked.toString().indexOf(' ');
                       int lastIndex = datePicked.toString().length;
                       controller.startValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
-                        controller.popUpDataList.clear();
-                      HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value}','@p_DATE_TO':'${controller.endValue.value}'}).then((value) =>
+                      controller.popUpDataList.clear();
+                      HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
                         {
                           Get.log('value[DATAS]: ${value['DATAS']}'),
                           if(value['DATAS'] != null) {
@@ -89,8 +89,6 @@ class BottomSheetModal extends StatelessWidget {
                           },
                           Get.log('datasList: ${controller.popUpDataList}'),
                         });
-
-
                     }else {
                       controller.startValue.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
                     }
@@ -152,7 +150,7 @@ class BottomSheetModal extends StatelessWidget {
                       controller.endValue.value = datePicked.toString().replaceRange(startIndex, lastIndex, '');
 
                       controller.popUpDataList.clear();
-                        HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value}','@p_DATE_TO':'${controller.endValue.value}'}).then((value) =>
+                        HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '','@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
                         {
                           Get.log('value[DATAS]: ${value['DATAS']}'),
                           if(value['DATAS'] != null) {
@@ -273,8 +271,22 @@ class BottomSheetModal extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('차량번호', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
-                          Text('${controller.popUpDataList[index]['CAR_NO']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('차량번호:', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                              SizedBox(width: 4,),
+                              Text('${controller.popUpDataList[index]['CAR_NO']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('품명: ', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                              SizedBox(width: 4,),
+                              Text('${controller.popUpDataList[index]['ITEM_NM']}', style: AppTheme.a14700.copyWith(color: AppTheme.black)),
+                            ],
+                          ),
                         ],
                       ),
                       const SizedBox(height: 4,),

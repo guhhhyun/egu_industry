@@ -694,7 +694,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
         padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: controller.isSelect[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2) ,
+            border: controller.isSelect[index] ? Border.all(color: AppTheme.black, width: 3) : Border.all(color: AppTheme.ae2e2e2),
             color: AppTheme.white,
             boxShadow: [
               BoxShadow(
@@ -742,14 +742,14 @@ class FacilityFirstStep1Page extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color:  AppTheme.af4f4f4
+                          color:  controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? Color(0xffF0FFFF) : Color(0xffFFFFE0)
                       ),
 
-                      child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
+                      child: Text(controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
                           : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
                       controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
                           style: AppTheme.a12500
-                              .copyWith(color: AppTheme.a969696)),
+                              .copyWith(color: controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? Color(0xff1E90FF) : Colors.orangeAccent)),
                     ),
 
                     controller.datasList[index]['IR_FG'].toString() == '' ? Container() :
@@ -791,7 +791,7 @@ class FacilityFirstStep1Page extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width - 100,
+                  width: MediaQuery.of(context).size.width - 80,
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(

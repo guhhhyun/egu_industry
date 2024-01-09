@@ -77,7 +77,7 @@ class ScrapLabelController extends GetxController {
 
   Future<void> popUpData() async {
     try{
-      var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE2', '@p_WHERE1': '', '@p_DATE_FROM': '2023-08-22', '@p_DATE_TO': endValue.value }).then((value) => // pop
+      var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM': startValue.value.replaceAll('-', ''), '@p_DATE_TO': endValue.value.replaceAll('-', '') }).then((value) => // pop
       {
         if(value['DATAS'] != null) {
           for(var i = 0; i < value['DATAS'].length; i++){

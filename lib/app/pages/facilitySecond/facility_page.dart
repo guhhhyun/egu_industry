@@ -728,14 +728,14 @@ class FacilityPage extends StatelessWidget {
                         padding: EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color:  AppTheme.af4f4f4
+                            color:  controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? Color(0xffF0FFFF) : Color(0xffFFFFE0)
                         ),
 
                         child: Text( controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? '정비완료'
                             : controller.datasList[index]['RESULT_FG'].toString() == 'I' ? '정비 진행중' :
                         controller.datasList[index]['RESULT_FG'].toString() == 'N' ? '미조치' : '',
                             style: AppTheme.a12500
-                                .copyWith(color: AppTheme.a969696)),
+                                .copyWith(color: controller.datasList[index]['RESULT_FG'].toString() == 'Y' ? Color(0xff1E90FF) :  Colors.orangeAccent)),
                       ),
                       controller.datasList[index]['IR_FG'].toString() == '' ? Container() :
                       Container(
@@ -774,33 +774,34 @@ class FacilityPage extends StatelessWidget {
 
               /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
               controller.datasList.isNotEmpty ?
-              Container(
-                width: MediaQuery.of(context).size.width - 100,
-                child: Row(
+             Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SingleChildScrollView(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(controller.datasList[index]['IR_TITLE'].toString(),
-                              style: AppTheme.a16400
-                                  .copyWith(color: AppTheme.a6c6c6c)),
-                          SizedBox(width: 4,),
-                          Text('|', style: AppTheme.a16400
-                              .copyWith(color: AppTheme.a6c6c6c)),
-                          SizedBox(width: 4,),
-                          Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
-                          controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30050' ? '안전환경팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
-                          controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
-                              style: AppTheme.a16400
-                                  .copyWith(color: AppTheme.a6c6c6c)),
-                        ],
+                    Container(
+                      width: MediaQuery.of(context).size.width - 80,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(controller.datasList[index]['IR_TITLE'].toString(),
+                                style: AppTheme.a16400
+                                    .copyWith(color: AppTheme.a6c6c6c)),
+                            SizedBox(width: 4,),
+                            Text('|', style: AppTheme.a16400
+                                .copyWith(color: AppTheme.a6c6c6c)),
+                            SizedBox(width: 4,),
+                            Text(controller.datasList[index]['INS_DEPT'] == '20040' ? '전산팀' : controller.datasList[index]['INS_DEPT'] == '30020' ? '생산팀' : controller.datasList[index]['INS_DEPT'] == '30030' ? '공무팀' :
+                            controller.datasList[index]['INS_DEPT'] == '30040' ? '전기팀' : controller.datasList[index]['INS_DEPT'] == '30050' ? '안전환경팀' : controller.datasList[index]['INS_DEPT'] == '30060' ? '품질팀' :
+                            controller.datasList[index]['INS_DEPT'] == '99990' ? '기타' : '',
+                                style: AppTheme.a16400
+                                    .copyWith(color: AppTheme.a6c6c6c)),
+                          ],
+                        ),
                       ),
                     ),
                   ],
-                ),
-              ) : Container(),
+                ) : Container(),
 
               const SizedBox(height: 12,),
               controller.datasList.isNotEmpty ? Row(
