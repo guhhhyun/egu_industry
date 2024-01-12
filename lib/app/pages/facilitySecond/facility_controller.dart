@@ -271,7 +271,6 @@ class FacilityController extends GetxController {
     irfgList.add('선택해주세요');
     noReasonList.add('선택해주세요');
     selectedReadEngineTeamMap.addAll({'CODE':'', 'TEXT': '전체'});
- //   selectedIrFqMap2.addAll({'CODE':'', 'TEXT': '선택해주세요'});
 
     try{
       /// 설비

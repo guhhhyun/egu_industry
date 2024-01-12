@@ -835,8 +835,8 @@ class FacilityPage extends StatelessWidget {
                     children: [
                       const Icon(Icons.watch_later_outlined, color: AppTheme.gray_c_gray_200, size: 20,),
                       const SizedBox(width: 4,),
-                      Text(controller.datasList[index]['RE_CRT_DATE'] == null ?
-                      '${_dateDifference(index)}h 경과' : '${_dateDifference2(index)}h 경과',
+                      Text(controller.datasList[index]['RESULT_FG'] == 'Y' ?
+                      '${controller.datasList[index]['AFTER_TIME'].toString()}h 경과' : '${_dateDifference(index)}h 경과',
                           style: AppTheme.a14700
                               .copyWith(color: AppTheme.a969696)),
                     ],
