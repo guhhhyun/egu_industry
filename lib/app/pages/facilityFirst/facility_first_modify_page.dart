@@ -337,7 +337,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                     }),
               ),
             ),
-            SizedBox(width: 16,),
+            const SizedBox(width: 16,),
             Expanded(
               child: Container(
                 height: 50,
@@ -346,7 +346,7 @@ class _FacilityFirstStep2PageState extends State<FacilityFirstModifyPage> {
                       bottom: BorderSide(color: AppTheme.gray_gray_200),
                     )),
                 padding: const EdgeInsets.only(right: 12),
-                child: DropdownButton<String>(
+                child: DropdownButton<String>(//
                     borderRadius: BorderRadius.circular(3),
                     isExpanded: true,
                     underline: Container(
