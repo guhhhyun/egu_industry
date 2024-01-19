@@ -46,7 +46,7 @@ class ProcessCheckController extends GetxController {
     ),
     PlutoColumn(
       title: '전일',
-      field: 'P_TIME',
+      field: 'P_EVE',
       type: PlutoColumnType.text(),
       width: 50,
       enableSorting: false,
@@ -61,7 +61,7 @@ class ProcessCheckController extends GetxController {
     ),
     PlutoColumn(
       title: '금일',
-      field: 'SHP_ID',
+      field: 'P_TODAY',
       type: PlutoColumnType.text(),
       width: 50,
       enableSorting: false,
@@ -332,12 +332,11 @@ class ProcessCheckController extends GetxController {
       textAlign: PlutoColumnTextAlign.center,
       backgroundColor: AppTheme.blue_blue_300,
     ),
-
     PlutoColumn(
       title: '시작시간',
       field: 'START_DT',
       type: PlutoColumnType.text(),
-      width: 100,
+      width: 140,
       enableSorting: false,
       enableEditingMode: false,
       enableContextMenu: false,
@@ -352,7 +351,7 @@ class ProcessCheckController extends GetxController {
       title: '종료시간',
       field: 'END_DT',
       type: PlutoColumnType.text(),
-      width: 100,
+      width: 140,
       enableSorting: false,
       enableEditingMode: false,
       enableContextMenu: false,
@@ -389,14 +388,14 @@ class ProcessCheckController extends GetxController {
 
     try {
       isLoading.value = true;
-      var a = await HomeApi.to.PROC('USP_MBR1600_R02', {'@p_WORK_TYPE':'Q'}).then((value) =>
+      var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':'Q1', '@p_DATE': '' }).then((value) =>
       {
         if(value['DATAS'] != null) {
           processList.value = value['DATAS'],
         },
 
       });
-      var lastDate = await HomeApi.to.PROC('USP_MBR1600_R02', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)))}'}).then((value) =>
+    /*  var lastDate = await HomeApi.to.PROC('USP_MBR1600_R02', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)))}'}).then((value) =>
       {
         if(value['DATAS'] != null) {
           lastList.value = value['DATAS'],
@@ -410,7 +409,8 @@ class ProcessCheckController extends GetxController {
       });
       Get.log('작업조회 200:::::::::::::: ${a}');
       Get.log('작업조회 200 전일:::::::::::::: ${lastDate}');
-      Get.log('작업조회 200 금일:::::::::::::: ${currentDate}');
+      Get.log('작업조회 200 금일:::::::::::::: ${currentDate}');*/
+      Get.log('작업조회 200:::::::::::::: ${a}');
     }catch (err) {
       Get.log('USP_MBR1600_R02 err = ${err.toString()} ', isError: true);
       Utils.gErrorMessage('작업조회 데이터 오류');
@@ -425,10 +425,10 @@ class ProcessCheckController extends GetxController {
     rowDatas = List<PlutoRow>.generate(processList.length, (index) =>
         PlutoRow(cells:
         Map.from((processList[index]).map((key, value) =>
-            MapEntry(key, PlutoCell(value:  key == 'P_TIME' ? lastList[index]['BE_CNT'] : key == 'SHP_ID' ? currentList[index]['BE_CNT']
-                :  key == 'DT' ? '${value.substring(8, 10)}일 ${value.substring(11, 16)}'
+            MapEntry(key, PlutoCell(value: key == 'STT_NM' ? value ?? '' : key == 'DUKE' ? value ?? '' :/*key == 'P_TIME' ? lastList[index]['BE_CNT']
+              *//*  :  key == 'DT' ? '${value.substring(8, 10)}일 ${value.substring(11, 16)}'*//*
 
-                : value)),
+                :*/ value)),
         )))
     );
     gridStateMgr?.removeAllRows();
@@ -440,8 +440,8 @@ class ProcessCheckController extends GetxController {
     rowDatas2 = List<PlutoRow>.generate(noProcessList.length, (index) =>
         PlutoRow(cells:
         Map.from((noProcessList[index]).map((key, value) =>
-            MapEntry(key, PlutoCell(value:  key == 'START_DT' ? value != null && value != '' ? value.toString().replaceRange(value.toString().lastIndexOf(':'), value.toString().length, '').replaceRange(0, value.toString().lastIndexOf('T') + 1, '') : value
-                : key == 'END_DT' ?  value != null && value != '' ? value.toString().replaceRange(value.toString().lastIndexOf(':'), value.toString().length, '').replaceRange(0, value.toString().lastIndexOf('T') + 1, '') : value
+            MapEntry(key, PlutoCell(value:  key == 'START_DT' ? value != null && value != '' ? value.toString().replaceRange(value.toString().lastIndexOf(':'), value.toString().length, '').replaceRange(0, value.toString().lastIndexOf('T') + 1, '') : ''
+                : key == 'END_DT' ?  value != null && value != '' ? value.toString().replaceRange(value.toString().lastIndexOf(':'), value.toString().length, '').replaceRange(0, value.toString().lastIndexOf('T') + 1, '') : ''
                 :  key == 'NWRK_DT' ? value != null && value != '' ?  value.toString().replaceRange(value.toString().lastIndexOf('T'), value.toString().length, '')
                 : value : value)),
         )))
@@ -456,27 +456,16 @@ class ProcessCheckController extends GetxController {
   Future<void> check600Button() async {
     try {
       isLoading.value = true;
-      var a = await HomeApi.to.PROC('USP_MBR1600_R01', {'@p_WORK_TYPE':'Q'}).then((value) =>
+      var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': '' }).then((value) =>
       {
         if(value['DATAS'] != null) {
           processList.value = value['DATAS'],
         }
       });
-      var lastDate = await HomeApi.to.PROC('USP_MBR1600_R01', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 1)))}'}).then((value) =>
-      {
-        if(value['DATAS'] != null) {
-          lastList.value = value['DATAS'],
-        }
-      });
-      var currentDate = await HomeApi.to.PROC('USP_MBR1600_R01', {'@p_WORK_TYPE':'Q_CNT', '@p_INP_DT':'${DateFormat('yyyy-MM-dd').format(DateTime.now())}'}).then((value) =>
-      {
-        if(value['DATAS'] != null) {
-          currentList.value = value['DATAS'],
-        }
-      });
+
       Get.log('작업조회 600 :::::::::::::: ${a}');
     }catch (err) {
-      Get.log('USP_MBR1600_R01 err = ${err.toString()} ', isError: true);
+      Get.log('USP_PRR7100_R01 err = ${err.toString()} ', isError: true);
       Utils.gErrorMessage('작업조회 데이터 오류');
     }finally {
       isLoading.value = false;
@@ -488,7 +477,8 @@ class ProcessCheckController extends GetxController {
   Future<void> noWorkButton() async {
     try {
       isLoading.value = true;
-      var a = await HomeApi.to.PROC('USP_MBR1600_R03', {'@p_WORK_TYPE':'Q', '@p_CHECK':monthCheckBox.value ? 'Y' : 'N', '@p_DATE': dayStartValue.value}).then((value) =>
+      // 일별 n = q2
+      var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':monthCheckBox.value == false ? 'Q2' : 'Q3', '@p_DATE': dayStartValue.value}).then((value) =>
       {
         if(value['DATAS'] != null) {
           noProcessList.value = value['DATAS'],
@@ -497,7 +487,7 @@ class ProcessCheckController extends GetxController {
 
       Get.log('비가동 내역 :::::::::::::: ${a}');
     }catch (err) {
-      Get.log('USP_MBR1600_R01 err = ${err.toString()} ', isError: true);
+      Get.log('USP_PRR7100_R01 err = ${err.toString()} ', isError: true);
       Utils.gErrorMessage('네트워크 오류');
     }finally {
       isLoading.value = false;

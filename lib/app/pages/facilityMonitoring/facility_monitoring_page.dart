@@ -210,7 +210,7 @@ class FacilityMonitoringPage extends StatelessWidget {
           textColor = AppTheme.a18b858;
         } else if (rendererContext.cell.value == '비가동') {
           textColor = AppTheme.affd15b;
-        } else if (rendererContext.cell.value == '설비이상') {
+        } else if (rendererContext.cell.value == '장애') {
           textColor = AppTheme.af34f39;
         } else {
           textColor = AppTheme.white;
@@ -443,7 +443,7 @@ class FacilityMonitoringPage extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: controller.monitoringList[index]['STATUS_NM'] == '가동'
                           ? AppTheme.a18b858 : controller.monitoringList[index]['STATUS_NM'] == '비가동'
-                          ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '설비이상'
+                          ? AppTheme.affd15b : controller.monitoringList[index]['STATUS_NM'] == '장애'
                           ? AppTheme.af34f39 : AppTheme.a18b858,
                       border: Border(
                           top: BorderSide(color: AppTheme.ae2e2e2),

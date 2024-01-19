@@ -55,6 +55,7 @@ class ProcessCheckPage extends StatelessWidget {
                   onTap: () {
                     controller.monthCheckBox.value == false ?
                       controller.monthCheckBox.value = true : controller.monthCheckBox.value = false;
+                    controller.noWorkButton();
                   },
                   child: controller.monthCheckBox.value == false ? Icon(Icons.check_box_outline_blank, size: 20,) :
                   Icon(Icons.check_box, size: 20,),
@@ -222,7 +223,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                   PlutoColumn(
                     title: '전일',
-                    field: 'P_TIME',
+                    field: 'P_EVE',
                     type: PlutoColumnType.text(),
                     width: 50,
                     enableSorting: false,
@@ -237,7 +238,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                   PlutoColumn(
                     title: '금일',
-                    field: 'SHP_ID',
+                    field: 'P_TODAY',
                     type: PlutoColumnType.text(),
                     width: 50,
                     enableSorting: false,
@@ -491,7 +492,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                   PlutoColumn(
                     title: '전일',
-                    field: 'P_TIME',
+                    field: 'P_EVE',
                     type: PlutoColumnType.text(),
                     width: 50,
                     enableSorting: false,
@@ -506,7 +507,7 @@ class ProcessCheckPage extends StatelessWidget {
                   ),
                   PlutoColumn(
                     title: '금일',
-                    field: 'SHP_ID',
+                    field: 'P_TODAY',
                     type: PlutoColumnType.text(),
                     width: 50,
                     enableSorting: false,

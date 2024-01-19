@@ -50,7 +50,7 @@ class CommonAppbarWidget extends StatelessWidget {
         ),
         onPressed: () {
           isFirstPage ?
-          {Get.offAll(HomePage()), controller.reqNoticeList(), controller.reqListAlarm() }
+          {Get.offAll(HomePage()), controller.reqNoticeList(), controller.reqListAlarm(),  }
               : facilityFlag == true ? _onBackKey(context, 1,) :  _onBackKey(context, 2,);
         },
         child: SvgPicture.asset('assets/app/arrow2Left.svg', color: AppTheme.black,),
@@ -71,6 +71,8 @@ class CommonAppbarWidget extends StatelessWidget {
       //bottom: bottom,
     );
   }
+
+
 
   Future<bool> _onBackKey(BuildContext context, int pageFlag) async{
      await showDialog(

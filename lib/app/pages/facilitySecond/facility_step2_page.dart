@@ -365,7 +365,8 @@ class FacilityStep2Page extends StatelessWidget {
               Text('경과시간',
                   style: AppTheme.a16400
                       .copyWith(color: AppTheme.a959595)),
-              Text('${_dateDifference()}h',
+              Text(controller.selectedContainer[0]['RESULT_FG'] == 'Y' ?
+              '${controller.selectedContainer[0]['AFTER_TIME'].toString()}h' :'${_dateDifference()}h',
                   style: AppTheme.a16400
                       .copyWith(color: AppTheme.black)),
             ],

@@ -2,6 +2,7 @@
 
 import 'package:egu_industry/app/common/global_service.dart';
 import 'package:egu_industry/app/common/utils.dart';
+import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/home/widget/home_news_widget.dart';
 import 'package:egu_industry/app/pages/home/widget/main_icon_widget.dart';
 import 'package:egu_industry/app/pages/home/widget/main_read_more_widget.dart';
@@ -26,8 +27,16 @@ class _HomePageState extends State<HomePage> {
   HomeController controller = Get.find();
   GlobalService gs = Get.find();
 
+  // 퇴사자 여부 판단
+  void userLeft() async {
+    String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
+    Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
+    status == 'SUCCESS' ? null : gs.logout();
+  }
+
   @override
   Widget build(BuildContext context) {
+    userLeft();
     return  Obx(() => Material(
         color: AppTheme.white,
         child: gs.loginId.value != '' ? CustomScrollView(

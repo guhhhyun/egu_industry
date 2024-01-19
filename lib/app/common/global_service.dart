@@ -33,8 +33,8 @@ class GlobalService extends GetxService {
           loginPassword.value = Utils.getStorage.read('userPw');
           await prefs.setString('userId', Utils.getStorage.read('userId'));
          String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
-
          Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
+         status == 'SUCCESS' ? null : logout();
 
 
        }else {

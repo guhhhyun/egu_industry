@@ -90,7 +90,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   void onClose() {}
 
   @override
-  void onReady() {
+  void onReady() async{
     reqListAlarm();
   }
 }
