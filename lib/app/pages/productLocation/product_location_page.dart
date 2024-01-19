@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -24,24 +25,30 @@ class ProductLocationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: AppTheme.white,
-        body: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
-              _topAreaTest(context),
-            //  _topArea(),
-              _locationItem(context),
-              _listArea()
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        body: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: AppTheme.white,
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '제품 위치이동', isLogo: false, isFirstPage: true ),
+                _topAreaTest(context),
+              //  _topArea(),
+                _locationItem(context),
+                _listArea()
 
 
-            ],
+              ],
+            ),
           ),
+          bottomNavigationBar: _bottomButton(context), //  등록
         ),
-        bottomNavigationBar: _bottomButton(context), //  등록
       ),
     );
   }

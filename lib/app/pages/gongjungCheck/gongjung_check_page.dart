@@ -4,6 +4,7 @@ import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_controller.dart';
 import 'package:egu_industry/app/pages/gongjungCheck/gongjung_check_detail_page.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/pages/inventoryCheck/inventory_check_controller.dart';
 
 import 'package:flutter/material.dart';
@@ -24,25 +25,31 @@ class GongjungCheckPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                CommonAppbarWidget(title: '공정조회', isLogo: false, isFirstPage: true,),
-                _bodyArea(context),
-                Obx(() => _list(context),),
-                SliverToBoxAdapter(child: SizedBox(height: 100,))
-                //   _listArea()
-              ],
-            ),
-            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  CommonAppbarWidget(title: '공정조회', isLogo: false, isFirstPage: true,),
+                  _bodyArea(context),
+                  Obx(() => _list(context),),
+                  SliverToBoxAdapter(child: SizedBox(height: 100,))
+                  //   _listArea()
+                ],
+              ),
+              Obx(() => CommonLoading(bLoading: controller.isLoading.value))
+            ],
+          ),
         ),
+        //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
   }
 

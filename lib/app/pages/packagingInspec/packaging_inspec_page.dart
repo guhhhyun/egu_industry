@@ -1,6 +1,7 @@
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/pages/packagingInspec/packaging_inspec_controller.dart';
 import 'package:egu_industry/app/pages/packagingInspec/test23.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
@@ -32,47 +33,53 @@ class PackagingInspecPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Scaffold(
-        backgroundColor: AppTheme.white,
-        body: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
-              _topAreaTest(context),
-              // _topArea(),
-              _bodyArea(context),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    SizedBox(height: 16,),
-                    Container(
-                      height: 8,
-                      color: AppTheme.af3f3f3,
-                    ),
-                  ],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        body: Scaffold(
+          backgroundColor: AppTheme.white,
+          body: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                CommonAppbarWidget(title: '제품포장 검수', isLogo: false, isFirstPage: true ),
+                _topAreaTest(context),
+                // _topArea(),
+                _bodyArea(context),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 16,),
+                      Container(
+                        height: 8,
+                        color: AppTheme.af3f3f3,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              _weightData(),
-              _listArea(),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16,),
-                    Container(
-                      height: 8,
-                      color: AppTheme.af3f3f3,
-                    ),
-                    const SizedBox(height: 16,),
-                  ],
+                _weightData(),
+                _listArea(),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16,),
+                      Container(
+                        height: 8,
+                        color: AppTheme.af3f3f3,
+                      ),
+                      const SizedBox(height: 16,),
+                    ],
+                  ),
                 ),
-              ),
 
-            //  _locationItem()
-            ],
+              //  _locationItem()
+              ],
+            ),
           ),
+          bottomNavigationBar: _bottomButton(context), //  등록
         ),
-        bottomNavigationBar: _bottomButton(context), //  등록
       ),
     );
   }

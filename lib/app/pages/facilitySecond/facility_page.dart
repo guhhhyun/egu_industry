@@ -5,6 +5,7 @@ import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_controller.dart';
 import 'package:egu_industry/app/pages/facilitySecond/facility_step2_page.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
@@ -23,23 +24,29 @@ class FacilityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                CommonAppbarWidget(title: '설비/안전 점검 조회', isLogo: false, isFirstPage: true,),
-                _bodyArea(context),
-                _listArea()
-              ],
-            ),
-            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  CommonAppbarWidget(title: '설비/안전 점검 조회', isLogo: false, isFirstPage: true,),
+                  _bodyArea(context),
+                  _listArea()
+                ],
+              ),
+              Obx(() => CommonLoading(bLoading: controller.isLoading.value))
+            ],
+          ),
         ),
+        bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
   }
 

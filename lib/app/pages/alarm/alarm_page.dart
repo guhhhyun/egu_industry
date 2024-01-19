@@ -4,6 +4,7 @@ import 'package:egu_industry/app/common/global_service.dart';
 import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/alarm/alarm_controller.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +23,7 @@ class AlarmPage extends GetView<AlarmController> {
       titleSpacing: 0,
       leading: IconButton(
         onPressed: () {
-          Get.back();
+          Get.offAll(HomePage());
         },
         icon: SvgPicture.asset(
           'assets/app/arrow2Left.svg',
@@ -625,12 +626,18 @@ class AlarmPage extends GetView<AlarmController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: [_title(), _body(context)],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Container(
+          color: Colors.white,
+          child: Column(
+            children: [_title(), _body(context)],
+          ),
         ),
       ),
     );

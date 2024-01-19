@@ -3,6 +3,7 @@ import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/common_loading.dart';
 import 'package:egu_industry/app/pages/facilityMonitoring/facility_monitoring_controller.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,24 +20,30 @@ class FacilityMonitoringPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
-                _bodyArea(context),
-                Obx(() => _list(context))
-                //   _listArea()
-              ],
-            ),
-            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  CommonAppbarWidget(title: '설비가동 모니터링', isLogo: false, isFirstPage: true,),
+                  _bodyArea(context),
+                  Obx(() => _list(context))
+                  //   _listArea()
+                ],
+              ),
+              Obx(() => CommonLoading(bLoading: controller.isLoading.value))
+            ],
+          ),
         ),
+        //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      //    bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
   }
 

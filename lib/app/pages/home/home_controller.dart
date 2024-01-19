@@ -76,12 +76,17 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
 
   }
 */
-
+  void userLeft() async {
+    String status = await HomeApi.to.LOGIN_MOB(Utils.getStorage.read('userId'), Utils.getStorage.read('userPw'));
+    Get.log('로그인~~~~~~~~~~~~~~~~~~~~ $status');
+    status == 'SUCCESS' ? null : gs.logout();
+  }
 
 
 
   @override
   void onInit() async{
+    userLeft();
     reqNoticeList();
     reqListAlarm();
   }

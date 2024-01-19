@@ -2,6 +2,7 @@ import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/dialog_widget.dart';
 import 'package:egu_industry/app/net/home_api.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 import 'package:egu_industry/app/pages/inventoryCounting/inventory_counting_controller.dart';
 import 'package:egu_industry/app/pages/productLocation/product_location_controller.dart';
 import 'package:flutter/material.dart';
@@ -29,19 +30,25 @@ class InventoryCountingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            CommonAppbarWidget(title: '재고실사', isLogo: false, isFirstPage: true ),
-            _topArea(context),
-            _listArea()
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: [
+              CommonAppbarWidget(title: '재고실사', isLogo: false, isFirstPage: true ),
+              _topArea(context),
+              _listArea()
 
-          ],
+            ],
+          ),
         ),
+       // bottomNavigationBar: _bottomButton(context), //  등록
       ),
-     // bottomNavigationBar: _bottomButton(context), //  등록
     );
   }
 

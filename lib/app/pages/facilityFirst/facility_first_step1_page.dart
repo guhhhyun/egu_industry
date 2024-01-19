@@ -5,6 +5,7 @@ import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_controller.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_modify_page.dart';
 import 'package:egu_industry/app/pages/facilityFirst/facility_first_step2_page.dart';
+import 'package:egu_industry/app/pages/home/home_page.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,23 +25,29 @@ class FacilityFirstStep1Page extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomScrollView(
-              slivers: [
-                CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
-                _bodyArea(context),
-                _listArea()
-              ],
-            ),
-            Obx(() => CommonLoading(bLoading: controller.isLoading.value))
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(HomePage());
+        return Future(() => true);
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.white,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  CommonAppbarWidget(title: '설비/안전 의뢰 조회', isLogo: false, isFirstPage: true ),
+                  _bodyArea(context),
+                  _listArea()
+                ],
+              ),
+              Obx(() => CommonLoading(bLoading: controller.isLoading.value))
+            ],
+          ),
         ),
+        bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
       ),
-      bottomNavigationBar: _bottomButton(context), // 점검의뢰 등록
     );
   }
 
