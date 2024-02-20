@@ -81,10 +81,10 @@ class BottomSheetModal extends StatelessWidget {
                       controller.popUpDataList.clear();
                       HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM':'${controller.startValue.value.replaceAll('-', '')}','@p_DATE_TO':'${controller.endValue.value.replaceAll('-', '')}'}).then((value) =>
                         {
-                          Get.log('value[DATAS]: ${value['DATAS']}'),
-                          if(value['DATAS'] != null) {
-                            for(var i = 0; i <  value['DATAS'].length; i++){
-                              controller.popUpDataList.add(value['DATAS'][i]),
+                          Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                          if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                            for(var i = 0; i <  value['RESULT']['DATAS'][0]['DATAS'].length; i++){
+                              controller.popUpDataList.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
                             },
                           },
                           Get.log('datasList: ${controller.popUpDataList}'),
@@ -152,10 +152,10 @@ class BottomSheetModal extends StatelessWidget {
                       controller.popUpDataList.clear();
                         HomeApi.to.PROC('USP_SCS0300_R01', {'p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM': controller.startValue.value.replaceAll('-', ''),'@p_DATE_TO': controller.endValue.value.replaceAll('-', '')}).then((value) =>
                         {
-                          Get.log('value[DATAS]: ${value['DATAS']}'),
-                          if(value['DATAS'] != null) {
-                            for(var i = 0; i < value['DATAS'].length; i++){
-                              controller.popUpDataList.add(value['DATAS'][i]),
+                          Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                          if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                            for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++){
+                              controller.popUpDataList.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
                             },
                           },
                           Get.log('datasList: ${controller.popUpDataList}'),

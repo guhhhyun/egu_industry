@@ -15,11 +15,11 @@ class ProcessTransferController extends GetxController {
   RxList<bool> isprocessSelectedList = [false].obs;
   RxList<dynamic> processSelectedList = [].obs;
   RxString dayValue = '날짜를 선택해주세요'.obs;
-  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 3))).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxList<String> movYnList = ['전체','처리','미처리'].obs;
-  RxString selectedMovYn = '전체'.obs;
-  RxString selectedMovYnCd = ''.obs; // 처리: y, 미처리: n
+  RxString selectedMovYn = '미처리'.obs;
+  RxString selectedMovYnCd = 'N'.obs; // 처리: y, 미처리: n
   RxMap<String, String> selectedFkfNm = {'FKF_NO':'', 'FKF_NM': ''}.obs;
   RxMap<String, String> selectedSaveFkfNm = {'FKF_NO':'', 'FKF_NM': ''}.obs;
   RxMap<String, String> selectedMachMap = {'MACH_CODE':'', 'MACH_NAME': ''}.obs;
@@ -31,13 +31,10 @@ class ProcessTransferController extends GetxController {
   RxBool registButton = false.obs;
   RxBool isLoading = false.obs;
 
-  Future<void> convert() async {
-
-  }
-
   Future<void> checkButton() async {
     movIds.clear();
     isprocessSelectedList.clear();
+    processSelectedList.clear();
     processList.clear();
 
     try {
@@ -45,10 +42,10 @@ class ProcessTransferController extends GetxController {
       var a = await HomeApi.to.PROC('USP_MBS0600_R01', {'@p_WORK_TYPE':'Q', '@p_DATE_FR': '$dayStartValue'
         , '@p_DATE_TO': '$dayEndValue', '@p_MOV_YN':'$selectedMovYnCd', '@p_FKF_NO':selectedFkfNm['FKF_NO'], '@p_FROM_MACH': selectedMachMap['MACH_CODE']}).then((value) =>
       {
-        for(var i = 0; i < value['DATAS'].length; i++) {
+        for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
           isprocessSelectedList.add(false)
         },
-        processList.value = value['DATAS'],
+        processList.value = value['RESULT']['DATAS'][0]['DATAS'],
         Get.log('aa ${processList.value}')
 
       });
@@ -75,16 +72,16 @@ class ProcessTransferController extends GetxController {
     try{
       var fkfList2 = await HomeApi.to.BIZ_DATA('L_BSS032').then((value) =>
       {
-        value['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '지게차 선택'}),
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'FKF_NO':'', 'FKF_NM': '지게차 선택'}),
 
-        fkfList.value = value['DATAS']
+        fkfList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('위치 : $fkfList2');
       /// 작업위치
       var engineer = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
       {
-        value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
-        machList.value = value['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
+        machList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('$engineer');
     }catch(err) {
@@ -107,10 +104,10 @@ class ProcessTransferController extends GetxController {
     await HomeApi.to.PROC('USP_MBS0600_R01', {'@p_WORK_TYPE':'Q', '@p_DATE_FR': '$dayStartValue'
       , '@p_DATE_TO': '$dayEndValue', '@p_MOV_YN':'$selectedMovYnCd', '@p_FKF_NO':selectedFkfNm['FKF_NO'], '@p_FROM_MACH': selectedMachMap['MACH_CODE']}).then((value) =>
     {
-      for(var i = 0; i < value['DATAS'].length; i++) {
+      for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
         isprocessSelectedList.add(false)
       },
-      processList.value = value['DATAS'],
+      processList.value = value['RESULT']['DATAS'][0]['DATAS'],
       Get.log('aa ${processList.value}')
 
     });

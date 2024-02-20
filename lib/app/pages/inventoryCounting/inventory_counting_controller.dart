@@ -45,15 +45,15 @@ class InventoryCountingController extends GetxController {
     try{
       var location = await HomeApi.to.BIZ_DATA('L_BSS035').then((value) =>
       {
-        selectedCheckLocationMap['DETAIL_CD'] =  value['DATAS'][1]['DETAIL_CD'],
-        selectedCheckLocationMap['DETAIL_NM'] =  value['DATAS'][1]['DETAIL_NM'],
-        locationList.value = value['DATAS']
+        selectedCheckLocationMap['DETAIL_CD'] =  value['RESULT']['DATAS'][0]['DATAS'][1]['DETAIL_CD'],
+        selectedCheckLocationMap['DETAIL_NM'] =  value['RESULT']['DATAS'][0]['DATAS'][1]['DETAIL_NM'],
+        locationList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('위치 : $locationList');
       var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
       {
-        value['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
-        machList.value = value['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'MACH_CODE':'', 'MACH_NAME': '설비 선택'}),
+        machList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');

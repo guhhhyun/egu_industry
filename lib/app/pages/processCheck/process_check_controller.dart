@@ -390,8 +390,8 @@ class ProcessCheckController extends GetxController {
       isLoading.value = true;
       var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':'Q1', '@p_DATE': '' }).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          processList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          processList.value = value['RESULT']['DATAS'][0]['DATAS'],
         },
 
       });
@@ -458,8 +458,8 @@ class ProcessCheckController extends GetxController {
       isLoading.value = true;
       var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': '' }).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          processList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          processList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
 
@@ -480,8 +480,8 @@ class ProcessCheckController extends GetxController {
       // 일별 n = q2
       var a = await HomeApi.to.PROC('USP_PRR7100_R01', {'@p_WORK_TYPE':monthCheckBox.value == false ? 'Q2' : 'Q3', '@p_DATE': dayStartValue.value}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          noProcessList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          noProcessList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
 

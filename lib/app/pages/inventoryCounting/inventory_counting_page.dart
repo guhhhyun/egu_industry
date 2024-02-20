@@ -8,7 +8,7 @@ import 'package:egu_industry/app/pages/productLocation/product_location_controll
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -291,8 +291,8 @@ class InventoryCountingPage extends StatelessWidget {
             var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.dayValue.value
               ,'@p_GUBUN':'${controller.selectedCheckLocationMap['DETAIL_CD']}' }).then((value) =>
             {
-              if(value['DATAS'] != null) {
-                controller.productList.value = value['DATAS'],
+              if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
                 for(var i = 0; i < controller.productList.length; i++) {
                   if(controller.productList[i]['CST_NM'] == null) {
                     controller.productList.remove(controller.productList[i])
@@ -379,8 +379,8 @@ class InventoryCountingPage extends StatelessWidget {
                         , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
                         , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                       {
-                        if(value['DATAS'] != null) {
-                          controller.productList.value = value['DATAS'],
+                        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                          controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
                           for(var i = 0; i < controller.productList.length; i++) {
                             if(controller.productList[i]['CST_NM'].toString() == null) {
                               controller.productList.remove(controller.productList[i])
@@ -409,8 +409,8 @@ class InventoryCountingPage extends StatelessWidget {
                               , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
                               , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                             {
-                              if(value['DATAS'] != null) {
-                                controller.productList.value = value['DATAS'],
+                              if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                                controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
                                 for(var i = 0; i < controller.productList.length; i++) {
                                   if(controller.productList[i]['CST_NM'].toString() == null) {
                                     controller.productList.remove(controller.productList[i])
@@ -446,22 +446,21 @@ class InventoryCountingPage extends StatelessWidget {
               ),
             ),
           ),
-         /* InkWell(
+          InkWell(
               onTap: () async {
                 String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
                     '#ff6666', '취소', false, ScanMode.BARCODE);
                 controller.textController.text = barcodeScanRes;
-                if(controller.textController.text != '') {
-                  if(controller.textController.text != '-1') {
-                    controller.textController.text = barcodeScanRes;
-                    controller.saveButton();
+                if(controller.textController.text != '-1') {
+                    await controller.saveButton();
+                    controller.textController.text = '';
+                    FocusScope.of(context).autofocus(focusNode);
                     var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                      , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                          : DateFormat('yyyy-MM-dd').format(DateTime.now())
+                      , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
                       , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
                     {
-                      if(value['DATAS'] != null) {
-                        controller.productList.value = value['DATAS'],
+                      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                        controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.productList.length; i++) {
                           if(controller.productList[i]['CST_NM'].toString() == null) {
                             controller.productList.remove(controller.productList[i])
@@ -470,19 +469,17 @@ class InventoryCountingPage extends StatelessWidget {
                         controller.productList.value = controller.productList.reversed.toList()
                       }
                     });
-                  }
-                  Future.delayed(const Duration(), (){
-                    focusNode2.requestFocus();
-                    //  FocusScope.of(context).requestFocus(focusNode);
-                    Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
-                  });
-
+                    Future.delayed(const Duration(), (){
+                      focusNode2.requestFocus();
+                      //  FocusScope.of(context).requestFocus(focusNode);
+                      Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                    });
                 }else {
-                 controller.textController.text = '바코드를 재스캔해주세요';
+                 controller.textController.text = '';
                 }
               },
               child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
-          )*/
+          )
         ],
       ),
     );

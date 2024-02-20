@@ -37,8 +37,8 @@ class GongjungCheckController extends GetxController {
       var a = await HomeApi.to.PROC('USP_MBR0800_R02', {'@p_WORK_TYPE':'Q', '@p_CPY_ID': gubunCd.value
         , '@p_CST_NAME': textController.text, '@p_CMP_NM': selectedCmpMap['FG_NAME'] == '품명 선택' ? '' : '${selectedCmpMap['FG_NAME']}', '@p_STT_NM': selectedSttMap['STT_NM'] == '강종 선택' ? '' : '${selectedSttMap['STT_NM']}', '@p_DUKE': textController2.text == '' ? '' : textController2.text}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          processList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          processList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
       Get.log('공정조회 ::::::: $a');
@@ -57,8 +57,8 @@ class GongjungCheckController extends GetxController {
       var a = await HomeApi.to.PROC('USP_MBR0800_R03', {'@p_WORK_TYPE':'Q', '@p_CARD_LIST_NO': '${selectedContainer[0]['CARD_LIST_NO']}'
         , '@p_COIL_ID': '${selectedContainer[0]['COIL_ID']}'}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          processDetailList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          processDetailList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
       Get.log('상세공정 ::::::: $a');
@@ -106,16 +106,16 @@ class GongjungCheckController extends GetxController {
     try{
       var cmpList2 = await HomeApi.to.BIZ_DATA('L_BSS028').then((value) =>
       {
-        value['DATAS'].insert(0, {'FG_CODE':'', 'FG_NAME': '품명 선택'}),
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'FG_CODE':'', 'FG_NAME': '품명 선택'}),
 
-        cmpList.value = value['DATAS']
+        cmpList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('위치 : $cmpList2');
       /// 작업위치
       var sttList2 = await HomeApi.to.BIZ_DATA('L_PRS010').then((value) =>
       {
-        value['DATAS'].insert(0, {'STT_ID':'', 'STT_NM': '강종 선택'}),
-        sttList.value = value['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'STT_ID':'', 'STT_NM': '강종 선택'}),
+        sttList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('$sttList2');
     }catch(err) {

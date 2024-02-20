@@ -85,9 +85,10 @@ class GlobalService extends GetxService {
       isLoading.value = true;
       var a = await HomeApi.to.PROC("USP_MBR0000_R01", {"@p_WORK_TYPE":"MENU","@p_USER_ID":Utils.getStorage.read('userId')}).then((value) =>
       {
-        allList.value = value['DATAS'],
+        Get.log('시발 $value'),
+        allList.value = value['RESULT']['DATAS'][0]['DATAS'],
         for(var i = 0; i < allList.length; i++) {
-          datasList.add(value['DATAS'][i]['SORT_SEQ']),
+          datasList.add(value['RESULT']['DATAS'][0]['DATAS'][i]['SORT_SEQ']),
         }
       });
       Get.log('권한 조회::::::::: ${datasList.value}');

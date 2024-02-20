@@ -41,7 +41,7 @@ class GagongFacilityController extends GetxController {
       var a = await HomeApi.to.PROC('USP_MBS1700_R01', {'@P_WORK_TYPE':'Q', '@P_ST_DT': '$dayStartValue'
         , '@P_END_DT': '$dayEndValue', '@P_INSP_CHK': inspCh.value, '@P_CALL_CAR': callCar.value}).then((value) =>
       {
-        datasList.value = value['DATAS'],
+        datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
         for(var i = 0; i < datasList.length; i++) {
           inspChList.add(''),
           callCarList.add(''),

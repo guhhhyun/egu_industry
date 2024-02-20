@@ -23,8 +23,8 @@ class FacilityMonitoringController extends GetxController {
       isLoading.value = true;
       var a = await HomeApi.to.PROC('USP_MBR1000_R01', {'@p_WORK_TYPE':'Q', '@p_LINE':selectedLineCd.value}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          monitoringList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          monitoringList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
     }catch (err) {
@@ -54,8 +54,8 @@ class FacilityMonitoringController extends GetxController {
       isLoading.value = true;
       var a = await HomeApi.to.PROC('USP_MBR1000_R01', {'@p_WORK_TYPE':'Q', '@p_LINE':selectedLineCd.value}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          monitoringList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          monitoringList.value = value['RESULT']['DATAS'][0]['DATAS'],
         }
       });
     }catch(err) {

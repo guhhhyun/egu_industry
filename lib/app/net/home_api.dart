@@ -108,7 +108,7 @@ class HomeApi {
 
 
   Future<Map> PROC(String procName, Map? PARAMS) async {
-    String res = await EXEC("PROC", procName, PARAMS) ?? "";
+    String res = await EXEC2("PROC", procName, PARAMS) ?? "";
     Map data = json.decode(res);
     return data;
   }
@@ -120,7 +120,7 @@ class HomeApi {
   }
 
   Future<Map> BIZ_DATA(String BizComponentID) async {
-    String res = await EXEC("PROC", 'P_BizComponentQuery_R', {'BizComponentID':BizComponentID}) ?? "";
+    String res = await EXEC2("PROC", 'P_BizComponentQuery_R', {'BizComponentID':BizComponentID}) ?? "";
 
     Map data = json.decode(res);
     return data;

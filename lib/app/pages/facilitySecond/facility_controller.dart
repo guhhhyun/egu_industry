@@ -147,8 +147,8 @@ class FacilityController extends GetxController {
       var part = await HomeApi.to.BIZ_DATA('P_MRS001').then((value) =>
       //  var part = await HomeApi.to.PROC('USP_MBS0300_R01', {'@p_WORK_TYPE':'Q_PART',  '@p_MACH_CODE':'${selectedContainer[0]['MACH_CODE']}',}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          partAllList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          partAllList.value = value['RESULT']['DATAS'][0]['DATAS'],
 
           for(var i = 0; i < partAllList.length; i++) {
             if(partAllList[i]['DEPT_CODE'] == selectedContainer[0]['INS_DEPT'] && partAllList[i]['CMH_ID_SCH'].toString().contains(',${selectedContainer[0]['MACH_CODE']},')) {
@@ -246,9 +246,9 @@ class FacilityController extends GetxController {
   Future<void> reqEngineer() async{
     var engineer = await HomeApi.to.BIZ_DATA('P_SYS029').then((value) =>
     {
-      for(var i = 0; i < value['DATAS'].length; i++) {
-        if(value['DATAS'][i]['DEPT_PATH'].toString().contains(selectedContainer[0]['INS_DEPT'])) {
-          engineer2List.add(value['DATAS'][i]),
+      for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
+        if(value['RESULT']['DATAS'][0]['DATAS'][i]['DEPT_PATH'].toString().contains(selectedContainer[0]['INS_DEPT'])) {
+          engineer2List.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
           isEngineerSelectedList.add(false)
         }
 
@@ -277,35 +277,35 @@ class FacilityController extends GetxController {
       var mach = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
       {
         // Get.log('우웅ㅇ ${value}'),
-        machList.value = value['DATAS']
+        machList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('이거봥 ${mach}');
       var test = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
-        for(var i = 0; i < value['DATAS'].length; i++) {
-          irfgList.add(value['DATAS'][i]['TEXT'].toString()),
+        for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
+          irfgList.add(value['RESULT']['DATAS'][0]['DATAS'][i]['TEXT'].toString()),
         }
       });
 
       var test2 = await HomeApi.to.BIZ_DATA('LCT_MR112').then((value) =>
       {
-        for(var i = 0; i < value['DATAS'].length; i++) {
-          noReasonList.add(value['DATAS'][i]['TEXT'].toString()),
+        for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
+          noReasonList.add(value['RESULT']['DATAS'][0]['DATAS'][i]['TEXT'].toString()),
         }
       });
       /// 점검부서
       var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
       {
-        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
-        engineTeamList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        engineTeamList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
 
       /// 정비유형
       var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
-        irfgList2.value = value['DATAS'],
-        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
-        step1IrfgList.value = value['DATAS']
+        irfgList2.value = value['RESULT']['DATAS'][0]['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        step1IrfgList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');
@@ -422,9 +422,9 @@ class FacilityController extends GetxController {
     await HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
       , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
     {
-      Get.log('value[DATAS]: ${value['DATAS']}'),
-      if(value['DATAS'] != null) {
-        datasList.value = value['DATAS'],
+      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
         for(var i = 0; i < datasList.length; i++){
           selectedDatas.add(false)
         },

@@ -110,9 +110,9 @@ class FacilityPage extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.selectedIrFqMap2['CODE']}).then((value) =>
                     {
-                      Get.log('value[DATAS]: ${value['DATAS']}'),
-                      if(value['DATAS'] != null) {
-                        controller.datasList.value = value['DATAS'],
+                      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                        controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.datasList.length; i++){
                           controller.selectedDatas.add(false)
                         },
@@ -183,9 +183,9 @@ class FacilityPage extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.selectedIrFqMap2['CODE']}).then((value) =>
                     {
-                      Get.log('value[DATAS]: ${value['DATAS']}'),
-                      if(value['DATAS'] != null) {
-                        controller.datasList.value = value['DATAS'],
+                      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                        controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.datasList.length; i++){
                           controller.selectedDatas.add(false)
                         },
@@ -311,9 +311,9 @@ class FacilityPage extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.selectedIrFqMap2['CODE']}).then((value) =>
                     {
-                      Get.log('value[DATAS]: ${value['DATAS']}'),
-                      if(value['DATAS'] != null) {
-                        controller.datasList.value = value['DATAS'],
+                      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                        controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.datasList.length; i++){
                           controller.selectedDatas.add(false)
                         },
@@ -376,9 +376,9 @@ class FacilityPage extends StatelessWidget {
                     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                       , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.selectedIrFqMap2['CODE']}).then((value) =>
                     {
-                      Get.log('value[DATAS]: ${value['DATAS']}'),
-                      if(value['DATAS'] != null) {
-                        controller.datasList.value = value['DATAS'],
+                      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                        controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.datasList.length; i++){
                           controller.selectedDatas.add(false)
                         },
@@ -444,10 +444,10 @@ class FacilityPage extends StatelessWidget {
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG':  controller.selectedIrFqMap2['CODE']}).then((value) =>
                 {
-                  Get.log('value[DATAS]: ${value['DATAS']}'),
+                  Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
                   controller.datasList.clear(),
-                  if(value['DATAS'] != null) {
-                    controller.datasList.value = value['DATAS'],
+                  if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                    controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                     for(var i = 0; i < controller.datasList.length; i++){
                       controller.selectedDatas.add(false)
                     },
@@ -468,9 +468,9 @@ class FacilityPage extends StatelessWidget {
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.selectedIrFqMap2['CODE']}).then((value) =>
                 {
-                  Get.log('value[DATAS]: ${value['DATAS']}'),
-                  if(value['DATAS'] != null) {
-                    controller.datasList.value = value['DATAS'],
+                  Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                  if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                    controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                     for(var i = 0; i < controller.datasList.length; i++){
                       controller.selectedDatas.add(false)
                     },
@@ -491,9 +491,9 @@ class FacilityPage extends StatelessWidget {
                 HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.selectedIrFqMap2['CODE']}).then((value) =>
                 {
-                  Get.log('value[DATAS]: ${value['DATAS']}'),
-                  if(value['DATAS'] != null) {
-                    controller.datasList.value = value['DATAS'],
+                  Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                  if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                    controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                     for(var i = 0; i < controller.datasList.length; i++){
                       controller.selectedDatas.add(false)
                     },
@@ -514,9 +514,9 @@ class FacilityPage extends StatelessWidget {
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                   , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG' : controller.selectedIrFqMap2['CODE']}).then((value) =>
                 {
-                  Get.log('value[DATAS]: ${value['DATAS']}'),
-                  if(value['DATAS'] != null) {
-                    controller.datasList.value = value['DATAS'],
+                  Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                  if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                    controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                     for(var i = 0; i < controller.datasList.length; i++){
                       controller.selectedDatas.add(false)
                     },
@@ -577,9 +577,9 @@ class FacilityPage extends StatelessWidget {
               HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${controller.step1DayStartValue.value}','@p_IR_DATE_TO':'${controller.step1DayEndValue.value}','@p_URGENCY_FG':'${controller.urgencyReadCd.value}', '@p_INS_DEPT' : controller.selectedReadEngineTeamMap['CODE']
                 , '@p_RESULT_FG' : controller.pResultFg.value, '@p_IR_FG': controller.selectedIrFqMap2['CODE']}).then((value) =>
               {
-                Get.log('value[DATAS]: ${value['DATAS']}'),
-                if(value['DATAS'] != null) {
-                  controller.datasList.value = value['DATAS'],
+                Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+                if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                  controller.datasList.value = value['RESULT']['DATAS'][0]['DATAS'],
                   for(var i = 0; i < controller.datasList.length; i++){
                     controller.selectedDatas.add(false)
                   },

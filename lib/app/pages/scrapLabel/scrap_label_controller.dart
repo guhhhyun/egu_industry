@@ -79,9 +79,9 @@ class ScrapLabelController extends GetxController {
     try{
       var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE2', '@p_DATE_FROM': startValue.value.replaceAll('-', ''), '@p_DATE_TO': endValue.value.replaceAll('-', '') }).then((value) => // pop
       {
-        if(value['DATAS'] != null) {
-          for(var i = 0; i < value['DATAS'].length; i++){
-            popUpDataList.add(value['DATAS'][i]),
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++){
+            popUpDataList.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
           },
         },
       });
@@ -100,24 +100,24 @@ class ScrapLabelController extends GetxController {
     try{
       var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_PROC'}).then((value) => // 공정정보
       {
-        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-        industryList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        industryList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
       Get.log('공장정보::::: $a');
       selectedScrapNmMap.clear();
       selectedScrapNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
       var b = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'SC'}).then((value) => // 스크랩품명
       {
-        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-        scrapNmList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        scrapNmList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
       Get.log('스크랩품명::::: $b');
       selectedRmNmMap.clear();
       selectedRmNmMap.addAll({'CODE':'', 'NAME': '선택해주세요'});
       var c = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_ITEM', '@p_WHERE1':'RM'}).then((value) => // 지금류품명
       {
-        value['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
-        rmNmList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'NAME': '선택해주세요'}),
+        rmNmList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
 
       Get.log('지금류품명::::: $c');
@@ -125,8 +125,8 @@ class ScrapLabelController extends GetxController {
       selectedTareMap.addAll({'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT': ''});
       var d = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SLT'}).then((value) => // 설통번호
       {
-        value['DATAS'].insert(0, {'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT':'' }),
-        tareList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'NAME': '설통번호 선택', 'WEIGHT':'' }),
+        tareList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
       Get.log('설통번호::::: $d');
     }catch(e) {
@@ -256,7 +256,7 @@ class ScrapLabelController extends GetxController {
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
         isEndLabel.value = true,
-        scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
+        scrapNo.value = value['RESULT']['DATAS'][0]['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
     }catch(e) {
@@ -283,7 +283,7 @@ class ScrapLabelController extends GetxController {
       {
         Get.log('스크랩 라밸 성공::::::::::: $value'),
         isEndLabel.value = true,
-        scrapNo.value = value['DATAS'][0]['SCRAP_NO'].toString(),
+        scrapNo.value = value['RESULT']['DATAS'][0]['DATAS'][0]['SCRAP_NO'].toString(),
       });
       isEndLabel.value = true;
   //    Get.log('트루 ::: ${isEndLabel.value}');
@@ -462,9 +462,9 @@ class ScrapLabelController extends GetxController {
       matlGb.value = '2';
       await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W04'}).then((value) => // 적재위치(스크랩)
       {
-        selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
-        selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
-        scLocList.value = value['DATAS'],
+        selectedScLocMap['RACK_BARCODE'] = value['RESULT']['DATAS'][0]['DATAS'][0]['RACK_BARCODE'],
+        selectedScLocMap['NAME'] = value['RESULT']['DATAS'][0]['DATAS'][0]['NAME'],
+        scLocList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
     }
     convert();

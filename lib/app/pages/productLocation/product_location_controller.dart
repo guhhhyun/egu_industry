@@ -27,8 +27,8 @@ class ProductLocationController extends GetxController {
       var a = await HomeApi.to.PROC('USP_MBS0400_R01',
           {'@p_WORK_TYPE': 'Q', '@p_BARCODE_NO': textBc.value}).then((value) =>
       {
-        if(value['DATAS'] != null) {
-          productList.value = value['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          productList.value = value['RESULT']['DATAS'][0]['DATAS'],
           for(var i = 0; i < productList.length; i++ ) {
             bcList.add(productList[i]['BARCODE_NO'])
           },
@@ -67,8 +67,8 @@ class ProductLocationController extends GetxController {
     try{
       var location = await HomeApi.to.BIZ_DATA('L_BSS030').then((value) =>
       {
-        value['DATAS'].insert(0, {'RACK_BARCODE':'', 'AREA': '선택해주세요'}),
-        locationList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'RACK_BARCODE':'', 'AREA': '선택해주세요'}),
+        locationList.value = value['RESULT']['DATAS'][0]['DATAS'],
 
       });
     }catch(err) {

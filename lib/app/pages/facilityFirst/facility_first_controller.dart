@@ -175,7 +175,7 @@ class FacilityFirstController extends GetxController {
     fileList.clear();
     var a = await HomeApi.to.PROC('USP_MBS0200_R01', {'@p_WORK_TYPE':'FILE_Q', '@p_IR_CODE': selectedContainer[0]['IR_CODE']}).then((value) =>
     {
-      fileList.value = value['DATAS'],
+      fileList.value = value['RESULT']['DATAS'][0]['DATAS'],
       for(var i = 0 ; i < fileList.length; i++) {
         fileSeqList.add(fileList[i]['SEQ']),
       },
@@ -258,37 +258,37 @@ class FacilityFirstController extends GetxController {
       var muc = await HomeApi.to.BIZ_DATA('L_MACH_001').then((value) =>
       {
         // Get.log('우웅ㅇ ${value}'),
-        value['DATAS'].insert(0, {'MACH_CODE':'00', 'MACH_NAME': '전체'}),
-        machList.value = value['DATAS'],
-        modifyMachList.value = value['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'MACH_CODE':'00', 'MACH_NAME': '전체'}),
+        machList.value = value['RESULT']['DATAS'][0]['DATAS'],
+        modifyMachList.value = value['RESULT']['DATAS'][0]['DATAS']
       });
       Get.log('설비 :  : : $muc');
 
       /// 점검부서
       var engineTeam = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
       {
-        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
-        engineTeamList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        engineTeamList.value = value['RESULT']['DATAS'][0]['DATAS'],
 
       });
       var engineTeam2 = await HomeApi.to.BIZ_DATA('LCT_MR006').then((value) =>
       {
-        step2EngineTeamList.value = value['DATAS'],
-        modifyEngineTeamList.value = value['DATAS'],
+        step2EngineTeamList.value = value['RESULT']['DATAS'][0]['DATAS'],
+        modifyEngineTeamList.value = value['RESULT']['DATAS'][0]['DATAS'],
 
       });
 
       /// 정비유형
       var engineCategory = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
-        value['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
-        step1IrfgList.value = value['DATAS'],
+        value['RESULT']['DATAS'][0]['DATAS'].insert(0, {'CODE':'', 'TEXT': '전체'}),
+        step1IrfgList.value = value['RESULT']['DATAS'][0]['DATAS'],
         Get.log('aaaaa ${step1IrfgList.value}')
       });
       var engineCategory2 = await HomeApi.to.BIZ_DATA('LCT_MR004').then((value) =>
       {
-        irfgList.value = value['DATAS'],
-        modifyIrfgList.value = value['DATAS'],
+        irfgList.value = value['RESULT']['DATAS'][0]['DATAS'],
+        modifyIrfgList.value = value['RESULT']['DATAS'][0]['DATAS'],
       });
     }catch(err) {
       Utils.gErrorMessage('네트워크 오류');
@@ -372,11 +372,11 @@ class FacilityFirstController extends GetxController {
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
       , '@p_INS_DEPT' : '${engineTeamReadCd.value}', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : checkSelectedIrFqMap['CODE']}).then((value) =>
     {
-      Get.log('value[DATAS]: ${value['DATAS']}'),
-      if(value['DATAS'] != null) {
-        datasLength.value = value['DATAS'].length,
+      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        datasLength.value = value['RESULT']['DATAS'][0]['DATAS'].length,
         for(var i = 0; i < datasLength.value; i++){
-          datasList.add(value['DATAS'][i]),
+          datasList.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
         },
       },
       Get.log('datasList: ${datasList}'),
@@ -387,8 +387,8 @@ class FacilityFirstController extends GetxController {
   void modifyCheck() {
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q1', 'p_IR_CODE':'${selectedContainer[0]['IR_CODE']}'}).then((value) =>
     {
-      Get.log('value[DATAS]: ${value['DATAS']}'),
-      modifyDatasList.value = value['DATAS'],
+      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+      modifyDatasList.value = value['RESULT']['DATAS'][0]['DATAS'],
       if(modifyDatasList.isNotEmpty) {
         modifySelectedIrFqMap['CODE'] = modifyDatasList[0]['IR_FG'],
         modifyEngineTeamCdMap['CODE'] = modifyDatasList[0]['INS_DEPT'],
@@ -413,11 +413,11 @@ class FacilityFirstController extends GetxController {
     HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${dayStartValue.value}','@p_IR_DATE_TO':'${dayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}', '@p_INS_DEPT' : ''
       , '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
     {
-      Get.log('value[DATAS]: ${value['DATAS']}'),
-      if(value['DATAS'] != null) {
-        datasLength.value = value['DATAS'].length,
+      Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        datasLength.value = value['RESULT']['DATAS'][0]['DATAS'].length,
         for(var i = 0; i < datasLength.value; i++){
-          datasList.add(value['DATAS'][i]),
+          datasList.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
         },
       },
       Get.log('datasList: ${datasList}'),

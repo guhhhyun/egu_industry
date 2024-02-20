@@ -34,7 +34,7 @@ class AlarmController extends GetxController with GetSingleTickerProviderStateMi
    Future<void> bizData() async {
      var alarm = await HomeApi.to.BIZ_DATA('L_PN001').then((value) =>
      {
-       alarmBizList.value = value['DATAS'],
+       alarmBizList.value = value['RESULT']['DATAS'][0]['DATAS'],
      });
      Get.log('알람 :  :  ${alarmBizList.value}');
    }
@@ -58,9 +58,9 @@ class AlarmController extends GetxController with GetSingleTickerProviderStateMi
       var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_CHK_YN": chkYn.value/*,"@p_TYPE_MSG":''*/}).then((value) =>
       {
         chkYn.value == '' ?
-        alarmAllList.value = value['DATAS'] :  chkYn.value == 'Y' ? alarmYList.value = value['DATAS'] : alarmNList.value = value['DATAS'],
-        if(value['DATAS'] != null) {
-          for(var i = 0; i < value['DATAS'].length; i++) {
+        alarmAllList.value = value['RESULT']['DATAS'][0]['DATAS'] :  chkYn.value == 'Y' ? alarmYList.value = value['RESULT']['DATAS'][0]['DATAS'] : alarmNList.value = value['RESULT']['DATAS'][0]['DATAS'],
+        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+          for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
             chkYn.value == '' ?
             isAlarmList.add(alarmAllList[i]["CHK_YN"]) : chkYn.value == 'Y' ?  isAlarmList.add(alarmYList[i]["CHK_YN"]) : isAlarmList.add(alarmNList[i]["CHK_YN"])
           },

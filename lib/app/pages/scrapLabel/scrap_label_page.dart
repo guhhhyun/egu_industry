@@ -241,9 +241,9 @@ class ScrapLabelPage extends StatelessWidget {
                          controller.matlGb.value = '1';
                          await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_RACK', '@p_WHERE1':'W02'}).then((value) => // // 적재위치(지금류)
                          {
-                           controller.selectedScLocMap['RACK_BARCODE'] = value['DATAS'][0]['RACK_BARCODE'],
-                           controller.selectedScLocMap['NAME'] = value['DATAS'][0]['NAME'],
-                           controller.scLocList.value = value['DATAS'],
+                           controller.selectedScLocMap['RACK_BARCODE'] = value['RESULT']['DATAS'][0]['DATAS'][0]['RACK_BARCODE'],
+                           controller.selectedScLocMap['NAME'] =value['RESULT']['DATAS'][0]['DATAS'][0]['NAME'],
+                           controller.scLocList.value = value['RESULT']['DATAS'][0]['DATAS'],
                          });
                        }catch(e) {
                          print('USP_SCS0300_R01 err -----> $e');
@@ -315,8 +315,8 @@ class ScrapLabelPage extends StatelessWidget {
                         controller.selectedContainer.clear();
                         var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE', '@p_SCALE_ID': controller.weighingInfoTextController.text}).then((value) =>
                         {
-                          if(value['DATAS'] != null) {
-                            controller.measList.value = value['DATAS'],
+                          if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                            controller.measList.value = value['RESULT']['DATAS'][0]['DATAS'],
                             Get.log('계량정보 스캔결과:::::: ${controller.measList.value}')
                           }
                         });
@@ -329,8 +329,8 @@ class ScrapLabelPage extends StatelessWidget {
                               Get.log('조회 돋보기 클릭!');
                               var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_SCALE', '@p_SCALE_ID': controller.weighingInfoTextController.text}).then((value) =>
                               {
-                                if(value['DATAS'] != null) {
-                                  controller.measList.value = value['DATAS'],
+                                if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                                  controller.measList.value = value['RESULT']['DATAS'][0]['DATAS'],
                                   Get.log('계량정보 스캔결과:::::: ${controller.measList.value}')
                                 }
                               });
@@ -565,8 +565,8 @@ class ScrapLabelPage extends StatelessWidget {
                         Get.log('조회 돋보기 클릭!');
                         var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_OUTS_NO', '@p_SCRAP_NO':  controller.otherScrapTextController.text}).then((value) =>
                         {
-                          if(value['DATAS'] != null) {
-                            controller.outScrapList.value = value['DATAS']
+                          if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                            controller.outScrapList.value = value['RESULT']['DATAS'][0]['DATAS']
                           }
                         });
                         Get.log('외주스크랩 결과: $a');
@@ -578,8 +578,8 @@ class ScrapLabelPage extends StatelessWidget {
                               Get.log('조회 돋보기 클릭!');
                               var a = await HomeApi.to.PROC('USP_SCS0300_R01', {'@p_WORK_TYPE':'Q_OUTS_NO', '@p_SCRAP_NO':  controller.otherScrapTextController.text}).then((value) =>
                               {
-                                if(value['DATAS'] != null) {
-                                  controller.outScrapList.value = value['DATAS']
+                                if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                                  controller.outScrapList.value = value['RESULT']['DATAS'][0]['DATAS']
                                 }
                               });
                               Get.log('외주스크랩 스캔결과:::::: $a');

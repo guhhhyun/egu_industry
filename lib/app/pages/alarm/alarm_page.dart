@@ -261,7 +261,7 @@ class AlarmPage extends GetView<AlarmController> {
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
                   var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmAllList[index]["ID"]}).then((value) =>
                   {
-                    controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
+                    controller.chkDtmNew.value = value['RESULT']['DATAS'][0]['DATAS'][0]['CHK_DTM'],
                   });
                   controller.alarmAllList[index]["CHK_YN"] = 'Y';
                   controller.isAlarmList[index] = 'Y';
@@ -463,7 +463,7 @@ class AlarmPage extends GetView<AlarmController> {
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
                   var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmNList[index]["ID"]}).then((value) =>
                   {
-                    controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
+                    controller.chkDtmNew.value = value['RESULT']['DATAS'][0]['DATAS'][0]['CHK_DTM'],
                   });
                   controller.alarmNList[index]["CHK_YN"] = 'Y';
                   controller.isAlarmList[index] = 'Y';
@@ -594,7 +594,7 @@ class AlarmPage extends GetView<AlarmController> {
                 onTap:  controller.isAlarmList[index] == 'Y' ? null : () async {
                   var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"U_CHK","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_ID":controller.alarmYList[index]["ID"]}).then((value) =>
                   {
-                    controller.chkDtmNew.value = value['DATAS'][0]['CHK_DTM'],
+                    controller.chkDtmNew.value = value['RESULT']['DATAS'][0]['DATAS'][0]['CHK_DTM'],
                   });
                   controller.alarmYList[index]["CHK_YN"] = 'Y';
                   controller.isAlarmList[index] = 'Y';

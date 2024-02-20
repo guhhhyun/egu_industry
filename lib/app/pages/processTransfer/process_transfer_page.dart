@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/common_loading.dart';
@@ -21,8 +23,10 @@ class ProcessTransferPage extends StatelessWidget {
 
   ProcessTransferController controller = Get.find();
 
+
   @override
   Widget build(BuildContext context) {
+    Timer.periodic(Duration(minutes: 3), (Timer t) => controller.checkButton());
     return WillPopScope(
       onWillPop: () {
         Get.offAll(HomePage());
@@ -720,7 +724,6 @@ class ProcessTransferPage extends StatelessWidget {
                   }
                   SchedulerBinding.instance!.addPostFrameCallback((_) {
                     Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', pageFlag: 5,));
-                    controller.processSelectedList.clear();
                   });
                 } : null : null,
                 child: Container(

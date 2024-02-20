@@ -23,8 +23,8 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     var a = await HomeApi.to.PROC('USP_MBR0100_R01',
         {'@p_WORK_TYPE': 'Q'}).then((value) =>
     {
-      if(value['DATAS'] != null) {
-        noticeList.value = value['DATAS'],
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        noticeList.value = value['RESULT']['DATAS'][0]['DATAS'],
       }
     });
     Get.log('공지사항 ::::: ${noticeList.value}');
@@ -37,7 +37,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
       isLoading.value = true;
       var a = await HomeApi.to.PROC("PS_PERIOD_USR_MSG", {"@p_WORK_TYPE":"Q_LIST","@p_RCV_USER":Utils.getStorage.read('userId'),"@p_CHK_YN": ''/*,"@p_TYPE_MSG":''*/}).then((value) =>
       {
-        alarmNList.value = value['DATAS'],
+        alarmNList.value = value['RESULT']['DATAS'][0]['DATAS'],
 
       });
       Get.log('알림 조회::::::::: $a');

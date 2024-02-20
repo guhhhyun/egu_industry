@@ -40,8 +40,8 @@ class PackagingInspecController extends GetxController {
     var a = await HomeApi.to.PROC('USP_MBS1300_R01',
         {'@p_WORK_TYPE': 'Q', '@p_BARCODE_NO': textController.text}).then((value) =>
     {
-      if(value['DATAS'] != null) {
-        productList.value = value['DATAS'],
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        productList.value = value['RESULT']['DATAS'][0]['DATAS'],
       }
     });
     Get.log('포장검수 첫번째: $a');
@@ -56,8 +56,8 @@ class PackagingInspecController extends GetxController {
     var a = await HomeApi.to.PROC('USP_MBS1300_R01',
         {'@p_WORK_TYPE': 'Q1', '@p_BARCODE_NO': textController.text}).then((value) =>
     {
-      if(value['DATAS'] != null) {
-        productDetailList.value = value['DATAS'],
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        productDetailList.value = value['RESULT']['DATAS'][0]['DATAS'],
       },
       for(var i = 0; i < productDetailList.length; i++) {
         if(productDetailList[i]['SPEC_YN'] == 'N') {
@@ -84,8 +84,8 @@ class PackagingInspecController extends GetxController {
     var a = await HomeApi.to.PROC('USP_MBS1300_R01',
         {'@p_WORK_TYPE': 'Q2', '@p_BARCODE_NO': textController.text}).then((value) =>
     {
-      if(value['DATAS'] != null) {
-        inspecDetailList.value = value['DATAS'],
+      if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+        inspecDetailList.value = value['RESULT']['DATAS'][0]['DATAS'],
       }
     });
     Get.log('포장검수 세번째: $a');

@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:egu_industry/app/common/app_theme.dart';
 import 'package:egu_industry/app/common/common_appbar_widget.dart';
 import 'package:egu_industry/app/common/common_loading.dart';
@@ -26,6 +28,7 @@ class _GagongFacilityPageState extends State<GagongFacilityPage> {
 
   @override
   Widget build(BuildContext context) {
+    Timer.periodic(Duration(minutes: 3), (Timer t) => controller.checkButton());
     return Scaffold(
       backgroundColor: AppTheme.white,
       body: SafeArea(
