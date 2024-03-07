@@ -114,7 +114,7 @@ class HomeApi {
   }
 
   Future<Map> PROC23(String procName, Map? PARAMS) async {
-    String res = await EXEC22("PROC", procName, PARAMS) ?? "";
+    String res = await EXEC("PROC", procName, PARAMS) ?? "";
     Map data = json.decode(res);
     return data;
   }

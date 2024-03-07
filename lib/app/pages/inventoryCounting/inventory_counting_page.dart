@@ -47,7 +47,7 @@ class InventoryCountingPage extends StatelessWidget {
             ],
           ),
         ),
-       // bottomNavigationBar: _bottomButton(context), //  등록
+        bottomNavigationBar: _bottomButton(context), //  등록
       ),
     );
   }
@@ -70,10 +70,7 @@ class InventoryCountingPage extends StatelessWidget {
                   _barcodeField(context)
                 ],
               ),
-
-              SizedBox(height: 20,),
-
-
+              const SizedBox(height: 20,),
             ],
           )
       ), )
@@ -88,40 +85,17 @@ class InventoryCountingPage extends StatelessWidget {
         Row(
           children: [
             _scrapDropdown(true),
-            SizedBox(width: 16,),
+            const SizedBox(width: 16,),
             _mach()
           ],
         ),
-        SizedBox(height: 10,),
-        TextButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-                AppTheme.light_ui_background
-            ),
-            padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    side: const BorderSide(color: AppTheme.ae2e2e2),
-                    borderRadius: BorderRadius.circular(10)
-                )),
-          ),
-          onPressed: () {
-            Get.log('날짜 클릭');
-            controller.isShowCalendar.value = true;
-
-          },
-          child: Container(
-            height: 50,
-            padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today_outlined, color: AppTheme.a959595, size: 20,),
-                SizedBox(width: 8,),
-                Text(controller.dayValue.value, style: AppTheme.a14500.copyWith(color: AppTheme.a6c6c6c),)
-              ],
-            ),
-          ),
-        ),
+        const SizedBox(height: 10,),
+        Row(
+          children: [
+            controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? _dropdownScrap('2') : controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? _dropdownScrap('3') :
+            controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? _dropdownScrap('4') : _dropdownScrap('5')
+          ],
+        )
       ],
     );
   }
@@ -132,7 +106,7 @@ class InventoryCountingPage extends StatelessWidget {
     var lastDay = DateTime.utc(2070, 12, 31);
     return Obx(
           () => Container(
-        padding: EdgeInsets.only(bottom: 24),
+        padding: const EdgeInsets.only(bottom: 24),
         decoration: BoxDecoration(
             color: AppTheme.light_ui_background,
             border: Border.all(color: AppTheme.light_ui_02),
@@ -160,7 +134,7 @@ class InventoryCountingPage extends StatelessWidget {
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(5)
                   ),
-                  todayTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                  todayTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
                   todayDecoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       color: Colors.white,
@@ -177,8 +151,8 @@ class InventoryCountingPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5)
                   ),
                   outsideDaysVisible: false,
-                  defaultTextStyle: TextStyle(fontWeight: FontWeight.w600),
-                  weekendTextStyle: TextStyle(fontWeight: FontWeight.w600)),
+                  defaultTextStyle: const TextStyle(fontWeight: FontWeight.w600),
+                  weekendTextStyle: const TextStyle(fontWeight: FontWeight.w600)),
               locale: 'ko-KR',
               headerStyle: HeaderStyle(
                   titleCentered: true,
@@ -214,8 +188,8 @@ class InventoryCountingPage extends StatelessWidget {
                 controller.isShowCalendar.value = false;
               },
             ),
-            SizedBox(height: 12,),
-            SizedBox(height: 12,),
+            const SizedBox(height: 12,),
+            const SizedBox(height: 12,),
 
           ],
         ),
@@ -245,23 +219,23 @@ class InventoryCountingPage extends StatelessWidget {
               color: AppTheme.light_placeholder,
             ),
             dropdownColor: AppTheme.light_ui_01,
-            value: controller.selectedMachMap['MACH_NAME'],
+            value: controller.selectedMachMap['CMH_NM'],
             //  flag == 3 ? controller.selectedNoReason.value :
             items: controller.machList.map((value) {
               return DropdownMenuItem<String>(
-                value: value['MACH_NAME'],
+                value: value['CMH_NM'],
                 child: Text(
-                  value['MACH_NAME'],
+                  value['CMH_NM'],
                   style: AppTheme.a16500
-                      .copyWith(color: value['MACH_NAME'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
+                      .copyWith(color: value['CMH_NM'] == '설비 선택' ? AppTheme.light_placeholder : AppTheme.a6c6c6c),
                 ),
               );
             }).toList(),
             onChanged: (value) {
               controller.machList.map((e) {
-                if(e['MACH_NAME'] == value) {
-                  controller.selectedMachMap['MACH_CODE'] = e['MACH_CODE'].toString();
-                  controller.selectedMachMap['MACH_NAME'] = e['MACH_NAME'];
+                if(e['CMH_NM'] == value) {
+                  controller.selectedMachMap['CMH_ID'] = e['CMH_ID'].toString();
+                  controller.selectedMachMap['CMH_NM'] = e['CMH_NM'];
                 }
                 //  Get.log('${ controller.selectedLocationMap} 선택!!!!');
               }).toList();
@@ -278,195 +252,85 @@ class InventoryCountingPage extends StatelessWidget {
   }
 
   Widget _checkButton() {
-    return Container(
-      child: TextButton(
-          style: ButtonStyle(
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.all(0))),
-          onPressed: () async{
-            var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.dayValue.value
-              ,'@p_GUBUN':'${controller.selectedCheckLocationMap['DETAIL_CD']}' }).then((value) =>
-            {
-              if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
-                controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
-                for(var i = 0; i < controller.productList.length; i++) {
-                  if(controller.productList[i]['CST_NM'] == null) {
-                    controller.productList.remove(controller.productList[i])
-                  }
-                },
-                controller.productList.value = controller.productList.reversed.toList()
-              }
-            }); /// 구분도 여쭤봐야함
-            Get.log('조회 결과~~~~~ $a');
-          },
-          child: SizedBox(
-            height: 56,
-            child: Center(
-                child: Text(
-                  '조회',
-                  style: AppTheme.bodyBody2.copyWith(
-                    color: const Color(0xfffbfbfb),
-                  ),
-                )),
-          )),
-    );
+    return TextButton(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10))),
+            backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f),
+            padding: MaterialStateProperty.all<EdgeInsets>(
+                const EdgeInsets.all(0))),
+        onPressed: () async{
+          controller.controllers.clear();
+          controller.productList.clear();
+          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
+          controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
+            ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
+          {
+            if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+              controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
+              for(var i = 0; i < controller.productList.length; i++) {
+                controller.controllers.add(TextEditingController(text: '${controller.productList[i]['C04']}'))
+              },
+            //  controller.productList.value = controller.productList.reversed.toList()
+            }
+          }); /// 구분도 여쭤봐야함
+          Get.log('조회 결과~~~~~ $a');
+        },
+        child: SizedBox(
+          height: 56,
+          child: Center(
+              child: Text(
+                '조회',
+                style: AppTheme.bodyBody2.copyWith(
+                  color: const Color(0xfffbfbfb),
+                ),
+              )),
+        ));
   }
 
   Widget _topAreaTest(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.only( right: 8),
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.only(left: 16),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: AppTheme.ae2e2e2),
-                      borderRadius: BorderRadius.circular(10)
-                  ),
-                  child: /*RawKeyboardListener(
-                    focusNode: focusNode,
-                    onKey: (event) async{
-                      FocusScope.of(context).autofocus(focusNode);
-                     *//* var an = event.data.toString();
-                      String eventText2 = an;
-                      String eventText = event.character ?? '';*//*
-                     *//* if (eventText2.isNotEmpty  || eventText2 == '-') {
-                        controller.textController.text += eventText2.trim();
-                        *//*if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-                          controller.saveButton();
-                          controller.textController.text = '';
-                          FocusScope.of(context).autofocus(focusNode);
-                        }
-                     // }
-                      var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                        , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                            : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                        , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
-                      {
-                        if(value['DATAS'] != null) {
-                          controller.productList.value = value['DATAS'],
-                          for(var i = 0; i < controller.productList.length; i++) {
-                            if(controller.productList[i]['CST_NM'].toString() == null) {
-                              controller.productList.remove(controller.productList[i])
-                            }
-                          },
-                          controller.productList.value = controller.productList.reversed.toList()
-                        }
-                      });
-                    },
-                    child: */TextFormField(
-                      focusNode: focusNode2,
-                    style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-                    controller: controller.textController,
-                    textAlignVertical: TextAlignVertical.center,
-                    textInputAction: TextInputAction.go,
-                    onTap: () {
-                      if(controller.focusCnt.value++ > 1) controller.focusCnt.value = 0;
-                      else Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
-                    },
-                    onTapOutside:(event) => { controller.focusCnt.value = 0 },
-                    onFieldSubmitted: (value) async{
-                      controller.saveButton();
-                      controller.textController.text = '';
-                      var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                        , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
-                        , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
-                      {
-                        if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
-                          controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
-                          for(var i = 0; i < controller.productList.length; i++) {
-                            if(controller.productList[i]['CST_NM'].toString() == null) {
-                              controller.productList.remove(controller.productList[i])
-                            }
-                          },
-                          controller.productList.value = controller.productList.reversed.toList()
-                        }
-                      });
-                      Future.delayed(const Duration(), (){
-                        focusNode2.requestFocus();
-                        //  FocusScope.of(context).requestFocus(focusNode);
-                        Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
-                      });
-                    /*  SchedulerBinding.instance!.addPostFrameCallback((_) {
-                        Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
-                      });*/
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      suffixIcon: InkWell(
-                          onTap: () async {
-                            controller.saveButton();
-                            controller.textController.text = '';
-                            FocusScope.of(context).autofocus(focusNode);
-                            var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                              , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
-                              , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
-                            {
-                              if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
-                                controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
-                                for(var i = 0; i < controller.productList.length; i++) {
-                                  if(controller.productList[i]['CST_NM'].toString() == null) {
-                                    controller.productList.remove(controller.productList[i])
-                                  }
-                                },
-                                controller.productList.value = controller.productList.reversed.toList()
-                              }
-                            });
-                            Future.delayed(const Duration(), (){
-                              focusNode2.requestFocus();
-                              //  FocusScope.of(context).requestFocus(focusNode);
-                              Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
-                            });
-                           /* SchedulerBinding.instance!.addPostFrameCallback((_) {
-                              Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
-                            });*/
-                          },
-                          child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
-                      ),
-
-                      contentPadding: const EdgeInsets.all(0),
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'BC 번호를 입력해주세요',
-                      hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
-                      border: InputBorder.none,
-                    ),
-                    showCursor: true,
-
-
-                  ),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only( right: 8),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.only(left: 16),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppTheme.ae2e2e2),
+                    borderRadius: BorderRadius.circular(10)
                 ),
-              ),
-            ),
-          ),
-          InkWell(
-              onTap: () async {
-                String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                    '#ff6666', '취소', false, ScanMode.BARCODE);
-                controller.textController.text = barcodeScanRes;
-                if(controller.textController.text != '-1') {
+                child: TextFormField(
+                    focusNode: focusNode2,
+                  style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
+                  controller: controller.textController,
+                  textAlignVertical: TextAlignVertical.center,
+                  textInputAction: TextInputAction.done,
+                  onTap: () {
+                    if(controller.focusCnt.value++ > 1) {
+                      controller.focusCnt.value = 0;
+                    } else {
+                      Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                    }
+                  },
+                  onTapOutside:(event) => { controller.focusCnt.value = 0 },
+                  onFieldSubmitted: (value) async {
                     await controller.saveButton();
                     controller.textController.text = '';
-                    FocusScope.of(context).autofocus(focusNode);
-                    var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                      , '@p_DATE': DateFormat('yyyy-MM-dd').format(DateTime.now())
-                      , '@p_GUBUN': '${controller.selectedCheckLocationMap['DETAIL_CD']}'}).then((value) =>
+                    controller.controllers.clear();
+                    controller.productList.clear();
+                    var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
+                    controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
+                      ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
                     {
                       if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
                         controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
                         for(var i = 0; i < controller.productList.length; i++) {
-                          if(controller.productList[i]['CST_NM'].toString() == null) {
-                            controller.productList.remove(controller.productList[i])
-                          }
+                          controller.controllers.add(TextEditingController(text: '${controller.productList[i]['C04']}'))
                         },
-                        controller.productList.value = controller.productList.reversed.toList()
+                        //  controller.productList.value = controller.productList.reversed.toList()
                       }
                     });
                     Future.delayed(const Duration(), (){
@@ -474,14 +338,91 @@ class InventoryCountingPage extends StatelessWidget {
                       //  FocusScope.of(context).requestFocus(focusNode);
                       Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
                     });
-                }else {
-                 controller.textController.text = '';
-                }
-              },
-              child: Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
-          )
-        ],
-      ),
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    suffixIcon: InkWell(
+                        onTap: () async {
+                          await controller.saveButton();
+                          controller.textController.text = '';
+                          controller.controllers.clear();
+                          controller.productList.clear();
+                          FocusScope.of(context).autofocus(focusNode);
+                          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
+                          controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
+                            ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
+                          {
+                            if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                              controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
+                              for(var i = 0; i < controller.productList.length; i++) {
+                                controller.controllers.add(TextEditingController(text: '${controller.productList[i]['C04']}'))
+                              },
+                              //  controller.productList.value = controller.productList.reversed.toList()
+                            }
+                          });
+                          Future.delayed(const Duration(), (){
+                            focusNode2.requestFocus();
+                            //  FocusScope.of(context).requestFocus(focusNode);
+                            Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                          });
+                         /* SchedulerBinding.instance!.addPostFrameCallback((_) {
+                            Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
+                          });*/
+                        },
+                        child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
+                    ),
+
+                    contentPadding: const EdgeInsets.all(0),
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'BC 번호를 입력해주세요',
+                    hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
+                    border: InputBorder.none,
+                  ),
+                  showCursor: true,
+
+
+                ),
+              ),
+            ),
+          ),
+        ),
+        InkWell(
+            onTap: () async {
+              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                  '#ff6666', '취소', false, ScanMode.BARCODE);
+              controller.textController.text = barcodeScanRes;
+              if(controller.textController.text != '-1') {
+                  await controller.saveButton();
+                  controller.textController.text = '';
+                  FocusScope.of(context).autofocus(focusNode);
+                  controller.controllers.clear();
+                  controller.productList.clear();
+
+                  var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
+                  controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
+                    ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
+                  {
+                    if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                      controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
+                      for(var i = 0; i < controller.productList.length; i++) {
+                        controller.controllers.add(TextEditingController(text: '${controller.productList[i]['C04']}'))
+                      },
+                      //  controller.productList.value = controller.productList.reversed.toList()
+                    }
+                  });
+                  Future.delayed(const Duration(), (){
+                    focusNode2.requestFocus();
+                    //  FocusScope.of(context).requestFocus(focusNode);
+                    Future.delayed(const Duration(), () => SystemChannels.textInput.invokeMethod('TextInput.hide'));
+                  });
+              }else {
+               controller.textController.text = '';
+              }
+            },
+            child: const Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black)
+        )
+      ],
     );
   }
 
@@ -490,89 +431,13 @@ class InventoryCountingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          child: Center(
-            child: _topAreaTest(context)
-          ),
+        Center(
+          child: _topAreaTest(context)
         ),
-        SizedBox(height: 10,),
+        const SizedBox(height: 10,),
       ],
     );
   }
-
-  /*Widget _barcodeField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('재고실사 등록',
-            style: AppTheme.a15700
-                .copyWith(color: AppTheme.black)),
-        const SizedBox(height: 10,),
-        _scrapDropdown(false),
-        const SizedBox(height: 10,),
-        controller.selectedSaveLocationMap['DETAIL_NM'] != '선택해주세요' ?
-       Container(
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.only(left: 16),
-              decoration: BoxDecoration(
-                  border: Border.all(color: AppTheme.ae2e2e2),
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              width: double.infinity,
-              child: TextFormField(
-                style:  AppTheme.a16400.copyWith(color: AppTheme.a6c6c6c),
-                // maxLines: 5,
-                controller: controller.textController,
-                textAlignVertical: TextAlignVertical.center,
-                textInputAction: TextInputAction.search,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                  suffixIcon: InkWell(
-                      onTap:  () async {
-                        Get.log('조회 돋보기 클릭!');
-                        if(controller.textController.text != '') {
-                          controller.saveButton();
-                          var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q'
-                            , '@p_DATE': controller.dayValue.value != '날짜를 선택해주세요' ? controller.dayValue.value
-                                : DateFormat('yyyy-MM-dd').format(DateTime.now())
-                            , '@p_GUBUN': '${controller.selectedSaveLocationMap['DETAIL_CD']}'}).then((value) =>
-                          {
-                            if(value['DATAS'] != null) {
-                              controller.productList.value = value['DATAS'],
-                              for(var i = 0; i < controller.productList.length; i++) {
-                                if(controller.productList[i]['CST_NM'].toString() == null) {
-                                  controller.productList.remove(controller.productList[i])
-                                }
-                              }
-                            }
-                          });
-                          SchedulerBinding.instance!.addPostFrameCallback((_) {
-                            Get.dialog(CommonDialogWidget(contentText: '저장되었습니다', flag: 1, pageFlag: 4,));
-                          });
-                        }
-                      },
-                      child: Image.asset('assets/app/search.png', color: AppTheme.a6c6c6c, width: 32, height: 32,)
-                  ),
-
-                  contentPadding: const EdgeInsets.all(0),
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'BC 번호를 입력해주세요',
-                  hintStyle: AppTheme.a16400.copyWith(color: AppTheme.aBCBCBC),
-                  border: InputBorder.none,
-                ),
-                showCursor: true,
-
-                // onChanged: ((value) => controller.submitSearch(value)),
-              ),
-            ),
-          ),
-        ) : Container(),
-        SizedBox(height: 10,),
-      ],
-    );
-  }*/
 
 
   Widget _scrapDropdown(bool isCheck) {
@@ -636,123 +501,220 @@ class InventoryCountingPage extends StatelessWidget {
         }, childCount: controller.productList.length)));
   }
 
-
   Widget _listItem({required BuildContext context, required int index}) {
 
     return Obx(() => Container(
-      margin: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
-      padding: const EdgeInsets.only(top: 18, bottom: 18, left: 18, right: 18),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.aE2E2E2),
-          color: AppTheme.white,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.gray_c_gray_100.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ]
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              controller.productList.isNotEmpty ?
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 6, right: 6, top: 2, bottom: 2),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: AppTheme.ae2e2e2
+              margin: const EdgeInsets.only(left: 18, bottom: 10, right: 18),
+              padding: const EdgeInsets.only(top:10, bottom: 10, left: 10, right: 10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppTheme.aE2E2E2),
+                  color: AppTheme.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.gray_c_gray_100.withOpacity(0.5),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
-                    child: Text(controller.productList[index]['BARCODE_NO'].toString(),
-                        style: AppTheme.a12500
-                            .copyWith(color: AppTheme.a969696)),
-                  ),
-                ],
-              )
-                  : Container(),
-            ],
-          ),
-          SizedBox(height: 8,),
-          /// 마노압연기 뭐시기뭐시기
-          controller.productList.isNotEmpty ?
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(controller.productList[index]['CST_NM'] == null ? '' : controller.productList[index]['CST_NM'],
-                  style: AppTheme.a16700
-                      .copyWith(color: AppTheme.black)),
-              SizedBox(width: 4,),
-              Text('|', style: AppTheme.a16400
-                  .copyWith(color: AppTheme.a6c6c6c)),
-              SizedBox(width: 4,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                  ]
+              ),
+              child: Column(
                 children: [
-                  Text(controller.productList[index]['CMP_NM'] == null ? '' : controller.productList[index]['CMP_NM'].toString(),
-                      style: AppTheme.a16400
-                          .copyWith(color: AppTheme.black)),
+                  controller.productList.isNotEmpty ?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(controller.productList[index]['NO'].toString() ?? '',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.black)),
+                          const SizedBox(width: 12,),
+                          Text(controller.productList[index]['C01'] ?? '',
+                              style: AppTheme.a16700
+                                  .copyWith(color: AppTheme.black)),
+                          const SizedBox(width: 12,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(controller.productList[index]['C02'].toString() ?? '',
+                                  style: AppTheme.a16400
+                                      .copyWith(color: AppTheme.black)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(width: 12,),
+                          Row(
+                            children: [
+                              Text(controller.productList[index]['CD03'] == null ? '' : controller.productList[index]['CD03'].toString(),
+                                  style: AppTheme.a16400
+                                      .copyWith(color: AppTheme.black)),
+                            ],
+                          ),
+                          const SizedBox(width: 12,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text('중량: ',
+                                  style: AppTheme.a16400
+                                      .copyWith(color: AppTheme.black)),
+                       /*             Text(controller.productList[index]['C04'] == null ? '' : controller.productList[index]['C04'].toString(),
+                                  style: AppTheme.a16400
+                                      .copyWith(color: AppTheme.black)),*/
+                              controller.controllers.isNotEmpty ?
+                              SizedBox(
+                                width: 50,
+                                child: TextFormField(
+                                  style:  AppTheme.a16700.copyWith(color: AppTheme.black),
+                                  // maxLines: 5,
+                                  controller: controller.controllers[index],
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.all(0),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    counterText:'',
+                                    hintText: '',
+                                    hintStyle: AppTheme.a16400.copyWith(color: AppTheme.black),
+                                    border: InputBorder.none,
+                                  ),
+                                  showCursor: true,
+
+                                  // onChanged: ((value) => controller.submitSearch(value)),
+                                ),
+                              ) : Container(),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                      : Container(),
                 ],
               ),
-            ],
-          )
-              : Container(),
-          /// 설비 | 설비이상 - 가동조치중 | 전기팀 대충 그런거
-          controller.productList.isNotEmpty ?
-          Wrap(
-            children: [
+            ),
+    );
+  }
 
-              Text(controller.productList[index]['RP'].toString(),
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('|', style: AppTheme.a14400
-                  .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text(controller.productList[index]['STT_NM'].toString(),
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('|', style: AppTheme.a16400
-                  .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('${controller.productList[index]['THIC'].toString()} (THIC)',
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('|', style: AppTheme.a14400
-                  .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('${controller.productList[index]['WIDTH'].toString()} (WIDTH)',
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('|', style: AppTheme.a14400
-                  .copyWith(color: AppTheme.a6c6c6c)),
-              const SizedBox(width: 4,),
-              Text('${controller.productList[index]['WEIGHT'].toString()} (WEIGHT)',
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a6c6c6c)),
-            ],
-          ) : Container(),
-          const SizedBox(height: 12,),
-          controller.productList.isNotEmpty ? Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(controller.productList[index]['PASS'] == true ? '합격': '불합',
-                  style: AppTheme.a14400
-                      .copyWith(color: AppTheme.a959595)),
-            ],
-          ) : Container(),
-        ],
+  Widget _dropdownScrap(String gb) {
+    return Expanded(
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+            border: Border.all(color: AppTheme.ae2e2e2),
+            borderRadius: BorderRadius.circular(10),
+            color: AppTheme.white
+        ),
+        padding: const EdgeInsets.only(left: 12, right: 12),
+        child: DropdownButton(
+            borderRadius: BorderRadius.circular(3),
+            isExpanded: true,
+            underline: Container(
+              height: 1,
+              color: Colors.white,
+            ),
+            icon: SvgPicture.asset(
+              'assets/app/arrowBottom.svg',
+              color: AppTheme.light_placeholder,
+            ),
+            dropdownColor: AppTheme.light_ui_01,
+            value: gb == '2' ? controller.dateValue2.value : gb == '3' ? controller.dateValue3.value :gb == '4' ? controller.dateValue4.value : controller.dateValue5.value,
+            //  flag == 3 ? controller.selectedNoReason.value :
+            items: gb == '2' ? controller.dateList2.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['STK_DT'],
+                child: Text(
+                  value['STK_DT'],
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList() : gb == '3' ? controller.dateList3.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['STK_DT'],
+                child: Text(
+                  value['STK_DT'],
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList() :
+            gb == '4' ? controller.dateList4.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['STK_DT'],
+                child: Text(
+                  value['STK_DT'],
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList() :
+            controller.dateList5.map((value) {
+              return DropdownMenuItem<String>(
+                value: value['STK_DT'],
+                child: Text(
+                  value['STK_DT'],
+                  style: AppTheme.a16400
+                      .copyWith(color: AppTheme.a6c6c6c),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              gb == '2' ? controller.dateValue2.value = value! : gb == '3' ? controller.dateValue3.value = value! :gb == '4' ? controller.dateValue4.value = value! : controller.dateValue5.value = value!;
+
+            }),
       ),
-    ),
+    );
+  }
 
+  Widget _bottomButton(BuildContext context) {
+    return BottomAppBar(
+      color: AppTheme.white,
+      surfaceTintColor: AppTheme.white,
+      child: Container(
+        child: TextButton(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                backgroundColor: MaterialStateProperty.all<Color>(AppTheme.a1f1f1f) ,
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.all(0))),
+            onPressed: () async{
+              await controller.updateButton();
+              controller.controllers.clear();
+              controller.productList.clear();
+              var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
+              controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
+                ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
+              {
+                if(value['RESULT']['DATAS'][0]['DATAS'] != null) {
+                  controller.productList.value = value['RESULT']['DATAS'][0]['DATAS'],
+                  for(var i = 0; i < controller.productList.length; i++) {
+                    controller.controllers.add(TextEditingController(text: '${controller.productList[i]['C04']}'))
+                  },
+                  //  controller.productList.value = controller.productList.reversed.toList()
+                }
+              }); /// 구분도 여쭤봐야함
+            },
+            child: SizedBox(
+              height: 56,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Text(
+                    '중량 수정',
+                    style: AppTheme.bodyBody2.copyWith(
+                      color: const Color(0xfffbfbfb),
+                    ),
+                  )),
+            )),
+      ),
     );
   }
 }
