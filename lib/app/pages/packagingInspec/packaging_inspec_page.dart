@@ -9,10 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:keyboard_service/keyboard_service.dart';
 
 
 class PackagingInspecPage extends StatelessWidget {
@@ -165,7 +164,7 @@ class PackagingInspecPage extends StatelessWidget {
                 ),
               ),
           ),
-       /*   Container(
+          Container(
             padding: const EdgeInsets.only( right: 20, top: 4, bottom: 4),
             child: InkWell(
                 onTap: () async {
@@ -179,14 +178,14 @@ class PackagingInspecPage extends StatelessWidget {
                     controller.textController.text = '';
                     FocusScope.of(context).autofocus(focusNode);
                   }else {
-                    controller.textController.text = '바코드를 재스캔해주세요';
+                    controller.textController.text = '';
                   }
                 },
                 child: Container(
                   padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
                     child: const Icon(Icons.camera_alt_outlined, size: 30, color: AppTheme.black))
             ),
-          )*/
+          )
         ],
       ),
     );

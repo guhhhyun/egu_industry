@@ -26,7 +26,8 @@ class FacilityController extends GetxController {
   Rx<DateTime> selectedStartDay = DateTime.now().obs; // 선택된 날짜
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
-  RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 10))).obs;
+ // RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 10))).obs;
+  RxString step1DayStartValue = '${DateTime.now().year.toString()}-01-01'.obs;
   RxString step1DayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString dayStartValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
@@ -48,7 +49,7 @@ class FacilityController extends GetxController {
   RxList<String> irfgList = [''].obs;
   RxList<dynamic> irfgList2 = [].obs;
   RxList<dynamic> step1IrfgList = [].obs;
-  RxMap<String, String> selectedIrFqMap2 = {'CODE':'010', 'TEXT': '돌발정비'}.obs;
+  RxMap<String, String> selectedIrFqMap2 = {'CODE':'', 'TEXT': '전체'}.obs;
   RxString selectedIrFq = '선택해주세요'.obs;
   RxString irfqCd = ''.obs;
   RxList<String> resultFgList = ['전체','정비 진행중', '정비완료', '미조치'].obs;
@@ -247,9 +248,17 @@ class FacilityController extends GetxController {
     var engineer = await HomeApi.to.BIZ_DATA('P_SYS029').then((value) =>
     {
       for(var i = 0; i < value['RESULT']['DATAS'][0]['DATAS'].length; i++) {
-        if(value['RESULT']['DATAS'][0]['DATAS'][i]['DEPT_PATH'].toString().contains(selectedContainer[0]['INS_DEPT'])) {
-          engineer2List.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
-          isEngineerSelectedList.add(false)
+        if(selectedContainer[0]['INS_DEPT'] == '30030' || selectedContainer[0]['INS_DEPT'] == '30040') {
+          if(value['RESULT']['DATAS'][0]['DATAS'][i]['DEPT_PATH'].toString().contains('30030')
+          || value['RESULT']['DATAS'][0]['DATAS'][i]['DEPT_PATH'].toString().contains('30040')) {
+            engineer2List.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
+            isEngineerSelectedList.add(false)
+          }
+        }else {
+          if(value['RESULT']['DATAS'][0]['DATAS'][i]['DEPT_PATH'].toString().contains(selectedContainer[0]['INS_DEPT'])) {
+            engineer2List.add(value['RESULT']['DATAS'][0]['DATAS'][i]),
+            isEngineerSelectedList.add(false)
+          }
         }
 
       },
@@ -420,7 +429,7 @@ class FacilityController extends GetxController {
     datasList.clear();
     selectedDatas.clear();
     await HomeApi.to.PROC('USP_MBS0200_R01', {'p_WORK_TYPE':'q','@p_IR_DATE_FR':'${step1DayStartValue.value}','@p_IR_DATE_TO':'${step1DayEndValue.value}','@p_URGENCY_FG':'${urgencyReadCd.value}'
-      , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : '010'}).then((value) =>
+      , '@p_INS_DEPT' : '', '@p_RESULT_FG' : pResultFg.value, '@p_IR_FG' : ''}).then((value) =>
     {
       Get.log('value[DATAS]: ${value['RESULT']['DATAS'][0]['DATAS']}'),
       if(value['RESULT']['DATAS'][0]['DATAS'] != null) {

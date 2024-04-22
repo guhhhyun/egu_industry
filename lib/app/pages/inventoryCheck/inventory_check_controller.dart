@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -50,12 +51,11 @@ class InventoryCheckController extends GetxController {
       plutoRow();
     }
   }
-
   Future<void> plutoRow() async {
     rowDatas = List<PlutoRow>.generate(productSearchList.length, (index) =>
         PlutoRow(cells:
         Map.from((productSearchList[index]).map((key, value) =>
-            MapEntry(key, PlutoCell(value:  value)),
+            MapEntry(key, PlutoCell(value: key == 'STOCK_QTY' ? NumberFormat('#,##0.0').format(value).replaceAll(' ', '') : key == 'IN_DATE' ? value != '' ? value.toString().substring(0,4) + '.' +  value.toString().substring(4,6) + '.' +  value.toString().substring(6, 8) : value : value )),
         )))
     );
     gridStateMgr.removeAllRows();
