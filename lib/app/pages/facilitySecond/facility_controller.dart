@@ -27,7 +27,8 @@ class FacilityController extends GetxController {
   Rx<DateTime> selectedEndDay = DateTime.now().obs; // 선택된 날짜
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
  // RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 10))).obs;
-  RxString step1DayStartValue = '${DateTime.now().year.toString()}-01-01'.obs;
+ // RxString step1DayStartValue = '${DateTime.now().year.toString()}-01-01'.obs;+
+  RxString step1DayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 90))).obs;
   RxString step1DayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxString dayStartValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()).obs;

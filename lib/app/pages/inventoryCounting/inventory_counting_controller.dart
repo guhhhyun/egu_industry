@@ -48,6 +48,10 @@ class InventoryCountingController extends GetxController {
         ? dateValue3.value : selectedCheckLocationMap['DETAIL_CD'] == '4' ? dateValue4.value : dateValue5.value,
    '@p_STK_GB':'${selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': selectedCheckLocationMap['DETAIL_CD'] == '4' ? selectedMachMap['CMH_ID'] : '', '@p_USER':Utils.getStorage.read('userId')});
    Get.log('구구ㅜ : $a');
+  if(a['RESULT']['DATAS'] != null) {
+    Utils.gErrorMessage(a['RESULT']['DATAS'][0]['DATAS'][0]['ERR_MSG'].toString());
+  //  Get.log('구구2 : ${a['RESULT']['DATAS'][0]['DATAS'][0]['ERR_MSG'].toString()}');
+  }
   }
 
   Future<void> updateButton() async {
@@ -85,29 +89,39 @@ class InventoryCountingController extends GetxController {
       /// 스크랩
       var date1 = await HomeApi.to.BIZ_DATA('L_STK001').then((value) =>
       {
-        dateValue2.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'],
-        dateList2.value = value['RESULT']['DATAS'][0]['DATAS']
+Get.log('aaaa ${value['RESULT']['DATAS'][0]['DATAS'].toString()}'),
+        value['RESULT']['DATAS'][0]['DATAS'].toString()  != '[]' ?
+        dateValue2.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'] : dateValue2.value = '',
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateList2.value = value['RESULT']['DATAS'][0]['DATAS'] : dateList2.value = [{'STK_DT' : ''}]
       });
-      Get.log('dateList1 : $dateList2');
+      Get.log('dateList2 : $dateList2');
       /// 슬라브
       var date2 = await HomeApi.to.BIZ_DATA('L_STK002').then((value) =>
       {
-        dateValue3.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'],
-        dateList3.value = value['RESULT']['DATAS'][0]['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateValue3.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'] : dateValue3.value = '',
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateList3.value = value['RESULT']['DATAS'][0]['DATAS'] : dateList3.value = [{'STK_DT' : ''}]
       });
       /// 재공
       var date3 = await HomeApi.to.BIZ_DATA('L_STK003').then((value) =>
       {
-        dateValue4.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'],
-        dateList4.value = value['RESULT']['DATAS'][0]['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateValue4.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'] : dateValue4.value = '',
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateList4.value = value['RESULT']['DATAS'][0]['DATAS'] : dateList4.value = [{'STK_DT' : ''}]
       });
       /// 반제품
       var date4 = await HomeApi.to.BIZ_DATA('L_STK004').then((value) =>
       {
-        dateValue5.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'],
-        dateList5.value = value['RESULT']['DATAS'][0]['DATAS']
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateValue5.value = value['RESULT']['DATAS'][0]['DATAS'][0]['STK_DT'] : dateValue5.value = '',
+        value['RESULT']['DATAS'][0]['DATAS'].toString() != '[]' ?
+        dateList5.value = value['RESULT']['DATAS'][0]['DATAS'] : dateList5.value = [{'STK_DT' : ''}]
       });
     }catch(err) {
+      Get.log('asd $err');
       Utils.gErrorMessage('네트워크 오류');
     }
   }

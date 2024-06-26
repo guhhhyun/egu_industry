@@ -135,7 +135,7 @@ class HomeApi {
         String? url = null,
         String? service_name = null,
         String? auth = null,
-        int timeoutSec = 10,
+        int timeoutSec = 20,
         String ContentType = 'application/json',
         Map<String, dynamic>? OPTION = null,
       }) async {
@@ -168,7 +168,7 @@ class HomeApi {
       return result;
     }catch(ex){
       exception = ex;
-      Utils.gErrorMessage('네트워크 오류');
+      Utils.gErrorMessage('$ex');
     }finally{
      log({'url':url,'service_name':service_name,'MODE':MODE,'CODE':CODE,'PARAMS':PARAMS}.toString());
      log({'DATA':data, 'RESULT':result, 'EXCEPTION':exception}.toString());

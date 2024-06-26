@@ -75,8 +75,9 @@ class FacilityFirstController extends GetxController {
 
 
   RxString dayValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
- // RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 10))).obs;
-  RxString dayStartValue = '${DateTime.now().year.toString()}-01-01'.obs;
+ // RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 90))).obs;
+ // RxString dayStartValue = '${DateTime.now().year.toString()}-01-01'.obs;
+  RxString dayStartValue = DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: 90))).obs;
   RxString dayEndValue = DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
   RxInt choiceButtonVal = 1.obs;
   RxBool isShowCalendar = false.obs;
