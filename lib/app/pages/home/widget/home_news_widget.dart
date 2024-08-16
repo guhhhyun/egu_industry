@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 
 
 class HomeNewsWidget extends StatelessWidget {
+  late int gubun; // 공지사항, 알림 구분값
+  HomeNewsWidget(this.gubun);
   HomeController controller = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,8 @@ class HomeNewsWidget extends StatelessWidget {
         color: AppTheme.white,
         child: Column(
           children: [
-            _alarmItem('알림사항'),
+            gubun == 1 ?
+            _alarmItem('알림사항') :
             _newItem('공지사항'),
           ],
         ),
@@ -181,7 +184,7 @@ class HomeNewsWidget extends StatelessWidget {
   Widget _newItem(String title) {
     return Obx(() => Container(
 
-        margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        margin: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 24),
         padding: EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 24),
         decoration: BoxDecoration(
             boxShadow: [

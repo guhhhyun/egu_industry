@@ -78,6 +78,7 @@ class ScrapLabelPage extends StatelessWidget {
   /// 매입과 외주 차이 = 외주스크랩 유무
   /// 공정회수와 매입 차이 = 공정정보 대신 계량정보 빼기
   Widget _inputArea(BuildContext context) {
+    Get.log('제발 ${controller.weighingInfoTextController.text}');
     return Obx(() => Container(
       padding: const EdgeInsets.only(left: 18, right: 18),
       child: Form(
@@ -322,7 +323,7 @@ class ScrapLabelPage extends StatelessWidget {
                         });
                         Get.log('계량정보 스캔결과:::::: $a');
                       },
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.url,
                       decoration: InputDecoration(
                         suffixIcon: InkWell(
                             onTap: () async {

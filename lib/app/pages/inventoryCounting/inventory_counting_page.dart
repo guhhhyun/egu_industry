@@ -342,7 +342,7 @@ class InventoryCountingPage extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     suffixIcon: InkWell(
-                        onTap: () async {
+    onTap: () async {
                           await controller.saveButton();
                           controller.textController.text = '';
                           controller.controllers.clear();

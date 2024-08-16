@@ -1126,7 +1126,7 @@ class FacilityStep2Page extends StatelessWidget {
   String _dateDifference() {
     var start = controller.selectedContainer[0]['IR_DATE'].toString().indexOf('.');
     var end = controller.selectedContainer[0]['IR_DATE'].toString().length;
-    var time = controller.selectedContainer[0]['IR_DATE'].toString().replaceRange(start, end, '');
+    var time = controller.selectedContainer[0]['IR_DATE'].toString(); // .replaceRange(start, end, '');
     var realDate = DateTime.parse(time);
     var times = DateTime.now().difference(realDate);
     Get.log('realDate $realDate');

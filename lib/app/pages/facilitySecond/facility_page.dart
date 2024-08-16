@@ -908,7 +908,7 @@ class FacilityPage extends StatelessWidget {
   String _dateDifference(int index) {
     var start = controller.datasList[index]['IR_DATE'].toString().indexOf('.');
     var end = controller.datasList[index]['IR_DATE'].toString().length;
-    var time = controller.datasList[index]['IR_DATE'].toString().replaceRange(start, end, '');
+    var time = controller.datasList[index]['IR_DATE'].toString(); // .replaceRange(start, end, '');
     var realDate = DateTime.parse(time);
     var times = DateTime.now().difference(realDate);
     Get.log('realDate $realDate');

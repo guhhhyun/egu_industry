@@ -16,12 +16,6 @@ class ProductLocationPage extends StatelessWidget {
 
   ProductLocationController controller = Get.find();
   final focusNode2 = FocusNode();
-  final focusNode = FocusNode(onKey: (node, event) {
-    if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-      return KeyEventResult.handled; // prevent passing the event into the TextField
-    }
-    return KeyEventResult.ignored; // pass the event to the TextField
-  });
 
   @override
   Widget build(BuildContext context) {

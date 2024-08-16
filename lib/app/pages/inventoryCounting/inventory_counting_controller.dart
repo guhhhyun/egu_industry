@@ -50,6 +50,7 @@ class InventoryCountingController extends GetxController {
    Get.log('구구ㅜ : $a');
   if(a['RESULT']['DATAS'] != null) {
     Utils.gErrorMessage(a['RESULT']['DATAS'][0]['DATAS'][0]['ERR_MSG'].toString());
+  //  Utils.showToast(msg: a['RESULT']['DATAS'][0]['DATAS'][0]['ERR_MSG'].toString());
   //  Get.log('구구2 : ${a['RESULT']['DATAS'][0]['DATAS'][0]['ERR_MSG'].toString()}');
   }
   }
