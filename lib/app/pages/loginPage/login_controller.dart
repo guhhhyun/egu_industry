@@ -7,7 +7,6 @@ import 'package:egu_industry/app/net/home_api.dart';
 import 'package:egu_industry/app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:home_widget/home_widget.dart';
 
 class LoginController extends GetxController {
   RxBool isCheckBox = false.obs;

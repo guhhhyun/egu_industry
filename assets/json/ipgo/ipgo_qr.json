@@ -1,0 +1,61 @@
+{
+"header": {
+"currentPage": 0,
+"pageSize": 0,
+"totalRecords": 0,
+"orders": null,
+"chnlCd": null
+},
+"resultCode": "0000",
+"resultMessage": "처리 완료",
+"body": [
+{
+"resultValue": true,
+"resultRowCount": 1,
+"resultCode": "GNR0002",
+"resultMessage": "",
+"errorState": "",
+"errorProcedure": "",
+"returnMessage": ""
+},
+[
+{
+"no": 0,
+"wht": null,
+"custCd": null,
+"extrVal": null,
+"pjtNm": null,
+"grpKey": "LSC240911000081",
+"pjtNo": null,
+"expDt": null,
+"remark": null,
+"tagTypeNmRowspan": 1,
+"prtNo": null,
+"itemNm": "동메쉬 64SQ 8M/EA(68W)\r\n",
+"selectedRowspan": 1,
+"inEdit": false,
+"lotNo": "LOT77548",
+"noRowspan": 1,
+"tagType": "70",
+"vendNm": null,
+"dQty": 1,
+"selected": false,
+"itemCd": "7206688",
+"tagNo": "LSC240911000081",
+"totWht": null,
+"whtUnit": null,
+"setQty": null,
+"boxWht": null,
+"qrNo": "LSC240911000081",
+"qty": 13.00000,
+"vendCd": null,
+"qtyUnit": "EA",
+"tagTypeNm": "원자재",
+"mstKey": "LSC240911000081_7206688",
+"setQtyRowspan": 1,
+"prtDt": null
+}
+]
+],
+"hasError": false
+}

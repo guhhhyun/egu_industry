@@ -1,0 +1,29 @@
+{
+  "header": {
+    "currentPage": 0,
+    "pageSize": 0,
+    "totalRecords": 0,
+    "orders": null,
+    "chnlCd": null
+  },
+  "resultCode": "0000",
+  "resultMessage": "처리 완료",
+  "body": [
+    {
+      "resultValue": true,
+      "resultRowCount": 1,
+      "resultCode": "GNR0002",
+      "resultMessage": "",
+      "errorState": "",
+      "errorProcedure": "",
+      "returnMessage": ""
+    },
+    [
+      {
+        "inbLotNo": "LINB24100700007",
+        "inbNo": "INBN24100700001"
+      }
+    ]
+  ],
+  "hasError": false
+}

@@ -1,0 +1,61 @@
+
+{
+"header": {
+"currentPage": 0,
+"pageSize": 0,
+"totalRecords": 0,
+"orders": null,
+"chnlCd": null
+},
+"resultCode": "0000",
+"resultMessage": "처리 완료",
+"body": [
+{
+"resultValue": true,
+"resultRowCount": 1,
+"resultCode": "GNR0002",
+"resultMessage": "",
+"errorState": "",
+"errorProcedure": "",
+"returnMessage": ""
+},
+[
+{
+"QTY_UNIT": "EA",
+"QR_NO": "LSC240911000081",
+"ITEM_NM": "동메쉬 64SQ 8M/EA(68W)\r\n",
+"LOC_CD": "G-01-05-01",
+"LAST_LOC": "A-01-01-04",
+"CUST_CD": null,
+"QTY": 13.00000,
+"VEND_NM": null,
+"ZONE_NM": "ZONE A",
+"REMARK": null,
+"WHT_UNIT": null,
+"PRT_NO": null,
+"BOX_WHT": null,
+"WHT": null,
+"ITEM_CD": "7206688",
+"LOC_DT": "10  4 20",
+"TAG_NO": "LSC240911000081",
+"INB_YN": "N",
+"EXP_DT": null,
+"EXTR_VAL": null,
+"D_QTY": 1,
+"BOX_NM": null,
+"PRT_DT": null,
+"SET_QTY": null,
+"BOX_NO": null,
+"PJT_NO": null,
+"PJT_NM": null,
+"VEND_CD": null,
+"TOT_WHT": null,
+"TAG_TYPE": "70",
+"LOT_NO": "LOT77548",
+"ZONE_CD": "A",
+"INB_NO": "INBN24092600001"
+}
+]
+],
+"hasError": false
+}

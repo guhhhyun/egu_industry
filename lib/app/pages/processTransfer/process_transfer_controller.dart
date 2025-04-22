@@ -4,7 +4,6 @@ import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:home_widget/home_widget_callback_dispatcher.dart';
 import 'package:intl/intl.dart';
 
 

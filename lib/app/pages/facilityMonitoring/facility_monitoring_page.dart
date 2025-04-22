@@ -122,7 +122,7 @@ class FacilityMonitoringPage extends StatelessWidget {
           width: MediaQuery.of(context).size.width-32,
           height: height,
           child: PlutoGrid(
-            columns: gridCols,
+            columns: gridCols(context),
             rows: controller.rowDatas,
             onLoaded: (PlutoGridOnLoadedEvent event) {
               controller.gridStateMgr = event.stateManager;
@@ -148,141 +148,143 @@ class FacilityMonitoringPage extends StatelessWidget {
       ],),
     );
   }
+  List<PlutoColumn> gridCols(BuildContext context) {
+    final List<PlutoColumn> gridCols = <PlutoColumn>[
+      PlutoColumn(
+        title: '설비',
+        field: 'CMH_NM',
+        type: PlutoColumnType.text(),
+        width: 100,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
+      PlutoColumn(
+        title: '전일',
+        field: 'P_EVE',
+        type: PlutoColumnType.text(),
+        width: 50,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
+      PlutoColumn(
+        title: '금일',
+        field: 'P_TODAY',
+        type: PlutoColumnType.text(),
+        width: 50,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
 
-  final List<PlutoColumn> gridCols = <PlutoColumn>[
-    PlutoColumn(
-      title: '설비',
-      field: 'CMH_NM',
-      type: PlutoColumnType.text(),
-      width: 100,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-    PlutoColumn(
-      title: '전일',
-      field: 'P_EVE',
-      type: PlutoColumnType.text(),
-      width: 50,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-    PlutoColumn(
-      title: '금일',
-      field: 'P_TODAY',
-      type: PlutoColumnType.text(),
-      width: 50,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
+      PlutoColumn(
+        title: '가동상태',
+        field: 'STATUS_NM',
+        type: PlutoColumnType.text(),
+        width: 75,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+        renderer: (rendererContext) {
+          Color textColor = Colors.black;
 
-    PlutoColumn(
-      title: '가동상태',
-      field: 'STATUS_NM',
-      type: PlutoColumnType.text(),
-      width: 75,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-      renderer: (rendererContext) {
-        Color textColor = Colors.black;
+          if (rendererContext.cell.value == '가동') {
+            textColor = AppTheme.a18b858;
+          } else if (rendererContext.cell.value == '비가동') {
+            textColor = AppTheme.affd15b;
+          } else if (rendererContext.cell.value == '장애') {
+            textColor = AppTheme.af34f39;
+          } else {
+            textColor = AppTheme.white;
+          }
 
-        if (rendererContext.cell.value == '가동') {
-          textColor = AppTheme.a18b858;
-        } else if (rendererContext.cell.value == '비가동') {
-          textColor = AppTheme.affd15b;
-        } else if (rendererContext.cell.value == '장애') {
-          textColor = AppTheme.af34f39;
-        } else {
-          textColor = AppTheme.white;
-        }
-
-        return Container(
-          margin: EdgeInsets.all(0),
-          width: 80,
-          color: textColor,
-          child: Center(
-            child: Text(
-              rendererContext.cell.value.toString(),
-              style: AppTheme.a14500.copyWith(color: Colors.black)
+          return Container(
+            margin: EdgeInsets.all(0),
+            width: 80,
+            color: textColor,
+            child: Center(
+              child: Text(
+                  rendererContext.cell.value.toString(),
+                  style: AppTheme.a14500.copyWith(color: Colors.black)
+              ),
             ),
-          ),
-        );
-      },
-    ),
-    PlutoColumn(
-      title: '시간',
-      field: 'LEAD_TIME',
-      type: PlutoColumnType.text(),
-      width: 60,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
+          );
+        },
+      ),
+      PlutoColumn(
+        title: '시간',
+        field: 'LEAD_TIME',
+        type: PlutoColumnType.text(),
+        width: 60,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
 
-    PlutoColumn(
-      title: '상태정보',
-      field: 'ALARM_VAL',
-      type: PlutoColumnType.text(),
-      width: 140,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-    PlutoColumn(
-      title: '작업자',
-      field: 'USR',
-      type: PlutoColumnType.text(),
-      width: 90,
-      enableSorting: false,
-      enableEditingMode: false,
-      enableContextMenu: false,
-      enableRowDrag: false,
-      enableDropToResize: false,
-      enableColumnDrag: false,
-      titleTextAlign: PlutoColumnTextAlign.center,
-      textAlign: PlutoColumnTextAlign.center,
-      backgroundColor: AppTheme.blue_blue_300,
-    ),
-  ];
+      PlutoColumn(
+        title: '상태정보',
+        field: 'ALARM_VAL',
+        type: PlutoColumnType.text(),
+        width: 100,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
+      PlutoColumn(
+        title: '작업자',
+        field: 'USR',
+        type: PlutoColumnType.text(),
+        width: 90,
+        enableSorting: false,
+        enableEditingMode: false,
+        enableContextMenu: false,
+        enableRowDrag: false,
+        enableDropToResize: false,
+        enableColumnDrag: false,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        backgroundColor: AppTheme.blue_blue_300,
+      ),
+    ];
+    return gridCols;
+  }
 
 
 

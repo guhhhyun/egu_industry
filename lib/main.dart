@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'dart:ui';
 import 'package:egu_industry/app/common/global_service.dart';
 import 'package:egu_industry/app/pages/home/home_controller.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -14,10 +15,7 @@ import 'package:egu_industry/app/common/utils.dart';
 import 'package:egu_industry/app/net/home_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -124,32 +122,27 @@ class _MyAppState extends State<MyApp> {
         'This notification appears when the foreground service is running.',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
-        isSticky: false,
-        iconData: const NotificationIconData(
+
+       /* iconData: const NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
           name: 'launcher',
           backgroundColor: Colors.orange,
-        ),
-        buttons: [
-
-        ],
+        ),*/
       ),
       iosNotificationOptions: const IOSNotificationOptions(
         showNotification: true,
         playSound: false,
       ),
-      foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 500,
-        isOnceEvent: false,
+      foregroundTaskOptions:  ForegroundTaskOptions(
         autoRunOnBoot: true,
         allowWakeLock: true,
-        allowWifiLock: true,
+        allowWifiLock: true, eventAction: ForegroundTaskEventAction.nothing(),
       ),
     );
   }
 
-  Future<bool> _startForegroundTask() async {
+  Future<Object> _startForegroundTask() async {
     // You can save data using the saveData function.
     await FlutterForegroundTask.saveData(key: 'customData', value: 'hello');
 
@@ -171,7 +164,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<bool> _stopForegroundTask() {
+  Future<ServiceRequestResult> _stopForegroundTask() {
     return FlutterForegroundTask.stopService();
   }
 
@@ -229,21 +222,21 @@ class _MyAppState extends State<MyApp> {
 
 
 class MyTaskHandler extends TaskHandler {
-  SendPort? _sendPort;
+  TaskStarter? _sendPort;
   int _eventCount = 0;
   @override
-  void onStart(DateTime timestamp, SendPort? sendPort) async {
+  Future<void> onStart(DateTime timestamp, TaskStarter? sendPort) async {
     _sendPort = sendPort;
     final customData =
     await FlutterForegroundTask.getData<String>(key: 'customData');
     print('customData: $customData');
   }
   @override
-  void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
+  void onRepeatEvent(DateTime timestamp) async {
     doPn();
   }
   @override
-  void onDestroy(DateTime timestamp, SendPort? sendPort) async {
+  Future<void> onDestroy(DateTime timestamp) async {
     print('onDestroy');
   }
   @override
@@ -253,7 +246,7 @@ class MyTaskHandler extends TaskHandler {
   @override
   void onNotificationPressed() {
     FlutterForegroundTask.launchApp("/");
-    _sendPort?.send('onNotificationPressed');
+   // _sendPort?.send('onNotificationPressed');
   }
 
   bool isWorkPn = false;

@@ -270,7 +270,6 @@ class ScrapLabelController extends GetxController {
   Future<void> reButton(BuildContext context) async {
     await PrintAlpha_3RB("SCRAP_LBL",{"SCRAP_NO": scrapNo.value}, context);
   }
-
   // 스크랩 라벨발행
   Future<void> scrapSaveButton(BuildContext context) async {
     try{

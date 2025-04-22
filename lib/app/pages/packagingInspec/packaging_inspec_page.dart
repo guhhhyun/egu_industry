@@ -9,9 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 
 class PackagingInspecPage extends StatelessWidget {
@@ -168,9 +168,19 @@ class PackagingInspecPage extends StatelessWidget {
             padding: const EdgeInsets.only( right: 20, top: 4, bottom: 4),
             child: InkWell(
                 onTap: () async {
-                  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                      '#ff6666', '취소', false, ScanMode.BARCODE);
-                  controller.textController.text = barcodeScanRes;
+                  String? barcodeScanRes = await SimpleBarcodeScanner.scanBarcode(
+                    context,
+                    barcodeAppBar: const BarcodeAppBar(
+                      appBarTitle: '',
+                      centerTitle: false,
+                      enableBackButton: true,
+                      backButtonIcon: Icon(Icons.arrow_back_ios),
+                    ),
+                    isShowFlashIcon: true,
+                    delayMillis: 2000,
+                    cameraFace: CameraFace.front,
+                  );
+                  controller.textController.text = barcodeScanRes!;
                   if(controller.textController.text != '-1') {
                     controller.checkButton();
                     controller.checkButton2();

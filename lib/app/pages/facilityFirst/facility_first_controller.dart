@@ -27,6 +27,7 @@ class FacilityFirstController extends GetxController {
 
   RxBool isLoading = false.obs;
 
+
   RxString modifyIrCode = ''.obs;
   Rx<DateTime> selectedDay = DateTime.now().obs; // 선택된 날짜
   RxList<String> insList = ['설비점검', '안전점검'].obs;

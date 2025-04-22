@@ -1,0 +1,804 @@
+
+{
+  "header": {
+    "currentPage": 0,
+    "pageSize": 0,
+    "totalRecords": 0,
+    "orders": null,
+    "chnlCd": null
+  },
+  "resultCode": "0000",
+  "resultMessage": "처리 완료",
+  "body": {
+    "resCd": "0000",
+    "hasUser": true,
+    "userKey": "admin",
+    "duplicationKey": "admin",
+    "userName": "관리자",
+    "orgNm": null,
+    "deptCd": null,
+    "deptNm": "시스템팀",
+    "resetPassword": false,
+    "loginFailCnt": 0,
+    "pwdUnchangedDays": 87,
+    "completed": true,
+    "authorities": [
+      {
+        "menuId": "10",
+        "authority": "ROLE_10",
+        "clientAuthority": "10::"
+      },
+      {
+        "menuId": "100",
+        "authority": "ROLE_100",
+        "clientAuthority": "100::"
+      },
+      {
+        "menuId": "11",
+        "authority": "ROLE_11",
+        "clientAuthority": "11::"
+      },
+      {
+        "menuId": "19",
+        "authority": "ROLE_19",
+        "clientAuthority": "19::"
+      },
+      {
+        "menuId": "2",
+        "authority": "ROLE_2",
+        "clientAuthority": "2::"
+      },
+      {
+        "menuId": "22",
+        "authority": "ROLE_22",
+        "clientAuthority": "22::"
+      },
+      {
+        "menuId": "23",
+        "authority": "ROLE_23",
+        "clientAuthority": "23::"
+      },
+      {
+        "menuId": "24",
+        "authority": "ROLE_24",
+        "clientAuthority": "24::"
+      },
+      {
+        "menuId": "25",
+        "authority": "ROLE_25",
+        "clientAuthority": "25::"
+      },
+      {
+        "menuId": "3",
+        "authority": "ROLE_3",
+        "clientAuthority": "3::"
+      },
+      {
+        "menuId": "33",
+        "authority": "ROLE_33",
+        "clientAuthority": "33::"
+      },
+      {
+        "menuId": "34",
+        "authority": "ROLE_34",
+        "clientAuthority": "34::"
+      },
+      {
+        "menuId": "35",
+        "authority": "ROLE_35",
+        "clientAuthority": "35::"
+      },
+      {
+        "menuId": "36",
+        "authority": "ROLE_36",
+        "clientAuthority": "36::"
+      },
+      {
+        "menuId": "37",
+        "authority": "ROLE_37",
+        "clientAuthority": "37::"
+      },
+      {
+        "menuId": "38",
+        "authority": "ROLE_38",
+        "clientAuthority": "38::"
+      },
+      {
+        "menuId": "39",
+        "authority": "ROLE_39",
+        "clientAuthority": "39::"
+      },
+      {
+        "menuId": "4",
+        "authority": "ROLE_4",
+        "clientAuthority": "4::"
+      },
+      {
+        "menuId": "40",
+        "authority": "ROLE_40",
+        "clientAuthority": "40::"
+      },
+      {
+        "menuId": "41",
+        "authority": "ROLE_41",
+        "clientAuthority": "41::"
+      },
+      {
+        "menuId": "42",
+        "authority": "ROLE_42",
+        "clientAuthority": "42::"
+      },
+      {
+        "menuId": "43",
+        "authority": "ROLE_43",
+        "clientAuthority": "43::"
+      },
+      {
+        "menuId": "44",
+        "authority": "ROLE_44",
+        "clientAuthority": "44::"
+      },
+      {
+        "menuId": "45",
+        "authority": "ROLE_45",
+        "clientAuthority": "45::"
+      },
+      {
+        "menuId": "46",
+        "authority": "ROLE_46",
+        "clientAuthority": "46::"
+      },
+      {
+        "menuId": "47",
+        "authority": "ROLE_47",
+        "clientAuthority": "47::"
+      },
+      {
+        "menuId": "48",
+        "authority": "ROLE_48",
+        "clientAuthority": "48::"
+      },
+      {
+        "menuId": "49",
+        "authority": "ROLE_49",
+        "clientAuthority": "49::"
+      },
+      {
+        "menuId": "50",
+        "authority": "ROLE_50",
+        "clientAuthority": "50::"
+      },
+      {
+        "menuId": "51",
+        "authority": "ROLE_51",
+        "clientAuthority": "51::"
+      },
+      {
+        "menuId": "52",
+        "authority": "ROLE_52",
+        "clientAuthority": "52::"
+      },
+      {
+        "menuId": "53",
+        "authority": "ROLE_53",
+        "clientAuthority": "53::"
+      },
+      {
+        "menuId": "54",
+        "authority": "ROLE_54",
+        "clientAuthority": "54::"
+      },
+      {
+        "menuId": "55",
+        "authority": "ROLE_55",
+        "clientAuthority": "55::"
+      },
+      {
+        "menuId": "56",
+        "authority": "ROLE_56",
+        "clientAuthority": "56::"
+      },
+      {
+        "menuId": "57",
+        "authority": "ROLE_57",
+        "clientAuthority": "57::"
+      },
+      {
+        "menuId": "58",
+        "authority": "ROLE_58",
+        "clientAuthority": "58::"
+      },
+      {
+        "menuId": "59",
+        "authority": "ROLE_59",
+        "clientAuthority": "59::"
+      },
+      {
+        "menuId": "6",
+        "authority": "ROLE_6",
+        "clientAuthority": "6::"
+      },
+      {
+        "menuId": "60",
+        "authority": "ROLE_60",
+        "clientAuthority": "60::"
+      },
+      {
+        "menuId": "61",
+        "authority": "ROLE_61",
+        "clientAuthority": "61::"
+      },
+      {
+        "menuId": "62",
+        "authority": "ROLE_62",
+        "clientAuthority": "62::"
+      },
+      {
+        "menuId": "63",
+        "authority": "ROLE_63",
+        "clientAuthority": "63::"
+      },
+      {
+        "menuId": "64",
+        "authority": "ROLE_64",
+        "clientAuthority": "64::"
+      },
+      {
+        "menuId": "65",
+        "authority": "ROLE_65",
+        "clientAuthority": "65::"
+      },
+      {
+        "menuId": "66",
+        "authority": "ROLE_66",
+        "clientAuthority": "66::"
+      },
+      {
+        "menuId": "67",
+        "authority": "ROLE_67",
+        "clientAuthority": "67::"
+      },
+      {
+        "menuId": "68",
+        "authority": "ROLE_68",
+        "clientAuthority": "68::"
+      },
+      {
+        "menuId": "69",
+        "authority": "ROLE_69",
+        "clientAuthority": "69::"
+      },
+      {
+        "menuId": "7",
+        "authority": "ROLE_7",
+        "clientAuthority": "7::"
+      },
+      {
+        "menuId": "70",
+        "authority": "ROLE_70",
+        "clientAuthority": "70::"
+      },
+      {
+        "menuId": "71",
+        "authority": "ROLE_71",
+        "clientAuthority": "71::"
+      },
+      {
+        "menuId": "72",
+        "authority": "ROLE_72",
+        "clientAuthority": "72::"
+      },
+      {
+        "menuId": "73",
+        "authority": "ROLE_73",
+        "clientAuthority": "73::"
+      },
+      {
+        "menuId": "74",
+        "authority": "ROLE_74",
+        "clientAuthority": "74::"
+      },
+      {
+        "menuId": "75",
+        "authority": "ROLE_75",
+        "clientAuthority": "75::"
+      },
+      {
+        "menuId": "76",
+        "authority": "ROLE_76",
+        "clientAuthority": "76::"
+      },
+      {
+        "menuId": "77",
+        "authority": "ROLE_77",
+        "clientAuthority": "77::"
+      },
+      {
+        "menuId": "78",
+        "authority": "ROLE_78",
+        "clientAuthority": "78::"
+      },
+      {
+        "menuId": "79",
+        "authority": "ROLE_79",
+        "clientAuthority": "79::"
+      },
+      {
+        "menuId": "80",
+        "authority": "ROLE_80",
+        "clientAuthority": "80::"
+      },
+      {
+        "menuId": "82",
+        "authority": "ROLE_82",
+        "clientAuthority": "82::"
+      },
+      {
+        "menuId": "83",
+        "authority": "ROLE_83",
+        "clientAuthority": "83::"
+      },
+      {
+        "menuId": "84",
+        "authority": "ROLE_84",
+        "clientAuthority": "84::"
+      },
+      {
+        "menuId": "86",
+        "authority": "ROLE_86",
+        "clientAuthority": "86::"
+      },
+      {
+        "menuId": "87",
+        "authority": "ROLE_87",
+        "clientAuthority": "87::"
+      },
+      {
+        "menuId": "88",
+        "authority": "ROLE_88",
+        "clientAuthority": "88::"
+      },
+      {
+        "menuId": "89",
+        "authority": "ROLE_89",
+        "clientAuthority": "89::"
+      },
+      {
+        "menuId": "91",
+        "authority": "ROLE_91",
+        "clientAuthority": "91::"
+      },
+      {
+        "menuId": "92",
+        "authority": "ROLE_92",
+        "clientAuthority": "92::"
+      },
+      {
+        "menuId": "93",
+        "authority": "ROLE_93",
+        "clientAuthority": "93::"
+      },
+      {
+        "menuId": "94",
+        "authority": "ROLE_94",
+        "clientAuthority": "94::"
+      },
+      {
+        "menuId": "97",
+        "authority": "ROLE_97",
+        "clientAuthority": "97::"
+      },
+      {
+        "menuId": "99",
+        "authority": "ROLE_99",
+        "clientAuthority": "99::"
+      },
+      {
+        "menuId": "22",
+        "programId": "A1",
+        "authority": "ROLE_A1",
+        "clientAuthority": "22:A1:"
+      },
+      {
+        "menuId": "33",
+        "programId": "A1010",
+        "authority": "ROLE_A1010",
+        "clientAuthority": "33:A1010:"
+      },
+      {
+        "menuId": "34",
+        "programId": "A1020",
+        "authority": "ROLE_A1020",
+        "clientAuthority": "34:A1020:"
+      },
+      {
+        "menuId": "35",
+        "programId": "A1030",
+        "authority": "ROLE_A1030",
+        "clientAuthority": "35:A1030:"
+      },
+      {
+        "menuId": "36",
+        "programId": "A1110",
+        "authority": "ROLE_A1110",
+        "clientAuthority": "36:A1110:"
+      },
+      {
+        "menuId": "37",
+        "programId": "A1115",
+        "authority": "ROLE_A1115",
+        "clientAuthority": "37:A1115:"
+      },
+      {
+        "menuId": "23",
+        "programId": "A2",
+        "authority": "ROLE_A2",
+        "clientAuthority": "23:A2:"
+      },
+      {
+        "menuId": "38",
+        "programId": "A2010",
+        "authority": "ROLE_A2010",
+        "clientAuthority": "38:A2010:"
+      },
+      {
+        "menuId": "39",
+        "programId": "A2020",
+        "authority": "ROLE_A2020",
+        "clientAuthority": "39:A2020:"
+      },
+      {
+        "menuId": "40",
+        "programId": "A2025",
+        "authority": "ROLE_A2025",
+        "clientAuthority": "40:A2025:"
+      },
+      {
+        "menuId": "41",
+        "programId": "A2030",
+        "authority": "ROLE_A2030",
+        "clientAuthority": "41:A2030:"
+      },
+      {
+        "menuId": "42",
+        "programId": "A2031",
+        "authority": "ROLE_A2031",
+        "clientAuthority": "42:A2031:"
+      },
+      {
+        "menuId": "97",
+        "programId": "A2032",
+        "authority": "ROLE_A2032",
+        "clientAuthority": "97:A2032:"
+      },
+      {
+        "menuId": "43",
+        "programId": "A2040",
+        "authority": "ROLE_A2040",
+        "clientAuthority": "43:A2040:"
+      },
+      {
+        "menuId": "44",
+        "programId": "A2041",
+        "authority": "ROLE_A2041",
+        "clientAuthority": "44:A2041:"
+      },
+      {
+        "menuId": "45",
+        "programId": "A2050",
+        "authority": "ROLE_A2050",
+        "clientAuthority": "45:A2050:"
+      },
+      {
+        "menuId": "46",
+        "programId": "A2060",
+        "authority": "ROLE_A2060",
+        "clientAuthority": "46:A2060:"
+      },
+      {
+        "menuId": "47",
+        "programId": "A2065",
+        "authority": "ROLE_A2065",
+        "clientAuthority": "47:A2065:"
+      },
+      {
+        "menuId": "48",
+        "programId": "A2110",
+        "authority": "ROLE_A2110",
+        "clientAuthority": "48:A2110:"
+      },
+      {
+        "menuId": "49",
+        "programId": "A2115",
+        "authority": "ROLE_A2115",
+        "clientAuthority": "49:A2115:"
+      },
+      {
+        "menuId": "50",
+        "programId": "A2120",
+        "authority": "ROLE_A2120",
+        "clientAuthority": "50:A2120:"
+      },
+      {
+        "menuId": "24",
+        "programId": "A3",
+        "authority": "ROLE_A3",
+        "clientAuthority": "24:A3:"
+      },
+      {
+        "menuId": "51",
+        "programId": "A3010",
+        "authority": "ROLE_A3010",
+        "clientAuthority": "51:A3010:"
+      },
+      {
+        "menuId": "52",
+        "programId": "A3020",
+        "authority": "ROLE_A3020",
+        "clientAuthority": "52:A3020:"
+      },
+      {
+        "menuId": "53",
+        "programId": "A3025",
+        "authority": "ROLE_A3025",
+        "clientAuthority": "53:A3025:"
+      },
+      {
+        "menuId": "54",
+        "programId": "A3110",
+        "authority": "ROLE_A3110",
+        "clientAuthority": "54:A3110:"
+      },
+      {
+        "menuId": "55",
+        "programId": "A3115",
+        "authority": "ROLE_A3115",
+        "clientAuthority": "55:A3115:"
+      },
+      {
+        "menuId": "56",
+        "programId": "A3120",
+        "authority": "ROLE_A3120",
+        "clientAuthority": "56:A3120:"
+      },
+      {
+        "menuId": "25",
+        "programId": "A4",
+        "authority": "ROLE_A4",
+        "clientAuthority": "25:A4:"
+      },
+      {
+        "menuId": "57",
+        "programId": "A4010",
+        "authority": "ROLE_A4010",
+        "clientAuthority": "57:A4010:"
+      },
+      {
+        "menuId": "58",
+        "programId": "A4020",
+        "authority": "ROLE_A4020",
+        "clientAuthority": "58:A4020:"
+      },
+      {
+        "menuId": "59",
+        "programId": "A4030",
+        "authority": "ROLE_A4030",
+        "clientAuthority": "59:A4030:"
+      },
+      {
+        "menuId": "60",
+        "programId": "A4041",
+        "authority": "ROLE_A4041",
+        "clientAuthority": "60:A4041:"
+      },
+      {
+        "menuId": "61",
+        "programId": "A4050",
+        "authority": "ROLE_A4050",
+        "clientAuthority": "61:A4050:"
+      },
+      {
+        "menuId": "65",
+        "programId": "A4060",
+        "authority": "ROLE_A4060",
+        "clientAuthority": "65:A4060:"
+      },
+      {
+        "menuId": "62",
+        "programId": "A4110",
+        "authority": "ROLE_A4110",
+        "clientAuthority": "62:A4110:"
+      },
+      {
+        "menuId": "63",
+        "programId": "A4115",
+        "authority": "ROLE_A4115",
+        "clientAuthority": "63:A4115:"
+      },
+      {
+        "menuId": "64",
+        "programId": "A4120",
+        "authority": "ROLE_A4120",
+        "clientAuthority": "64:A4120:"
+      },
+      {
+        "menuId": "88",
+        "programId": "A5110",
+        "authority": "ROLE_A5110",
+        "clientAuthority": "88:A5110:"
+      },
+      {
+        "menuId": "89",
+        "programId": "A5115",
+        "authority": "ROLE_A5115",
+        "clientAuthority": "89:A5115:"
+      },
+      {
+        "menuId": "82",
+        "programId": "A5130",
+        "authority": "ROLE_A5130",
+        "clientAuthority": "82:A5130:"
+      },
+      {
+        "menuId": "91",
+        "programId": "A5140",
+        "authority": "ROLE_A5140",
+        "clientAuthority": "91:A5140:"
+      },
+      {
+        "menuId": "84",
+        "programId": "A5145",
+        "authority": "ROLE_A5145",
+        "clientAuthority": "84:A5145:"
+      },
+      {
+        "menuId": "86",
+        "programId": "A5150",
+        "authority": "ROLE_A5150",
+        "clientAuthority": "86:A5150:"
+      },
+      {
+        "menuId": "87",
+        "programId": "A55",
+        "authority": "ROLE_A55",
+        "clientAuthority": "87:A55:"
+      },
+      {
+        "menuId": "72",
+        "programId": "A8",
+        "authority": "ROLE_A8",
+        "clientAuthority": "72:A8:"
+      },
+      {
+        "menuId": "92",
+        "programId": "A8010",
+        "authority": "ROLE_A8010",
+        "clientAuthority": "92:A8010:"
+      },
+      {
+        "menuId": "83",
+        "programId": "A8020",
+        "authority": "ROLE_A8020",
+        "clientAuthority": "83:A8020:"
+      },
+      {
+        "menuId": "94",
+        "programId": "A8030",
+        "authority": "ROLE_A8030",
+        "clientAuthority": "94:A8030:"
+      },
+      {
+        "menuId": "73",
+        "programId": "A8040",
+        "authority": "ROLE_A8040",
+        "clientAuthority": "73:A8040:"
+      },
+      {
+        "menuId": "74",
+        "programId": "A8050",
+        "authority": "ROLE_A8050",
+        "clientAuthority": "74:A8050:"
+      },
+      {
+        "menuId": "93",
+        "programId": "A9050",
+        "authority": "ROLE_A9050",
+        "clientAuthority": "93:A9050:"
+      },
+      {
+        "menuId": "99",
+        "programId": "COMMON-PROCEDURE",
+        "authority": "ROLE_COMMON-PROCEDURE",
+        "clientAuthority": "99:COMMON-PROCEDURE:"
+      },
+      {
+        "menuId": "100",
+        "programId": "COMMON-QUERY",
+        "authority": "ROLE_COMMON-QUERY",
+        "clientAuthority": "100:COMMON-QUERY:"
+      },
+      {
+        "menuId": "67",
+        "programId": "KIT-GRID-BASIC",
+        "authority": "ROLE_KIT-GRID-BASIC",
+        "clientAuthority": "67:KIT-GRID-BASIC:"
+      },
+      {
+        "menuId": "70",
+        "programId": "KIT-GRID-BUTTON",
+        "authority": "ROLE_KIT-GRID-BUTTON",
+        "clientAuthority": "70:KIT-GRID-BUTTON:"
+      },
+      {
+        "menuId": "69",
+        "programId": "KIT-GRID-CHECK",
+        "authority": "ROLE_KIT-GRID-CHECK",
+        "clientAuthority": "69:KIT-GRID-CHECK:"
+      },
+      {
+        "menuId": "71",
+        "programId": "KIT-GRID-ROWSPAN",
+        "authority": "ROLE_KIT-GRID-ROWSPAN",
+        "clientAuthority": "71:KIT-GRID-ROWSPAN:"
+      },
+      {
+        "menuId": "68",
+        "programId": "KIT-GRID-TWO",
+        "authority": "ROLE_KIT-GRID-TWO",
+        "clientAuthority": "68:KIT-GRID-TWO:"
+      },
+      {
+        "menuId": "66",
+        "programId": "KIT-OCTO",
+        "authority": "ROLE_KIT-OCTO",
+        "clientAuthority": "66:KIT-OCTO:"
+      },
+      {
+        "menuId": "75",
+        "programId": "KIT-SPLITTER-LR",
+        "authority": "ROLE_KIT-SPLITTER-LR",
+        "clientAuthority": "75:KIT-SPLITTER-LR:"
+      },
+      {
+        "menuId": "78",
+        "programId": "KIT-SPLITTER-LR-GF",
+        "authority": "ROLE_KIT-SPLITTER-LR-GF",
+        "clientAuthority": "78:KIT-SPLITTER-LR-GF:"
+      },
+      {
+        "menuId": "77",
+        "programId": "KIT-SPLITTER-NO",
+        "authority": "ROLE_KIT-SPLITTER-NO",
+        "clientAuthority": "77:KIT-SPLITTER-NO:"
+      },
+      {
+        "menuId": "79",
+        "programId": "KIT-SPLITTER-POPUP1",
+        "authority": "ROLE_KIT-SPLITTER-POPUP1",
+        "clientAuthority": "79:KIT-SPLITTER-POPUP1:"
+      },
+      {
+        "menuId": "80",
+        "programId": "KIT-SPLITTER-POPUP2",
+        "authority": "ROLE_KIT-SPLITTER-POPUP2",
+        "clientAuthority": "80:KIT-SPLITTER-POPUP2:"
+      },
+      {
+        "menuId": "76",
+        "programId": "KIT-SPLITTER-TB",
+        "authority": "ROLE_KIT-SPLITTER-TB",
+        "clientAuthority": "76:KIT-SPLITTER-TB:"
+      },
+      {
+        "menuId": "19",
+        "programId": "VX-SAMPLE-POSTS",
+        "authority": "ROLE_VX-SAMPLE-POSTS",
+        "clientAuthority": "19:VX-SAMPLE-POSTS:"
+      }
+    ],
+    "userMenus": [],
+    "sessionId": "1727673827981jvIJO7iqM1JndFMVai2nkA",
+    "authenticated": true
+  },
+  "hasError": false
+}

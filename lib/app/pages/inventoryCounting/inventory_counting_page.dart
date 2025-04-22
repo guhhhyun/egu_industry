@@ -8,12 +8,11 @@ import 'package:egu_industry/app/pages/productLocation/product_location_controll
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 
 class InventoryCountingPage extends StatelessWidget {
@@ -51,6 +50,7 @@ class InventoryCountingPage extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _topArea(BuildContext context) {
     return SliverToBoxAdapter(
@@ -348,6 +348,7 @@ class InventoryCountingPage extends StatelessWidget {
                           controller.controllers.clear();
                           controller.productList.clear();
                           FocusScope.of(context).autofocus(focusNode);
+
                           var a = await HomeApi.to.PROC('USP_MBS0500_R01', {'@p_WORK_TYPE':'Q', '@p_DATE': controller.selectedCheckLocationMap['DETAIL_CD'] == '2' ? controller.dateValue2.value :
                           controller.selectedCheckLocationMap['DETAIL_CD'] == '3' ? controller.dateValue3.value : controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.dateValue4.value : controller.dateValue5.value
                             ,'@p_STK_GB':'${controller.selectedCheckLocationMap['DETAIL_CD']}', '@p_CMH_ID': controller.selectedCheckLocationMap['DETAIL_CD'] == '4' ? controller.selectedMachMap['CMH_ID'] : ''}).then((value) =>
@@ -389,9 +390,19 @@ class InventoryCountingPage extends StatelessWidget {
         ),
         InkWell(
             onTap: () async {
-              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-                  '#ff6666', '취소', false, ScanMode.BARCODE);
-              controller.textController.text = barcodeScanRes;
+              String? barcodeScanRes = await SimpleBarcodeScanner.scanBarcode(
+                context,
+                barcodeAppBar: const BarcodeAppBar(
+                  appBarTitle: '',
+                  centerTitle: false,
+                  enableBackButton: true,
+                  backButtonIcon: Icon(Icons.arrow_back_ios),
+                ),
+                isShowFlashIcon: true,
+                delayMillis: 2000,
+                cameraFace: CameraFace.back,
+              );
+              controller.textController.text = barcodeScanRes!;
               if(controller.textController.text != '-1') {
                   await controller.saveButton();
                   controller.textController.text = '';
@@ -497,7 +508,8 @@ class InventoryCountingPage extends StatelessWidget {
   Widget _listArea() {
     return Obx(() => SliverList(
         delegate: SliverChildBuilderDelegate((context, index) {
-          return _listItem(index: index, context: context);
+          final reversedIndex = controller.productList.length - 1 - index;
+          return _listItem(index: reversedIndex, context: context);
         }, childCount: controller.productList.length)));
   }
 
@@ -538,7 +550,7 @@ class InventoryCountingPage extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(controller.productList[index]['C02'].toString() ?? '',
+                              Text(controller.productList[index]['C05'].toString() ?? '',
                                   style: AppTheme.a16400
                                       .copyWith(color: AppTheme.black)),
                             ],
